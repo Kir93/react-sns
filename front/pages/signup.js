@@ -11,12 +11,23 @@ const CheckDiv = styled.div`
 const ButtonDiv = styled.div`
   margin-top: 10px;
 `;
+
+export const useInput = (initValue = null) => {
+  const [value, setter] = useState(initValue);
+  const handler = useCallback((e) => {
+    setter(e.target.value);
+  }, []);
+  return [value, handler];
+};
+
 const signup = () => {
-  const [id, setId] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [password, setPassword] = useState('');
+  const [id, onChangeId] = useInput('');
+  const [nickname, onChangeNickname] = useInput('');
+  const [password, onChangePassword] = useInput('');
+
   const [passwordCheck, setPasswordCheck] = useState('');
   const [passwordError, setPasswordError] = useState(false);
+
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -26,24 +37,7 @@ const signup = () => {
     },
     [password, passwordCheck],
   );
-  const onChangeId = useCallback(
-    (e) => {
-      setId(e.target.value);
-    },
-    [id],
-  );
-  const onChangeNickname = useCallback(
-    (e) => {
-      setNickname(e.target.value);
-    },
-    [nickname],
-  );
-  const onChangePassword = useCallback(
-    (e) => {
-      setPassword(e.target.value);
-    },
-    [password],
-  );
+
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordError(e.target.value !== password);

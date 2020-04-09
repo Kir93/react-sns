@@ -1,14 +1,16 @@
 import React from 'react';
-import { Menu, Input, Form, Button, Row, Col, Avatar, Card } from 'antd';
+import { Menu, Input, Form, Button, Row, Col, Avatar, Card, Icon } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import LoginForm from './LoginForm';
 
 const dummy = {
   nickname: 'Kir',
   Post: [],
   Followings: [],
   Followers: [],
+  isLogedIn: false,
 };
 
 const middleAlign = 'vertical-align: middle;';
@@ -24,6 +26,7 @@ const GridCard = styled(Card.Grid)`
 `;
 const HeadBox = styled(Row)`
   border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 50px;
 `;
 
 const Span = styled.span`
@@ -33,25 +36,15 @@ const Span = styled.span`
 const Header = styled(Menu)`
   border-bottom: 0;
 `;
-
-const Signup = styled(Button)`
-  margin-left: 5px;
-  ${middleAlign}
-`;
-
-const Login = styled(Button)`
-  ${middleAlign}
-`;
 const LoginCard = styled(Card)`
   border: 0;
   margin-top: 5px;
+  margin-right: 40px;
   & .ant-card-body {
     padding: 0;
   }
 `;
-const LoginMenu = styled(Form)`
-  padding-top: 5px;
-`;
+
 const Inputbox = styled(Input)`
   ${middleAlign}
 `;
@@ -60,7 +53,7 @@ const AppLayout = ({ children }) => {
   return (
     <>
       <HeadBox>
-        <Col xs={24} md={12}>
+        <Col xs={24} md={dummy.isLogedIn ? 14 : 12}>
           <Header mode="horizontal">
             <Menu.Item key="home">
               <Link href="/">
@@ -77,66 +70,36 @@ const AppLayout = ({ children }) => {
             </Menu.Item>
           </Header>
         </Col>
-        <Col xs={24} md={12}>
-          <LoginCard>
-            <GridCard hoverable={false}>
-              <Avatar>{dummy.nickname[0]}</Avatar>
-            </GridCard>
-            <GridCard>
-              포스트 <Span>{dummy.Post.length}</Span>
-            </GridCard>
-            <GridCard>
-              팔로잉 <Span>{dummy.Followings.length}</Span>
-            </GridCard>
-            <GridCard>
-              팔로워 <Span>{dummy.Followers.length}</Span>
-            </GridCard>
-            <GridCard hoverable={false}>
-              <Button>로그아웃</Button>
-            </GridCard>
-          </LoginCard>
-          {/* <LoginMenu layout="inline">
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your username!',
-                },
-              ]}
-            >
-              <Inputbox placeholder="Username" />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your password!',
-                },
-              ]}
-            >
-              <Inputbox type="password" placeholder="Password" />
-            </Form.Item>
-            <Form.Item>
-              <Login type="primary" htmlType="submit">
-                LOGIN
-              </Login>
-              <Link href="/signup">
-                <a>
-                  <Signup htmlType="submit">SIGNUP</Signup>
-                </a>
-              </Link>
-            </Form.Item>
-          </LoginMenu> */}
+        <Col xs={24} md={dummy.isLogedIn ? 10 : 12}>
+          {dummy.isLogedIn ? (
+            <LoginCard>
+              <GridCard hoverable={false}>
+                <Avatar>{dummy.nickname[0]}</Avatar>
+              </GridCard>
+              <GridCard>
+                포스트 <Span>{dummy.Post.length}</Span>
+              </GridCard>
+              <GridCard>
+                팔로잉 <Span>{dummy.Followings.length}</Span>
+              </GridCard>
+              <GridCard>
+                팔로워 <Span>{dummy.Followers.length}</Span>
+              </GridCard>
+              <GridCard hoverable={false}>
+                <Button loading={false}>로그아웃</Button>
+              </GridCard>
+            </LoginCard>
+          ) : (
+            <LoginForm />
+          )}
         </Col>
       </HeadBox>
-      <Row>
-        <Col xs={24} md={6}></Col>
-        <Col xs={24} md={12}>
+      <Row gutter={8}>
+        <Col xs={24} md={7}></Col>
+        <Col xs={24} md={10}>
           {children}
         </Col>
-        <Col xs={24} md={6}></Col>
+        <Col xs={24} md={7}></Col>
       </Row>
     </>
   );
