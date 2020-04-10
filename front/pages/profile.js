@@ -4,13 +4,13 @@ import styled from 'styled-components';
 
 const NicknameForm = styled(Form)`
   margin-bottom: 20px;
-  border: 1px solid #d9d9d9
+  border: 1px solid #d9d9d9;
   padding: 20px;
 
-  button{
+  button {
     width: 19%;
     margin-left: 1%;
-    top: 1px; 
+    top: 1px;
   }
 `;
 
@@ -25,6 +25,8 @@ const ProfileList = styled(List)`
 
 const More = styled(Button)`
   width: 100%;
+  // border: 0;
+  // border-top: 1px solid #d9d9d9;
 `;
 
 const ListItem = styled(List.Item)`
