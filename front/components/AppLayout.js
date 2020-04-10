@@ -94,7 +94,7 @@ const AppLayout = ({ children }) => {
           )}
         </Col>
       </HeadBox>
-      <Row gutter={8}>
+      <Row>
         <Col xs={24} md={7}></Col>
         <Col xs={24} md={10}>
           {children}

@@ -6,6 +6,10 @@ const Label = styled.label`
   font-weight: bold;
 `;
 
+const SignupInput = styled(Input)`
+  margin-top: 10px;
+`;
+
 const SignupForm = styled(Form)`
   padding: 30px;
 `;
@@ -14,6 +18,18 @@ const CheckDiv = styled.div`
 `;
 const ButtonDiv = styled.div`
   margin-top: 10px;
+
+  .ant-btn {
+    width: 100%;
+  }
+
+  .ant-btn-lg {
+    height: 60px;
+  }
+`;
+
+const InputDiv = styled.div`
+  margin-bottom: 20px;
 `;
 
 export const useInput = (initValue = null) => {
@@ -53,32 +69,37 @@ const signup = () => {
   return (
     <>
       <SignupForm onSubmit={onSubmit}>
-        <div>
+        <InputDiv>
           <Label htmlFor="user-id">아이디</Label>
-          <Input value={id} name="user-id" required onChange={onChangeId} />
-        </div>
-        <div>
+          <SignupInput
+            value={id}
+            name="user-id"
+            required
+            onChange={onChangeId}
+          />
+        </InputDiv>
+        <InputDiv>
           <Label htmlFor="user-nickname">닉네임</Label>
-          <Input
+          <SignupInput
             value={nickname}
             name="user-nickname"
             required
             onChange={onChangeNickname}
           />
-        </div>
-        <div>
+        </InputDiv>
+        <InputDiv>
           <Label htmlFor="user-password">비밀번호</Label>
-          <Input
+          <SignupInput
             value={password}
             name="user-password"
             type="password"
             required
             onChange={onChangePassword}
           />
-        </div>
-        <div>
+        </InputDiv>
+        <InputDiv>
           <Label htmlFor="user-password-chk">비밀번호체크</Label>
-          <Input
+          <SignupInput
             value={passwordCheck}
             name="user-password-check"
             type="password"
@@ -86,9 +107,9 @@ const signup = () => {
             onChange={onChangePasswordCheck}
           />
           {passwordError && <CheckDiv>비밀번호가 일치하지 않습니다.</CheckDiv>}
-        </div>
+        </InputDiv>
         <ButtonDiv>
-          <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+          <Button size="large" type="primary" htmlType="submit">
             가입하기
           </Button>
         </ButtonDiv>
