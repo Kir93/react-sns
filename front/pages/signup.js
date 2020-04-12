@@ -25,6 +25,7 @@ const ButtonDiv = styled.div`
 
   .ant-btn-lg {
     height: 60px;
+    font-weight: bold;
   }
 `;
 

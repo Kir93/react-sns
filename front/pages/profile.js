@@ -1,22 +1,7 @@
 import React from 'react';
-import { Form, Input, List, Button, Card, Icon } from 'antd';
+import { List, Button, Card, Icon } from 'antd';
 import styled from 'styled-components';
-
-const NicknameForm = styled(Form)`
-  margin-bottom: 20px;
-  border: 1px solid #d9d9d9;
-  padding: 20px;
-
-  button {
-    width: 19%;
-    margin-left: 1%;
-    top: 1px;
-  }
-`;
-
-const NicknameInput = styled(Input)`
-  width: 80%;
-`;
+import NicknameEditForm from '../components/NicknameEditForm';
 
 const ProfileList = styled(List)`
   margin-bottom: 20px;
@@ -35,11 +20,8 @@ const ListItem = styled(List.Item)`
 
 const profile = () => {
   return (
-    <div>
-      <NicknameForm>
-        <NicknameInput addonBefore="닉네임" />
-        <Button type="primary">수정</Button>
-      </NicknameForm>
+    <>
+      <NicknameEditForm />
       <ProfileList
         grid={{ gutter: 4, xs: 2, md: 3 }}
         size="small"
@@ -70,7 +52,7 @@ const profile = () => {
           </ListItem>
         )}
       />
-    </div>
+    </>
   );
 };
 

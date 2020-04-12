@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { Form, Input, Button, Icon } from 'antd';
-import { useState } from 'react';
 import { useInput } from '../pages/signup';
 import { useCallback } from 'react';
 
