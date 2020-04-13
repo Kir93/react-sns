@@ -4,14 +4,8 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import LoginForm from './LoginForm';
-
-const dummy = {
-  nickname: 'Kir',
-  Post: [],
-  Followings: [],
-  Followers: [],
-  isLogedIn: false,
-};
+import UserProfile from './UserProfile';
+import { useSelector } from 'react-redux';
 
 const middleAlign = 'vertical-align: middle;';
 const SearchBar = styled(Input.Search)`
@@ -28,10 +22,12 @@ const Header = styled(Menu)`
 `;
 
 const AppLayout = ({ children }) => {
+  const { isLoggedIn } = useSelector((state) => state.user);
+
   return (
     <>
       <HeadBox>
-        <Col xs={24} md={dummy.isLogedIn ? 14 : 12}>
+        <Col xs={24} md={13}>
           <Header mode="horizontal">
             <Menu.Item key="home">
               <Link href="/">
@@ -48,8 +44,8 @@ const AppLayout = ({ children }) => {
             </Menu.Item>
           </Header>
         </Col>
-        <Col xs={24} md={dummy.isLogedIn ? 10 : 12}>
-          {dummy.isLogedIn ? <UserProfile /> : <LoginForm />}
+        <Col xs={24} md={11}>
+          {isLoggedIn ? <UserProfile /> : <LoginForm />}
         </Col>
       </HeadBox>
       <Row>

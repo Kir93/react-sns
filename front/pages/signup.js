@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { signUpAction } from '../reducers/user';
 
 const Label = styled.label`
   font-weight: bold;
@@ -48,6 +50,7 @@ const signup = () => {
 
   const [passwordCheck, setPasswordCheck] = useState('');
   const [passwordError, setPasswordError] = useState(false);
+  const dispatch = useDispatch();
 
   const onSubmit = useCallback(
     (e) => {
@@ -55,6 +58,13 @@ const signup = () => {
       if (password !== passwordCheck) {
         return setPasswordError(true);
       }
+      dispatch(
+        signUpAction({
+          id,
+          password,
+          nickname,
+        }),
+      );
     },
     [password, passwordCheck],
   );
