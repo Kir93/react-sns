@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { Form, Input, Button, Icon } from 'antd';
 import { useInput } from '../pages/signup';
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { loginAction } from '../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { LOG_IN_REQUEST } from '../reducers/user';
 
 const middleAlign = 'vertical-align: middle;';
 
@@ -41,12 +41,19 @@ const Login = styled(Button)`
 const LoginForm = () => {
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
+  const { isLoggingIn } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onSubmitForm = useCallback(
     (e) => {
       e.preventDefault();
-      dispatch(loginAction);
+      dispatch({
+        type: LOG_IN_REQUEST,
+        data: {
+          id,
+          password,
+        },
+      });
     },
     [id, password],
   );
@@ -73,7 +80,7 @@ const LoginForm = () => {
         />
       </InputFrom>
       <InputFrom>
-        <Login type="primary" htmlType="submit" loading={false}>
+        <Login type="primary" htmlType="submit" loading={isLoggingIn}>
           LOGIN
         </Login>
         <Link href="/signup">

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Avatar, Button, Card } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
-import { logoutAction } from '../reducers/user';
+import { logoutAction, LOG_OUT_REQUEST } from '../reducers/user';
 
 const LoginCard = styled(Card)`
   border: 0;
@@ -27,25 +27,27 @@ const Span = styled.span`
 `;
 
 const UserProfile = () => {
-  const { user } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onLogout = useCallback(() => {
-    dispatch(logoutAction);
+    dispatch({
+      type: LOG_OUT_REQUEST,
+    });
   }, []);
   return (
     <LoginCard>
       <GridCard hoverable={false}>
-        <Avatar>{user.nickname[0]}</Avatar>
+        <Avatar>{me.nickname[0]}</Avatar>
       </GridCard>
       <GridCard>
-        포스트 <Span>{user.Post.length}</Span>
+        포스트 <Span>{me.Post.length}</Span>
       </GridCard>
       <GridCard>
-        팔로잉 <Span>{user.Followings.length}</Span>
+        팔로잉 <Span>{me.Followings.length}</Span>
       </GridCard>
       <GridCard>
-        팔로워 <Span>{user.Followers.length}</Span>
+        팔로워 <Span>{me.Followers.length}</Span>
       </GridCard>
       <GridCard hoverable={false}>
         <Button onClick={onLogout} loading={false}>

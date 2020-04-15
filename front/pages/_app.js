@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import withRedux from 'next-redux-wrapper';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
+import createSagaMiddleware from 'redux-saga';
 import reducer from '../reducers';
+import rootSaga from '../sagas';
 
 const ReactSNS = ({ Component, store }) => {
   return (
@@ -25,12 +27,13 @@ const ReactSNS = ({ Component, store }) => {
 };
 
 ReactSNS.PropTypes = {
-  Component: PropTypes.elementType,
-  store: PropTypes.object,
+  Component: PropTypes.elementType.isRequired,
+  store: PropTypes.object.isRequired,
 };
 
-export default withRedux((initialState, options) => {
-  const middlewares = [];
+const configureStore = (initialState, options) => {
+  const sagaMiddleware = createSagaMiddleware();
+  const middlewares = [sagaMiddleware];
   const enhancer = compose(
     applyMiddleware(...middlewares),
     !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
@@ -38,5 +41,8 @@ export default withRedux((initialState, options) => {
       : (f) => f,
   );
   const store = createStore(reducer, initialState, enhancer);
+  sagaMiddleware.run(rootSaga);
   return store;
-})(ReactSNS);
+};
+
+export default withRedux(configureStore)(ReactSNS);
