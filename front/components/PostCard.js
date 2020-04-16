@@ -1,26 +1,100 @@
-import React from 'react';
-import { Card, Button, Icon, Avatar } from 'antd';
+import React, { useState } from 'react';
+import { Card, Button, Icon, Avatar, Form, Input, List, Comment } from 'antd';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { useCallback } from 'react';
+import { ADD_COMMENT_REQUEST } from '../reducers/post';
+import { useEffect } from 'react';
 
 const PostCard = ({ post }) => {
+  const [commentFormOpend, setCommentFormOpend] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const { me } = useSelector((state) => state.user);
+  const { isAddingComment, commentAdded } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
+
+  const onToggleComment = useCallback(() => {
+    setCommentFormOpend((prev) => !prev);
+  }, []);
+
+  const onSubmitComment = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (!commentText) {
+        return alert('글자를 입력하세요.');
+      }
+      if (!me) {
+        return alert('로그인이 필요합니다.');
+      }
+      dispatch({
+        type: ADD_COMMENT_REQUEST,
+        data: {
+          postId: post.id,
+        },
+      });
+    },
+    [me && me.id, commentText],
+  );
+
+  useEffect(() => {
+    setCommentText('');
+  }, [commentAdded === true]);
+
+  const onChangeCommentText = useCallback((e) => {
+    setCommentText(e.target.value);
+  }, []);
+
   return (
-    <Card
-      key={+post.createdAt}
-      cover={post.img && <img alt="example" src={post.img} />}
-      actions={[
-        <Icon type="retweet" key="retweet" />,
-        <Icon type="heart" key="heart" />,
-        <Icon type="message" key="message" />,
-        <Icon type="ellipsis" key="ellipsis" />,
-      ]}
-      extra={<Button>팔로우</Button>}
-    >
-      <Card.Meta
-        avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-        title={post.User.nickname}
-        description={post.content}
-      />
-    </Card>
+    <div>
+      <Card
+        key={+post.createdAt}
+        cover={post.img && <img alt="example" src={post.img} />}
+        actions={[
+          <Icon type="retweet" key="retweet" />,
+          <Icon type="heart" key="heart" />,
+          <Icon type="message" key="message" onClick={onToggleComment} />,
+          <Icon type="ellipsis" key="ellipsis" />,
+        ]}
+        extra={<Button>팔로우</Button>}
+      >
+        <Card.Meta
+          avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+          title={post.User.nickname}
+          description={post.content}
+        />
+      </Card>
+      {commentFormOpend && (
+        <>
+          <Form onSubmit={onSubmitComment}>
+            <Form.Item>
+              <Input.TextArea
+                rows={4}
+                value={commentText}
+                onChange={onChangeCommentText}
+              />
+            </Form.Item>
+            <Button type="primary" htmlType="submit" loading={isAddingComment}>
+              등록
+            </Button>
+          </Form>
+          <List
+            header={`${post.Comments ? post.Comments.length : 0} 댓글`}
+            itemLayout="horizontal"
+            dataSource={post.Comments || []}
+            renderItem={(item) => (
+              <li>
+                <Comment
+                  author={item.User.nickname}
+                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  content={item.content}
+                  datatime={item.createdAt}
+                />
+              </li>
+            )}
+          />
+        </>
+      )}
+    </div>
   );
 };
 

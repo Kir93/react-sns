@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
 import { SIGN_UP_REQUEST } from '../reducers/user';
+import { useEffect } from 'react';
 
 const Label = styled.label`
   font-weight: bold;
@@ -51,6 +53,14 @@ const signup = () => {
   const [passwordCheck, setPasswordCheck] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const dispatch = useDispatch();
+  const { isSigningUp, me } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (me) {
+      alert('로그인 된 사용자는 접근 할 수 없는 페이지 입니다.');
+      Router.push('/');
+    }
+  }, [me && me.id]);
 
   const onSubmit = useCallback(
     (e) => {
@@ -121,7 +131,12 @@ const signup = () => {
           {passwordError && <CheckDiv>비밀번호가 일치하지 않습니다.</CheckDiv>}
         </InputDiv>
         <ButtonDiv>
-          <Button size="large" type="primary" htmlType="submit">
+          <Button
+            size="large"
+            type="primary"
+            htmlType="submit"
+            loading={isSigningUp}
+          >
             가입하기
           </Button>
         </ButtonDiv>

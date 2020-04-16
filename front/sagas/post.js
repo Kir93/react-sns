@@ -19,7 +19,7 @@ function* addPost() {
   } catch (e) {
     yield put({
       type: ADD_POST_FAILURE,
-      error: e,
+      error: alert(e),
     });
   }
 }
