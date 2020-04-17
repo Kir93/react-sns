@@ -32,3 +32,7 @@ build/
 
 ### Maven ###
 .mvn
+
+### JDBC ###
+
+jdbc.properties
