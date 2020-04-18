@@ -46,12 +46,17 @@ export const useInput = (initValue = null) => {
 };
 
 const signup = () => {
-  const [id, onChangeId] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
-  const [password, onChangePassword] = useInput('');
 
+  const [id, setId] = useState('');
+  const [idError, setIdError] = useState(false);
+  const [idOk, setIdOk] = useState(false);
+
+  const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [passwordError, setPasswordError] = useState(false);
+  const [passwordOk, setPasswordOk] = useState(false);
+
   const dispatch = useDispatch();
   const { isSigningUp, me } = useSelector((state) => state.user);
 
@@ -62,24 +67,55 @@ const signup = () => {
     }
   }, [me && me.id]);
 
+  const isEnabled = useCallback(() => {
+    if (passwordError || idError) {
+      return true;
+    }
+    if (id && nickname && password && passwordCheck) {
+      return false;
+    }
+    return true;
+  }, [id, nickname, password, passwordCheck, passwordError, idError]);
+
+  const onCheckId = useCallback(() => {
+    if (!id) {
+      setIdError(true);
+    }
+    setIdError(false);
+    console.log('아이디 체크');
+  }, [id]);
+
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      if (password !== passwordCheck) {
-        return setPasswordError(true);
-      }
       dispatch({
         type: SIGN_UP_REQUEST,
         data: {
-          id,
-          password,
+          userId: id,
           nickname,
+          password,
         },
       });
     },
-    [password, passwordCheck],
+    [id, nickname, password, passwordCheck],
   );
 
+  const onChangeId = useCallback(
+    (e) => {
+      const idReg = /^[a-z]+[a-z0-9]{5,12}$/g;
+      setIdOk(!idReg.test(e.target.value));
+      setId(e.target.value);
+    },
+    [id],
+  );
+  const onChangePassword = useCallback(
+    (e) => {
+      const passwordReg = /^(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9])(?=.*[0-9]).{8,16}$/g;
+      setPasswordOk(!passwordReg.test(e.target.value));
+      setPassword(e.target.value);
+    },
+    [password],
+  );
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordError(e.target.value !== password);
@@ -98,7 +134,14 @@ const signup = () => {
             name="user-id"
             required
             onChange={onChangeId}
+            onBlur={onCheckId}
           />
+          {idError && <CheckDiv>중복된 아이디가 있습니다.</CheckDiv>}
+          {idOk && (
+            <CheckDiv>
+              아이디는 소문자로 시작하는 6~12자 영문자 또는 숫자이어야 합니다.
+            </CheckDiv>
+          )}
         </InputDiv>
         <InputDiv>
           <Label htmlFor="user-nickname">닉네임</Label>
@@ -128,6 +171,12 @@ const signup = () => {
             required
             onChange={onChangePasswordCheck}
           />
+          {passwordOk && (
+            <CheckDiv>
+              비밀번호는 8~16자 이내의 영문, 숫자, 특수문자의 조합으로
+              입력해주세요.
+            </CheckDiv>
+          )}
           {passwordError && <CheckDiv>비밀번호가 일치하지 않습니다.</CheckDiv>}
         </InputDiv>
         <ButtonDiv>
@@ -136,6 +185,7 @@ const signup = () => {
             type="primary"
             htmlType="submit"
             loading={isSigningUp}
+            disabled={isEnabled()}
           >
             가입하기
           </Button>

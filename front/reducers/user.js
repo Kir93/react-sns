@@ -100,6 +100,7 @@ export default (state = initialState, action) => {
         ...state,
         isSigningUp: false,
         isSignedUp: true,
+        signUpErrorReason: action.error,
       };
     }
     case SIGN_UP_FAILURE: {

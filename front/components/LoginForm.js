@@ -44,6 +44,13 @@ const LoginForm = () => {
   const { isLoggingIn } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  const isEnabled = useCallback(() => {
+    if (id && password) {
+      return false;
+    }
+    return true;
+  }, [id, password]);
+
   const onSubmitForm = useCallback(
     (e) => {
       e.preventDefault();
@@ -80,7 +87,12 @@ const LoginForm = () => {
         />
       </InputFrom>
       <InputFrom>
-        <Login type="primary" htmlType="submit" loading={isLoggingIn}>
+        <Login
+          type="primary"
+          htmlType="submit"
+          loading={isLoggingIn}
+          disabled={isEnabled()}
+        >
           LOGIN
         </Login>
         <Link href="/signup">

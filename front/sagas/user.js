@@ -1,4 +1,5 @@
-import { all, delay, fork, put, takeEvery } from 'redux-saga/effects';
+import { all, delay, fork, put, takeEvery, call } from 'redux-saga/effects';
+import Router from 'next/router';
 import axios from 'axios';
 import {
   LOG_IN_FAILURE,
@@ -35,16 +36,22 @@ function* watchLogin() {
   yield takeEvery(LOG_IN_REQUEST, login);
 }
 
-function signUpAPI() {
+function signUpAPI(signUpData) {
   // 서버에 요청을 보내는 부분
-  return axios.post('/login');
+  axios.post('http://localhost:3065/api/user/', signUpData).then((res) => {
+    console.log(res);
+    if (res.data === 1) {
+      alert('회원가입에 성공하셨습니다.');
+      Router.push('/');
+    } else {
+      alert('회원가입에 실패하셨습니다.');
+    }
+  });
 }
 
-function* signUp() {
+function* signUp(action) {
   try {
-    // yield call(signUpAPI);
-    yield delay(2000);
-    throw new Error('에러에러에러');
+    yield call(signUpAPI, action.data);
     yield put({
       // put은 dispatch 동일
       type: SIGN_UP_SUCCESS,
@@ -53,7 +60,7 @@ function* signUp() {
     // loginAPI 실패
     yield put({
       type: SIGN_UP_FAILURE,
-      error: alert(e),
+      error: e,
     });
   }
 }
