@@ -12,6 +12,9 @@ public interface UserMapper {
     @Select("select id from Users where userId=#{userId}")
     public int checkUserId(String userId);
 
+    @Select("select * from Users where userId=#{userId}")
+    public UserBean checkUser(String userId);
+
     @Insert("insert into Users (userId, nickname, password) value (#{userId}, #{nickname}, #{password})")
     public int signUp(UserBean ub);
 }

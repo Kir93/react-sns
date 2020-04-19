@@ -10,18 +10,20 @@ import {
   SIGN_UP_SUCCESS,
 } from '../reducers/user';
 
-function loginAPI() {
+axios.defaults.baseURL = 'http://localhost:3065/api/user';
+
+function loginAPI(loginData) {
   // 서버에 요청을 보내는 부분
-  return axios.post('/login');
+  return axios.post('/login', loginData);
 }
 
-function* login() {
+function* login(action) {
   try {
-    // yield call(loginAPI);
-    yield delay(2000);
+    const result = yield call(loginAPI, action.data);
     yield put({
       // put은 dispatch 동일
       type: LOG_IN_SUCCESS,
+      data: result.data,
     });
   } catch (e) {
     // loginAPI 실패
@@ -38,26 +40,31 @@ function* watchLogin() {
 
 function signUpAPI(signUpData) {
   // 서버에 요청을 보내는 부분
-  axios.post('http://localhost:3065/api/user/', signUpData).then((res) => {
-    console.log(res);
-    if (res.data === 1) {
-      alert('회원가입에 성공하셨습니다.');
-      Router.push('/');
-    } else {
-      alert('회원가입에 실패하셨습니다.');
-    }
-  });
+  return axios.post('/', signUpData);
 }
 
 function* signUp(action) {
   try {
-    yield call(signUpAPI, action.data);
-    yield put({
-      // put은 dispatch 동일
-      type: SIGN_UP_SUCCESS,
-    });
+    const result = yield call(signUpAPI, action.data);
+    console.log(result.data);
+    if (result.data === 0) {
+      alert('회원가입에 실패하셨습니다.');
+      return yield put({
+        // put은 dispatch 동일
+        type: SIGN_UP_FAILURE,
+      });
+    }
+    if (result.data >= 1) {
+      alert('회원가입에 성공하셨습니다.');
+      yield put({
+        // put은 dispatch 동일
+        type: SIGN_UP_SUCCESS,
+      });
+      Router.push('/');
+    }
   } catch (e) {
     // loginAPI 실패
+    console.log(result.data);
     yield put({
       type: SIGN_UP_FAILURE,
       error: e,

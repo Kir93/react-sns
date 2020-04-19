@@ -1,8 +1,7 @@
 package kr.reactSNS.app.controller;
 
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +18,17 @@ public class UserController {
     @Autowired
     private UserMapper um;
 
-    @GetMapping("/")
-    public String User() {
-        return "User";
+    @PostMapping("/login")
+    public UserBean Login(@RequestBody UserBean ub) {
+        System.out.println(ub.getUserId());
+        System.out.println(ub.getPassword());
+        UserBean user = um.checkUser(ub.getUserId());
+        System.out.println(BCrypt.checkpw(ub.getPassword(), user.getPassword()));
+        // if (BCrypt.checkpw(password, um.checkUserPassword(userId))) {
+        System.out.println("로그인됨?");
+        // }
+        user.setPassword("");
+        return user;
     }
 
     @PostMapping("/")
@@ -38,8 +45,11 @@ public class UserController {
 
     @GetMapping("/test")
     public Object CheckUserId(String userId) {
+        userId = "test12";
         try {
             System.out.println(um.checkUserId(userId));
+            // System.out.println(BCrypt.checkpw("a1111111!",
+            // um.checkUserPassword(userId)));
             return 1;
         } catch (Exception e) {
             System.out.println(e);

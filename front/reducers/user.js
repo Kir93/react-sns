@@ -68,7 +68,7 @@ export default (state = initialState, action) => {
         ...state,
         isLoggingIn: false,
         isLoggedIn: true,
-        me: dummyUser,
+        me: action.data,
       };
     }
     case LOG_IN_FAILURE: {
@@ -100,7 +100,6 @@ export default (state = initialState, action) => {
         ...state,
         isSigningUp: false,
         isSignedUp: true,
-        signUpErrorReason: action.error,
       };
     }
     case SIGN_UP_FAILURE: {
