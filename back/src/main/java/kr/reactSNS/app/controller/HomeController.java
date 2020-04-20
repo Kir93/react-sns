@@ -1,6 +1,9 @@
 package kr.reactSNS.app.controller;
 
 import java.util.Date;
+
+import javax.servlet.http.Cookie;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,8 @@ public class HomeController {
 
 	@GetMapping("/")
 	public String hello() {
+		Cookie c = new Cookie("test", "test");
+		c.setMaxAge(3600);
 		return "안녕하세요. 현재 서버시간은 " + new Date() + "입니다. \n";
 	}
 

@@ -1,5 +1,7 @@
 package kr.reactSNS.app.config;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,9 +21,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().cors();
 
         http.authorizeRequests().antMatchers("*").permitAll();
+
         http.formLogin().loginPage("http://localhost:3000/").loginProcessingUrl("api/user/login")
                 .defaultSuccessUrl("http://localhost:3000/").usernameParameter("userId").passwordParameter("password")
                 .permitAll();
+
+        http.logout().logoutUrl("/api/user/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
+                .clearAuthentication(true).permitAll();
+
+        http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true).expiredUrl("/accessDenied");
+        ;
+
     }
 
     @Bean
@@ -29,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "TOKEN_ID", "X-Requested-With", "Authorization",
+                "Content-Type", "Content-Length", "Cache-Control", "Set-Cookie"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

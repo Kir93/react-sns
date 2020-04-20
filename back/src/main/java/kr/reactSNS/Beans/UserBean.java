@@ -8,6 +8,9 @@ public class UserBean {
     String delYn;
     String createdAt;
     String updatedAt;
+    String[] Posts;
+    String[] Followings;
+    String[] Followers;
 
     public int getId() {
         return id;
@@ -65,10 +68,28 @@ public class UserBean {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public String toString() {
-        return "UserBean [createdAt=" + createdAt + ", delYn=" + delYn + ", id=" + id + ", nickname=" + nickname
-                + ", password=" + password + ", updatedAt=" + updatedAt + ", userId=" + userId + "]";
+    public String[] getPosts() {
+        return Posts;
+    }
+
+    public void setPosts(String posts) {
+        Posts = posts.split(",");
+    }
+
+    public String[] getFollowings() {
+        return Followings;
+    }
+
+    public void setFollowings(String followings) {
+        Followings = followings.split(",");
+    }
+
+    public String[] getFollowers() {
+        return Followers;
+    }
+
+    public void setFollowers(String followers) {
+        Followers = followers.split(",");
     }
 
 }

@@ -1,7 +1,10 @@
 package kr.reactSNS.app.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,18 +21,31 @@ public class UserController {
     @Autowired
     private UserMapper um;
 
-    @PostMapping("/login")
-    public UserBean Login(@RequestBody UserBean ub) {
-        System.out.println(ub.getUserId());
-        System.out.println(ub.getPassword());
-        UserBean user = um.checkUser(ub.getUserId());
-        System.out.println(BCrypt.checkpw(ub.getPassword(), user.getPassword()));
-        // if (BCrypt.checkpw(password, um.checkUserPassword(userId))) {
-        System.out.println("로그인됨?");
-        // }
-        user.setPassword("");
+    @GetMapping("/")
+    public UserBean LoadUser(Model model, HttpSession session) {
+        Object userId = session.getAttribute("rslc");
+        System.out.println(userId);
+        UserBean user = um.checkUser((String) userId);
         return user;
     }
+
+    @PostMapping("/login")
+    public UserBean Login(HttpSession session, @RequestBody UserBean ub) {
+        UserBean user = um.checkUser(ub.getUserId());
+        if (user != null) {
+            if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
+                user.setPassword("");
+                session.setAttribute("rslc", user.getUserId());
+                return user;
+            }
+        }
+        return user;
+    }
+
+    // @PostMapping("/logout")
+    // public void Logout(HttpSession session) {
+    // session.invalidate();
+    // }
 
     @PostMapping("/")
     public int Signup(@RequestBody UserBean ub) {
