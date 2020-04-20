@@ -1,10 +1,11 @@
 package kr.reactSNS.app.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,11 +23,17 @@ public class UserController {
     private UserMapper um;
 
     @GetMapping("/")
-    public UserBean LoadUser(Model model, HttpSession session) {
-        Object userId = session.getAttribute("rslc");
-        System.out.println(userId);
-        UserBean user = um.checkUser((String) userId);
-        return user;
+    public UserBean LoadUser(HttpServletResponse res, HttpSession session) {
+            String userId = (String) session.getAttribute("rslc");
+            System.out.println(userId);
+            if(userId == null){
+                Cookie rslc = new Cookie("rslc", null);
+                rslc.setMaxAge(0);
+                rslc.setPath("/");
+                res.addCookie(rslc);
+            }
+            UserBean user = um.checkUser(userId);
+            return user;
     }
 
     @PostMapping("/login")
@@ -39,7 +46,7 @@ public class UserController {
                 return user;
             }
         }
-        return user;
+        return null;
     }
 
     // @PostMapping("/logout")
