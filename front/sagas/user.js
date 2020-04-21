@@ -28,7 +28,9 @@ function loginAPI(loginData) {
 function* login(action) {
   try {
     const result = yield call(loginAPI, action.data);
-    console.log(result);
+    if (result.data.posts === null) result.data.posts = [];
+    if (result.data.followings === null) result.data.followings = [];
+    if (result.data.followers === null) result.data.followers = [];
     if (result.data !== '') {
       yield put({
         // put은 dispatch 동일
@@ -65,7 +67,6 @@ function signUpAPI(signUpData) {
 function* signUp(action) {
   try {
     const result = yield call(signUpAPI, action.data);
-    console.log(result.data);
     if (result.data === 0) {
       alert('회원가입에 실패하셨습니다.');
       return yield put({
@@ -128,6 +129,9 @@ function loadUserAPI() {
 function* loadUser() {
   try {
     const result = yield call(loadUserAPI);
+    if (result.data.posts === null) result.data.posts = [];
+    if (result.data.followings === null) result.data.followings = [];
+    if (result.data.followers === null) result.data.followers = [];
     yield put({
       // put은 dispatch 동일
       type: LOAD_USER_SUCCESS,
