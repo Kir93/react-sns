@@ -17,11 +17,16 @@ export const initialState = {
   followingList: [], // 팔로잉 리스트
   followerList: [], // 팔로워 리스트
   userInfo: null, // 남의 정보
+  checkId: 0,
 };
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
+export const CHECK_ID_REQUEST = 'CHECK_ID_REQUEST';
+export const CHECK_ID_SUCCESS = 'CHECK_ID_SUCCESS';
+export const CHECK_ID_FAILURE = 'CHECK_ID_FAILURE';
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST'; // 액션의 이름
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS'; // 액션의 이름
@@ -94,6 +99,22 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoggingOut: false,
+      };
+    }
+    case CHECK_ID_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case CHECK_ID_SUCCESS: {
+      return {
+        ...state,
+        checkId: action.data,
+      };
+    }
+    case CHECK_ID_FAILURE: {
+      return {
+        ...state,
       };
     }
     case SIGN_UP_REQUEST: {

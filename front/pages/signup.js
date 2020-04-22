@@ -3,7 +3,7 @@ import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
-import { SIGN_UP_REQUEST } from '../reducers/user';
+import { SIGN_UP_REQUEST, CHECK_ID_REQUEST } from '../reducers/user';
 import { useEffect } from 'react';
 
 const Label = styled.label`
@@ -58,7 +58,7 @@ const signup = () => {
   const [passwordOk, setPasswordOk] = useState(false);
 
   const dispatch = useDispatch();
-  const { isSigningUp, me } = useSelector((state) => state.user);
+  const { isSigningUp, me, checkId } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (me) {
@@ -77,13 +77,15 @@ const signup = () => {
     return true;
   }, [id, nickname, password, passwordCheck, passwordError, idError]);
 
-  const onCheckId = useCallback(() => {
-    if (!id) {
-      setIdError(true);
-    }
-    setIdError(false);
-    console.log('아이디 체크');
-  }, [id]);
+  const onCheckId = useCallback(async () => {
+    await dispatch({
+      type: CHECK_ID_REQUEST,
+      data: {
+        userId: id,
+      },
+    });
+    setIdError(checkId === 1 ? false : true);
+  }, [id, idError]);
 
   const onSubmit = useCallback(
     (e) => {

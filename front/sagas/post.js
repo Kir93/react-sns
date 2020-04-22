@@ -1,4 +1,5 @@
-import { all, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import Axios from 'axios';
+import { all, delay, fork, put, call, takeLatest } from 'redux-saga/effects';
 import {
   ADD_COMMENT_FAILURE,
   ADD_COMMENT_REQUEST,
@@ -8,14 +9,24 @@ import {
   ADD_POST_SUCCESS,
 } from '../reducers/post';
 
-function addPostAPI() {}
+function addPostAPI(addPostData) {
+  return Axios.post('post/', addPostData);
+}
 
-function* addPost() {
+function* addPost(action) {
   try {
-    yield delay(2000);
-    yield put({
-      type: ADD_POST_SUCCESS,
-    });
+    console.log(action);
+    const result = yield call(addPostAPI, action.data);
+    if (result.data == 0) {
+      yield put({
+        type: ADD_POST_FAILURE,
+        error: alert('에러가 발생했습니다.'),
+      });
+    } else {
+      yield put({
+        type: ADD_POST_SUCCESS,
+      });
+    }
   } catch (e) {
     yield put({
       type: ADD_POST_FAILURE,

@@ -24,36 +24,51 @@ public class UserController {
 
     @GetMapping("/")
     public UserBean LoadUser(HttpServletResponse res, HttpSession session) {
-        String userId = (String) session.getAttribute("rslc");
-        System.out.println(userId);
-        if (userId == null) {
-            Cookie rslc = new Cookie("rslc", null);
-            rslc.setMaxAge(0);
-            rslc.setPath("/");
-            res.addCookie(rslc);
-        }
+        try {
+            String userId = (String) session.getAttribute("rslc");
+            if (userId == null) {
+                Cookie rslc = new Cookie("rslc", null);
+                rslc.setMaxAge(0);
+                rslc.setPath("/");
+                res.addCookie(rslc);
+            }
         UserBean user = um.checkUser(userId);
         return user;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @PostMapping("/checkId")
+    public int CheckId(@RequestBody UserBean ub){
+        try {
+            int result = um.checkUserId(ub.getUserId());
+            return result;
+        } catch (Exception e) {
+            System.out.println(e);
+            return 0;
+        }
     }
 
     @PostMapping("/login")
     public UserBean Login(HttpSession session, @RequestBody UserBean ub) {
-        UserBean user = um.checkUser(ub.getUserId());
-        if (user != null) {
-            if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
-                user.setPassword("");
-                session.setAttribute("rslc", user.getId());
-                return user;
+        try {
+            UserBean user = um.checkUser(ub.getUserId());
+            if (user != null) {
+                if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
+                    user.setPassword("");
+                    session.setAttribute("rslc", user.getId());
+                    return user;
+                }
             }
+            return null;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
         }
-        return null;
     }
-
-    // @PostMapping("/logout")
-    // public void Logout(HttpSession session) {
-    // session.invalidate();
-    // }
-
+    
     @PostMapping("/")
     public int Signup(@RequestBody UserBean ub) {
         try {
@@ -71,8 +86,6 @@ public class UserController {
         userId = "test12";
         try {
             System.out.println(um.checkUserId(userId));
-            // System.out.println(BCrypt.checkpw("a1111111!",
-            // um.checkUserPassword(userId)));
             return 1;
         } catch (Exception e) {
             System.out.println(e);

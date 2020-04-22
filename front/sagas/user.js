@@ -14,13 +14,14 @@ import {
   LOAD_USER_FAILURE,
   LOAD_USER_REQUEST,
   LOG_OUT_FAILURE,
+  CHECK_ID_REQUEST,
+  CHECK_ID_SUCCESS,
+  CHECK_ID_FAILURE,
 } from '../reducers/user';
-
-axios.defaults.baseURL = 'http://localhost:3065/api/user';
 
 function loginAPI(loginData) {
   // 서버에 요청을 보내는 부분
-  return axios.post('/login', loginData, {
+  return axios.post('/user/login', loginData, {
     withCredentials: true,
   });
 }
@@ -61,7 +62,7 @@ function* watchLogin() {
 
 function signUpAPI(signUpData) {
   // 서버에 요청을 보내는 부분
-  return axios.post('/', signUpData);
+  return axios.post('/user', signUpData);
 }
 
 function* signUp(action) {
@@ -98,7 +99,7 @@ function* watchSignUp() {
 
 function logoutAPI() {
   // 서버에 요청을 보내는 부분
-  return axios.post('/logout', {}, { withCredentials: true });
+  return axios.post('/user/logout', {}, { withCredentials: true });
 }
 
 function* logout() {
@@ -123,7 +124,7 @@ function* watchLogout() {
 
 function loadUserAPI() {
   // 서버에 요청을 보내는 부분
-  return axios.get('/', { withCredentials: true });
+  return axios.get('/user/', { withCredentials: true });
 }
 
 function* loadUser() {
@@ -151,10 +152,36 @@ function* watchLoadUser() {
   yield takeEvery(LOAD_USER_REQUEST, loadUser);
 }
 
+function checkIdAPI(checkIdData) {
+  return axios.post('/user/checkId', checkIdData);
+}
+
+function* checkId(action) {
+  try {
+    const result = yield call(checkIdAPI, action.data);
+    yield put({
+      // put은 dispatch 동일
+      type: CHECK_ID_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    // loginAPI 실패
+    yield put({
+      type: CHECK_ID_FAILURE,
+      error: e,
+    });
+  }
+}
+
+function* watchCheckId() {
+  yield takeEvery(CHECK_ID_REQUEST, checkId);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchLogin),
     fork(watchSignUp),
+    fork(watchCheckId),
     fork(watchLogout),
     fork(watchLoadUser),
   ]);
