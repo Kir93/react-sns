@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.reactSNS.Beans.UserBean;
+import kr.reactSNS.app.Beans.UserBean;
 import kr.reactSNS.app.mapper.UserMapper;
 
 @RestController
@@ -24,16 +24,16 @@ public class UserController {
 
     @GetMapping("/")
     public UserBean LoadUser(HttpServletResponse res, HttpSession session) {
-            String userId = (String) session.getAttribute("rslc");
-            System.out.println(userId);
-            if(userId == null){
-                Cookie rslc = new Cookie("rslc", null);
-                rslc.setMaxAge(0);
-                rslc.setPath("/");
-                res.addCookie(rslc);
-            }
-            UserBean user = um.checkUser(userId);
-            return user;
+        String userId = (String) session.getAttribute("rslc");
+        System.out.println(userId);
+        if (userId == null) {
+            Cookie rslc = new Cookie("rslc", null);
+            rslc.setMaxAge(0);
+            rslc.setPath("/");
+            res.addCookie(rslc);
+        }
+        UserBean user = um.checkUser(userId);
+        return user;
     }
 
     @PostMapping("/login")
@@ -42,7 +42,7 @@ public class UserController {
         if (user != null) {
             if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
                 user.setPassword("");
-                session.setAttribute("rslc", user.getUserId());
+                session.setAttribute("rslc", user.getId());
                 return user;
             }
         }

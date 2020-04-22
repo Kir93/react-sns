@@ -31,13 +31,13 @@ const PostForm = () => {
   const onSubmitForm = useCallback(
     (e) => {
       e.preventDefault();
-      if (!text) {
+      if (!text || !text.trim()) {
         return alert('글자를 입력하세요.');
       }
       return dispatch({
         type: ADD_POST_REQUEST,
         data: {
-          text,
+          content: text,
         },
       });
     },

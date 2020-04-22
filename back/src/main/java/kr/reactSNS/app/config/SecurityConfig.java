@@ -26,8 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("http://localhost:3000/").usernameParameter("userId").passwordParameter("password")
                 .permitAll();
 
-        http.logout().logoutUrl("/api/user/logout").deleteCookies("rslc").logoutSuccessUrl("api/user/").invalidateHttpSession(true)
-                .clearAuthentication(true).permitAll();
+        http.logout().logoutUrl("/api/user/logout").deleteCookies("rslc").logoutSuccessUrl("/api/user/")
+                .invalidateHttpSession(true).clearAuthentication(true).permitAll();
 
         http.sessionManagement().maximumSessions(1).expiredUrl("/api/user/").maxSessionsPreventsLogin(true);
         ;

@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import kr.reactSNS.Beans.UserBean;
+import kr.reactSNS.app.Beans.UserBean;
 
 @Mapper
 public interface UserMapper {

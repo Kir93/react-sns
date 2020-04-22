@@ -1,4 +1,4 @@
-package kr.reactSNS.Beans;
+package kr.reactSNS.app.Beans;
 
 public class UserBean {
     int id;
