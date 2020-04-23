@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.reactSNS.app.Beans.HashtagBean;
 import kr.reactSNS.app.Beans.PostBean;
 import kr.reactSNS.app.mapper.PostMapper;
 
@@ -35,21 +36,14 @@ public class PostController {
             pb.setUserId(userId);
             pm.AddPost(pb);
             int postId = pb.getId();
-            int hashtagId;
             while (matcher.find()) {
                 hashtags[x] = matcher.group(0).substring(1).toLowerCase();
-                System.out.println(hashtags[x]);
-                hashtagId = pm.CheckHashtag(hashtags[x]);
-                System.out.println(hashtagId);
-                if (hashtagId == 0) {
+                HashtagBean hb = pm.CheckHashtag(hashtags[x]);
+                hb.setName(hashtags[x]);
+                if (hb.getId() == 0) {
                     System.out.println("들어옴");
-                    Object test = pm.InsertHashtag(hashtags[x]);
-                    System.out.println(test);
-                    System.out.println(hashtags[x]);
                 }
-                System.out.println(postId);
-                System.out.println(hashtagId);
-                pm.AddPostHashtag(postId, hashtagId);
+                pm.AddPostHashtag(postId, hb.getId());
                 x++;
             }
             PostBean newPost = pm.SelectPost(postId);
