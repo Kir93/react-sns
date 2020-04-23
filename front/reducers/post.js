@@ -1,16 +1,5 @@
 export const initialState = {
-  mainPosts: [
-    {
-      id: 1,
-      User: {
-        id: 1,
-        nickname: '키르',
-      },
-      content: '첫 번째 게시글',
-      img: 'https://dimg.donga.com/wps/NEWS/IMAGE/2019/12/22/98915688.2.jpg',
-      Comments: [],
-    },
-  ], // 화면에 보일 포스트들
+  mainPosts: [], // 화면에 보일 포스트들
   imagePaths: [], // 미리보기 이미지 경로
   addPostErrorReason: '', // 포스트 업로드 실패 사유
   isAddingPost: false, // 포스트 업로드 중
@@ -22,10 +11,7 @@ export const initialState = {
 
 const dummyPost = {
   id: 2,
-  User: {
-    id: 1,
-    nickname: '키르',
-  },
+  nickname: '키르',
   content: '나는 더미입니다.',
   Comments: [],
 };
@@ -88,6 +74,23 @@ export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case LOAD_MAIN_POSTS_REQUEST: {
+      return {
+        ...state,
+        mainPosts: [],
+      };
+    }
+    case LOAD_MAIN_POSTS_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: action.data,
+      };
+    }
+    case LOAD_MAIN_POSTS_FAILURE: {
+      return {
+        ...state,
+      };
+    }
     case ADD_POST_REQUEST: {
       return {
         ...state,

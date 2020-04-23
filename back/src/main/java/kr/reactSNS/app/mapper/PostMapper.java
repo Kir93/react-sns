@@ -14,11 +14,17 @@ public interface PostMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     public int AddPost(PostBean pb);
 
-    @Select("SELECT id FROM Hashtags WHERE `name`=#{name}")
+    @Select("SELECT p.*, u.nickname FROM Posts AS p JOIN Users AS u ON (p.UserId = u.id) WHERE p.id=#{id}")
+    public PostBean SelectPost(int id);
+
+    @Select("SELECT IFNULL(id, COUNT(id)) AS id FROM Hashtags WHERE `name`=#{name}")
     public int CheckHashtag(String name);
 
-    @Insert("INSERT INTO HashTags (name) value (#{name})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Insert("INSERT INTO Hashtags (name) value (#{name})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public int InsertHashtag(String name);
+
+    @Insert("INSERT INTO `PostHashtag` (`HashtagId`, `PostId`) VALUES (#{HashtagId}, #{PostId})")
+    public int AddPostHashtag(int PostId, int HashtagId);
 
 }

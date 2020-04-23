@@ -25,15 +25,15 @@ public class UserController {
     @GetMapping("/")
     public UserBean LoadUser(HttpServletResponse res, HttpSession session) {
         try {
-            String userId = (String) session.getAttribute("rslc");
-            if (userId == null) {
+            int userId = (int) session.getAttribute("rslc");
+            UserBean user = um.checkUser(userId);
+            if (user == null) {
                 Cookie rslc = new Cookie("rslc", null);
                 rslc.setMaxAge(0);
                 rslc.setPath("/");
                 res.addCookie(rslc);
             }
-        UserBean user = um.checkUser(userId);
-        return user;
+            return user;
         } catch (Exception e) {
             System.out.println(e);
             return null;
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/checkId")
-    public int CheckId(@RequestBody UserBean ub){
+    public int CheckId(@RequestBody UserBean ub) {
         try {
             int result = um.checkUserId(ub.getUserId());
             return result;
@@ -54,7 +54,8 @@ public class UserController {
     @PostMapping("/login")
     public UserBean Login(HttpSession session, @RequestBody UserBean ub) {
         try {
-            UserBean user = um.checkUser(ub.getUserId());
+            int result = um.checkUserId(ub.getUserId());
+            UserBean user = um.checkUser(result);
             if (user != null) {
                 if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
                     user.setPassword("");
@@ -68,7 +69,7 @@ public class UserController {
             return null;
         }
     }
-    
+
     @PostMapping("/")
     public int Signup(@RequestBody UserBean ub) {
         try {

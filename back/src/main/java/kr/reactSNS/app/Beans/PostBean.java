@@ -8,6 +8,7 @@ public class PostBean {
     String updatedAt;
     int UserId;
     int RetweetId;
+    String nickname;
 
     public int getId() {
         return id;
@@ -64,4 +65,13 @@ public class PostBean {
     public void setRetweetId(int retweetId) {
         RetweetId = retweetId;
     }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
 }
