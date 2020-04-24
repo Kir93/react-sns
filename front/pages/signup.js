@@ -49,7 +49,6 @@ const signup = () => {
   const [nickname, onChangeNickname] = useInput('');
 
   const [id, setId] = useState('');
-  const [idError, setIdError] = useState(false);
   const [idOk, setIdOk] = useState(false);
 
   const [password, setPassword] = useState('');
@@ -58,7 +57,7 @@ const signup = () => {
   const [passwordOk, setPasswordOk] = useState(false);
 
   const dispatch = useDispatch();
-  const { isSigningUp, me, checkId } = useSelector((state) => state.user);
+  const { isSigningUp, me, idError } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (me) {
@@ -77,15 +76,14 @@ const signup = () => {
     return true;
   }, [id, nickname, password, passwordCheck, passwordError, idError]);
 
-  const onCheckId = useCallback(async () => {
-    await dispatch({
+  const onCheckId = useCallback(() => {
+    dispatch({
       type: CHECK_ID_REQUEST,
       data: {
         userId: id,
       },
     });
-    setIdError(checkId === 1 ? false : true);
-  }, [id, idError]);
+  }, [id]);
 
   const onSubmit = useCallback(
     (e) => {

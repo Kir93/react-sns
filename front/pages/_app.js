@@ -9,7 +9,7 @@ import createSagaMiddleware from 'redux-saga';
 import reducer from '../reducers';
 import rootSaga from '../sagas';
 
-const ReactSNS = ({ Component, store }) => {
+const ReactSNS = ({ Component, store, pageProps }) => {
   return (
     <Provider store={store}>
       <Head>
@@ -20,15 +20,26 @@ const ReactSNS = ({ Component, store }) => {
         />
       </Head>
       <AppLayout>
-        <Component />
+        <Component {...pageProps} />
       </AppLayout>
     </Provider>
   );
 };
 
-ReactSNS.PropTypes = {
+ReactSNS.propTypes = {
   Component: PropTypes.elementType.isRequired,
   store: PropTypes.object.isRequired,
+  pageProps: PropTypes.object.isRequired,
+};
+
+ReactSNS.getInitialProps = async (context) => {
+  console.log(context);
+  const { ctx, Component } = context;
+  let pageProps = {};
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
+  return { pageProps };
 };
 
 const configureStore = (initialState, options) => {

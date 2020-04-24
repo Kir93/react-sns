@@ -1,5 +1,7 @@
 package kr.reactSNS.app.controller;
 
+import java.util.Collection;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -7,11 +9,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.reactSNS.app.Beans.PostBean;
 import kr.reactSNS.app.Beans.UserBean;
 import kr.reactSNS.app.mapper.UserMapper;
 
@@ -25,14 +29,19 @@ public class UserController {
     @GetMapping("/")
     public UserBean LoadUser(HttpServletResponse res, HttpSession session) {
         try {
-            int userId = (int) session.getAttribute("rslc");
-            UserBean user = um.checkUser(userId);
-            if (user == null) {
+            Object userId = session.getAttribute("rslc");
+            if (userId == null) {
                 Cookie rslc = new Cookie("rslc", null);
                 rslc.setMaxAge(0);
                 rslc.setPath("/");
                 res.addCookie(rslc);
+                return null;
             }
+            UserBean user = um.checkUser((int) userId);
+            System.out.println(user.getFollower());
+            user.setPosts(user.getPost() != null ? user.getPost().length : 0);
+            user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
+            user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
             return user;
         } catch (Exception e) {
             System.out.println(e);
@@ -43,8 +52,11 @@ public class UserController {
     @PostMapping("/checkId")
     public int CheckId(@RequestBody UserBean ub) {
         try {
-            int result = um.checkUserId(ub.getUserId());
-            return result;
+            Object result = um.checkUserId(ub.getUserId());
+            if (result == null) {
+                return 0;
+            }
+            return (int) result;
         } catch (Exception e) {
             System.out.println(e);
             return 0;
@@ -52,21 +64,26 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserBean Login(HttpSession session, @RequestBody UserBean ub) {
+    public Object Login(HttpSession session, @RequestBody UserBean ub) {
         try {
-            int result = um.checkUserId(ub.getUserId());
-            UserBean user = um.checkUser(result);
-            if (user != null) {
+            System.out.println(ub.getUserId());
+            Object userId = um.checkUserId(ub.getUserId());
+            System.out.println(userId);
+            if (userId != null) {
+                UserBean user = um.checkUser((int) userId);
                 if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
                     user.setPassword("");
                     session.setAttribute("rslc", user.getId());
+                    user.setPosts(user.getPost() != null ? user.getPost().length : 0);
+                    user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
+                    user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
                     return user;
                 }
             }
-            return null;
+            return "로그인 실패!";
         } catch (Exception e) {
             System.out.println(e);
-            return null;
+            return e;
         }
     }
 
@@ -82,12 +99,25 @@ public class UserController {
         }
     }
 
-    @GetMapping("/test")
-    public Object CheckUserId(String userId) {
-        userId = "test12";
+    @GetMapping("/{id}")
+    public Object LoadOtherUser(@PathVariable int id) {
         try {
-            System.out.println(um.checkUserId(userId));
-            return 1;
+            UserBean ub = um.checkUser(id);
+            ub.setPosts(ub.getPost() != null ? ub.getPost().length : 0);
+            ub.setFollowings(ub.getFollowing() != null ? ub.getFollowing().length : 0);
+            ub.setFollowers(ub.getFollower() != null ? ub.getFollower().length : 0);
+            return ub;
+        } catch (Exception e) {
+            System.out.println(e);
+            return e;
+        }
+    }
+
+    @GetMapping("/{id}/posts")
+    public Object CheckUserId(@PathVariable int id) {
+        try {
+            Collection<PostBean> loadUserPosts = um.LoadUserPosts(id);
+            return loadUserPosts;
         } catch (Exception e) {
             System.out.println(e);
             return e;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Button, Icon, Avatar, Form, Input, List, Comment } from 'antd';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
@@ -58,9 +59,28 @@ const PostCard = ({ post }) => {
         extra={<Button>팔로우</Button>}
       >
         <Card.Meta
-          avatar={<Avatar>{post.nickname[0]}</Avatar>}
+          avatar={
+            <Link href={`/user/${post.userId}/posts`}>
+              <a>
+                <Avatar>{post.nickname[0]}</Avatar>
+              </a>
+            </Link>
+          }
           title={post.nickname}
-          description={post.content}
+          description={
+            <div>
+              {post.content.split(/(#[^\s]+)/g).map((v) => {
+                if (v.match(/#[^\s]+/)) {
+                  return (
+                    <Link href={`/hashtag/${v.slice(1)}`} key={v}>
+                      <a>{v}</a>
+                    </Link>
+                  );
+                }
+                return v;
+              })}
+            </div>
+          }
         />
       </Card>
       {commentFormOpend && (
@@ -84,8 +104,14 @@ const PostCard = ({ post }) => {
             renderItem={(item) => (
               <li>
                 <Comment
-                  author={item.User.nickname}
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  author={item.nickname}
+                  avatar={
+                    <Link href={`/user/${item.userId}/posts`}>
+                      <a>
+                        <Avatar>{item.nickname[0]}</Avatar>
+                      </a>
+                    </Link>
+                  }
                   content={item.content}
                   datatime={item.createdAt}
                 />

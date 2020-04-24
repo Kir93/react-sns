@@ -17,7 +17,7 @@ export const initialState = {
   followingList: [], // 팔로잉 리스트
   followerList: [], // 팔로워 리스트
   userInfo: null, // 남의 정보
-  checkId: 0,
+  idError: false,
 };
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
@@ -104,12 +104,13 @@ export default (state = initialState, action) => {
     case CHECK_ID_REQUEST: {
       return {
         ...state,
+        idError: false,
       };
     }
     case CHECK_ID_SUCCESS: {
       return {
         ...state,
-        checkId: action.data,
+        idError: action.data === 0 ? false : true,
       };
     }
     case CHECK_ID_FAILURE: {
@@ -145,9 +146,15 @@ export default (state = initialState, action) => {
       };
     }
     case LOAD_USER_SUCCESS: {
+      if (action.me) {
+        return {
+          ...state,
+          me: action.data,
+        };
+      }
       return {
         ...state,
-        me: action.data,
+        userInfo: action.data,
       };
     }
     case LOAD_USER_FAILURE: {

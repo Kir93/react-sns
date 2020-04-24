@@ -18,9 +18,6 @@ public interface PostMapper {
     @Select("SELECT p.*, u.nickname FROM Posts AS p JOIN Users AS u ON (p.UserId = u.id) WHERE p.id=#{id}")
     public PostBean SelectPost(int id);
 
-    @Select("SELECT IFNULL(id, COUNT(id)) AS id FROM Hashtags WHERE `name`=#{name}")
-    public HashtagBean CheckHashtag(String name);
-
     @Insert("INSERT INTO Hashtags (name) value (#{name})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public int InsertHashtag(HashtagBean hb);

@@ -22,12 +22,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("*").permitAll();
 
-        http.formLogin().loginPage("http://localhost:3000/").loginProcessingUrl("api/user/login")
-                .defaultSuccessUrl("http://localhost:3000/").usernameParameter("userId").passwordParameter("password")
-                .permitAll();
+        http.formLogin().loginPage("http://localhost:3060").loginProcessingUrl("api/user/login")
+                .usernameParameter("userId").passwordParameter("password").permitAll();
 
-        http.logout().logoutUrl("/api/user/logout").deleteCookies("rslc").logoutSuccessUrl("/api/user/")
-                .invalidateHttpSession(true).clearAuthentication(true).permitAll();
+        http.logout().logoutUrl("/api/user/logout").deleteCookies("rslc").invalidateHttpSession(true)
+                .logoutSuccessUrl("/api/user/").clearAuthentication(true).permitAll();
 
         http.sessionManagement().maximumSessions(1).expiredUrl("/api/user/").maxSessionsPreventsLogin(true);
         ;
@@ -37,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:3060");
         configuration.addAllowedMethod("*");
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "TOKEN_ID", "X-Requested-With", "Authorization",
                 "Content-Type", "Content-Length", "Cache-Control", "Set-Cookie"));

@@ -1,4 +1,11 @@
-import { all, delay, fork, put, takeEvery, call } from 'redux-saga/effects';
+import {
+  all,
+  fork,
+  put,
+  takeEvery,
+  takeLatest,
+  call,
+} from 'redux-saga/effects';
 import Router from 'next/router';
 import axios from 'axios';
 import {
@@ -29,11 +36,8 @@ function loginAPI(loginData) {
 function* login(action) {
   try {
     const result = yield call(loginAPI, action.data);
-    if (result.data.posts === null) result.data.posts = [];
-    if (result.data.followings === null) result.data.followings = [];
-    if (result.data.followers === null) result.data.followers = [];
-    if (result.data !== '') {
-      yield put({
+    if (result.data.id > 0) {
+      return yield put({
         // put은 dispatch 동일
         type: LOG_IN_SUCCESS,
         data: result.data,
@@ -43,7 +47,7 @@ function* login(action) {
       return yield put({
         // put은 dispatch 동일
         type: LOG_IN_FAILURE,
-        error: e,
+        error: result.data,
       });
     }
   } catch (e) {
@@ -122,23 +126,22 @@ function* watchLogout() {
   yield takeEvery(LOG_OUT_REQUEST, logout);
 }
 
-function loadUserAPI() {
+function loadUserAPI(userId) {
   // 서버에 요청을 보내는 부분
-  return axios.get('/user/', { withCredentials: true });
+  return axios.get(userId ? `/user/${userId}/` : '/user/', {
+    withCredentials: true,
+  });
 }
 
-function* loadUser() {
+function* loadUser(action) {
   try {
-    const result = yield call(loadUserAPI);
-    if (result.data.posts === null) result.data.posts = [];
-    if (result.data.followings === null) result.data.followings = [];
-    if (result.data.followers === null) result.data.followers = [];
+    const result = yield call(loadUserAPI, action.data);
     yield put({
       // put은 dispatch 동일
       type: LOAD_USER_SUCCESS,
       data: result.data,
+      me: !action.data,
     });
-    Router.push('/');
   } catch (e) {
     // loginAPI 실패
     yield put({
@@ -174,7 +177,7 @@ function* checkId(action) {
 }
 
 function* watchCheckId() {
-  yield takeEvery(CHECK_ID_REQUEST, checkId);
+  yield takeLatest(CHECK_ID_REQUEST, checkId);
 }
 
 export default function* userSaga() {

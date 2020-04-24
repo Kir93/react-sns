@@ -9,23 +9,6 @@ export const initialState = {
   commentAdded: false,
 };
 
-const dummyPost = {
-  id: 2,
-  nickname: '키르',
-  content: '나는 더미입니다.',
-  Comments: [],
-};
-
-const dummyComment = {
-  id: 1,
-  User: {
-    id: 1,
-    nickname: '키르',
-  },
-  createdAt: new Date(),
-  content: '더미 댓글입니다.',
-};
-
 export const LOAD_MAIN_POSTS_REQUEST = 'LOAD_MAIN_POSTS_REQUEST';
 export const LOAD_MAIN_POSTS_SUCCESS = 'LOAD_MAIN_POSTS_SUCCESS';
 export const LOAD_MAIN_POSTS_FAILURE = 'LOAD_MAIN_POSTS_FAILURE';
@@ -74,18 +57,24 @@ export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case LOAD_HASHTAG_POSTS_REQUEST:
+    case LOAD_USER_POSTS_REQUEST:
     case LOAD_MAIN_POSTS_REQUEST: {
       return {
         ...state,
         mainPosts: [],
       };
     }
+    case LOAD_HASHTAG_POSTS_SUCCESS:
+    case LOAD_USER_POSTS_SUCCESS:
     case LOAD_MAIN_POSTS_SUCCESS: {
       return {
         ...state,
         mainPosts: action.data,
       };
     }
+    case LOAD_HASHTAG_POSTS_FAILURE:
+    case LOAD_USER_POSTS_FAILURE:
     case LOAD_MAIN_POSTS_FAILURE: {
       return {
         ...state,
@@ -127,7 +116,7 @@ export default (state = initialState, action) => {
         (v) => v.id === action.data.postId,
       );
       const post = state.mainPosts[postIndex];
-      const Comments = [...post.Comments, dummyComment];
+      const Comments = [...post.Comments1];
       const mainPosts = [...state.mainPosts];
       mainPosts[postIndex] = { ...post, Comments };
       return {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.reactSNS.app.Beans.HashtagBean;
 import kr.reactSNS.app.Beans.PostBean;
+import kr.reactSNS.app.mapper.HashtagMapper;
 import kr.reactSNS.app.mapper.PostMapper;
 
 @RestController
@@ -21,6 +22,9 @@ public class PostController {
 
     @Autowired
     private PostMapper pm;
+
+    @Autowired
+    private HashtagMapper hm;
 
     @PostMapping("/")
     public PostBean Post(@RequestBody PostBean pb, HttpSession session) {
@@ -38,7 +42,7 @@ public class PostController {
             int postId = pb.getId();
             while (matcher.find()) {
                 hashtags[x] = matcher.group(0).substring(1).toLowerCase();
-                HashtagBean hb = pm.CheckHashtag(hashtags[x]);
+                HashtagBean hb = hm.CheckHashtag(hashtags[x]);
                 hb.setName(hashtags[x]);
                 if (hb.getId() == 0) {
                     pm.InsertHashtag(hb);
