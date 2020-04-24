@@ -41,7 +41,7 @@ public class PostController {
                 HashtagBean hb = pm.CheckHashtag(hashtags[x]);
                 hb.setName(hashtags[x]);
                 if (hb.getId() == 0) {
-                    System.out.println("들어옴");
+                    pm.InsertHashtag(hb);
                 }
                 pm.AddPostHashtag(postId, hb.getId());
                 x++;
