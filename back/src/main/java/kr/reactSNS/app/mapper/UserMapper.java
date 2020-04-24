@@ -15,7 +15,13 @@ public interface UserMapper {
     @Select("select id from Users where userId=#{userId}")
     public Object checkUserId(String userId);
 
-    @Select("SELECT u.*, GROUP_CONCAT(DISTINCT p.id) AS `Post`, GROUP_CONCAT(DISTINCT fer.followingId) AS `Following`, GROUP_CONCAT(DISTINCT fing.followerId) AS `Follower` FROM Users AS u JOIN Posts AS p ON (u.id = p.UserId) JOIN Follow AS fer ON (u.id = fer.followerId) JOIN Follow AS fing ON (u.id = fing.followingId) WHERE u.id = #{id}")
+    @Select("SELECT u.*, GROUP_CONCAT(DISTINCT p.id) Post," +
+    "GROUP_CONCAT(DISTINCT fing.followerId) Following," +
+    "GROUP_CONCAT(DISTINCT fer.followingId) Follower FROM Users AS u " +
+    "JOIN Posts AS p ON (u.id = p.UserId) " +
+    "JOIN Follow AS fing ON (u.id = fing.followingId) " +
+    "JOIN Follow AS fer ON (u.id = fer.followerId) " +
+    "WHERE u.id = #{id}")
     public UserBean checkUser(int id);
 
     @Insert("insert into Users (userId, nickname, password) value (#{userId}, #{nickname}, #{password})")

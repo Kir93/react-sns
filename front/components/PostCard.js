@@ -60,7 +60,10 @@ const PostCard = ({ post }) => {
       >
         <Card.Meta
           avatar={
-            <Link href={`/user/${post.userId}/posts`}>
+            <Link
+              href={{ pathname: '/user', query: { id: post.userId } }}
+              as={`/user/${post.userId}/posts`}
+            >
               <a>
                 <Avatar>{post.nickname[0]}</Avatar>
               </a>
@@ -72,7 +75,14 @@ const PostCard = ({ post }) => {
               {post.content.split(/(#[^\s]+)/g).map((v) => {
                 if (v.match(/#[^\s]+/)) {
                   return (
-                    <Link href={`/hashtag/${v.slice(1)}`} key={v}>
+                    <Link
+                      href={{
+                        pathname: '/hashtag',
+                        query: { tag: v.slice(1) },
+                      }}
+                      as={`/hashtag/${v.slice(1)}`}
+                      key={v}
+                    >
                       <a>{v}</a>
                     </Link>
                   );
@@ -106,7 +116,10 @@ const PostCard = ({ post }) => {
                 <Comment
                   author={item.nickname}
                   avatar={
-                    <Link href={`/user/${item.userId}/posts`}>
+                    <Link
+                      href={{ pathname: '/user', query: { id: item.userId } }}
+                      as={`/user/${item.userId}/posts`}
+                    >
                       <a>
                         <Avatar>{item.nickname[0]}</Avatar>
                       </a>

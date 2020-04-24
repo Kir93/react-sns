@@ -8,9 +8,9 @@ public class UserBean {
     String delYn;
     String createdAt;
     String updatedAt;
-    String[] Post;
-    String[] Following;
-    String[] Follower;
+    String[] post;
+    String[] following;
+    String[] follower;
     int Posts;
     int Followings;
     int Followers;
@@ -72,27 +72,27 @@ public class UserBean {
     }
 
     public String[] getPost() {
-        return Post;
+        return post;
     }
 
     public void setPost(String post) {
-        Post = post.split(",");
+        this.post = post.split(",");
     }
 
     public String[] getFollowing() {
-        return Following;
+        return following;
     }
 
     public void setFollowing(String following) {
-        Following = following.split(",");
+        this.following = following.split(",");
     }
 
     public String[] getFollower() {
-        return Follower;
+        return follower;
     }
 
     public void setFollower(String follower) {
-        Follower = follower.split(",");
+        this.follower = follower.split(",");
     }
 
     public int getPosts() {

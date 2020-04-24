@@ -38,10 +38,13 @@ public class UserController {
                 return null;
             }
             UserBean user = um.checkUser((int) userId);
-            System.out.println(user.getFollower());
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
+            user.setPost("");
+            user.setFollowing("");
+            user.setFollower("");
+            user.setPassword("");
             return user;
         } catch (Exception e) {
             System.out.println(e);
@@ -77,6 +80,10 @@ public class UserController {
                     user.setPosts(user.getPost() != null ? user.getPost().length : 0);
                     user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
                     user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
+                    user.setPost("");
+                    user.setFollowing("");
+                    user.setFollower("");
+                    user.setPassword("");
                     return user;
                 }
             }
@@ -102,11 +109,15 @@ public class UserController {
     @GetMapping("/{id}")
     public Object LoadOtherUser(@PathVariable int id) {
         try {
-            UserBean ub = um.checkUser(id);
-            ub.setPosts(ub.getPost() != null ? ub.getPost().length : 0);
-            ub.setFollowings(ub.getFollowing() != null ? ub.getFollowing().length : 0);
-            ub.setFollowers(ub.getFollower() != null ? ub.getFollower().length : 0);
-            return ub;
+            UserBean user = um.checkUser(id);
+            user.setPosts(user.getPost() != null ? user.getPost().length : 0);
+            user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
+            user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
+            user.setPost("");
+            user.setFollowing("");
+            user.setFollower("");
+            user.setPassword("");
+            return user;
         } catch (Exception e) {
             System.out.println(e);
             return e;
