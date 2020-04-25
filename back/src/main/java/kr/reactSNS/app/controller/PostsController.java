@@ -18,13 +18,13 @@ public class PostsController {
     PostsMapper pm;
 
     @GetMapping("/")
-    public Collection<PostBean> Posts() {
+    public Object Posts() {
         try {
             Collection<PostBean> loadPosts = pm.LoadMainPosts();
             return loadPosts;
         } catch (Exception e) {
-            System.out.println(e);
-            return null;
+            System.err.println(e);
+            return e;
         }
     }
 }

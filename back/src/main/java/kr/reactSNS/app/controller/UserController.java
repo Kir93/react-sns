@@ -27,7 +27,7 @@ public class UserController {
     private UserMapper um;
 
     @GetMapping("/")
-    public UserBean LoadUser(HttpServletResponse res, HttpSession session) {
+    public Object LoadUser(HttpServletResponse res, HttpSession session) {
         try {
             Object userId = session.getAttribute("rslc");
             if (userId == null) {
@@ -35,7 +35,7 @@ public class UserController {
                 rslc.setMaxAge(0);
                 rslc.setPath("/");
                 res.addCookie(rslc);
-                return null;
+                return "로그인이 필요합니다.";
             }
             UserBean user = um.checkUser((int) userId);
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
@@ -47,31 +47,29 @@ public class UserController {
             user.setPassword("");
             return user;
         } catch (Exception e) {
-            System.out.println(e);
-            return null;
+            System.err.println(e);
+            return e;
         }
     }
 
     @PostMapping("/checkId")
-    public int CheckId(@RequestBody UserBean ub) {
+    public Object CheckId(@RequestBody UserBean ub) {
         try {
             Object result = um.checkUserId(ub.getUserId());
             if (result == null) {
-                return 0;
+                return "중복된 아이디가 없습니다.";
             }
             return (int) result;
         } catch (Exception e) {
-            System.out.println(e);
-            return 0;
+            System.err.println(e);
+            return e;
         }
     }
 
     @PostMapping("/login")
     public Object Login(HttpSession session, @RequestBody UserBean ub) {
         try {
-            System.out.println(ub.getUserId());
             Object userId = um.checkUserId(ub.getUserId());
-            System.out.println(userId);
             if (userId != null) {
                 UserBean user = um.checkUser((int) userId);
                 if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
@@ -87,22 +85,21 @@ public class UserController {
                     return user;
                 }
             }
-            return "로그인 실패!";
+            return "아이디와 패스워드를 재확인 후 실행하세요.";
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             return e;
         }
     }
 
     @PostMapping("/")
-    public int Signup(@RequestBody UserBean ub) {
+    public Object Signup(@RequestBody UserBean ub) {
         try {
             ub.setPassword(BCrypt.hashpw(ub.getPassword(), BCrypt.gensalt()));
             return um.signUp(ub);
-            // return Integer.toString(result);
         } catch (Exception e) {
-            System.out.println(e);
-            return 0;
+            System.err.println(e);
+            return e;
         }
     }
 
@@ -110,6 +107,9 @@ public class UserController {
     public Object LoadOtherUser(@PathVariable int id) {
         try {
             UserBean user = um.checkUser(id);
+            if(user == null){
+                return "존재하지 않는 사용자입니다.";
+            }
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
@@ -119,7 +119,7 @@ public class UserController {
             user.setPassword("");
             return user;
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             return e;
         }
     }
@@ -127,10 +127,14 @@ public class UserController {
     @GetMapping("/{id}/posts")
     public Object CheckUserId(@PathVariable int id) {
         try {
+            UserBean user = um.checkUser(id);
+            if(user==null){
+                return "존재하지 않는 사용자입니다.";
+            }
             Collection<PostBean> loadUserPosts = um.LoadUserPosts(id);
             return loadUserPosts;
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             return e;
         }
     }

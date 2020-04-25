@@ -1,18 +1,23 @@
 package kr.reactSNS.app.controller;
 
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.reactSNS.app.Beans.CommentBean;
 import kr.reactSNS.app.Beans.HashtagBean;
 import kr.reactSNS.app.Beans.PostBean;
+import kr.reactSNS.app.mapper.CommentMapper;
 import kr.reactSNS.app.mapper.HashtagMapper;
 import kr.reactSNS.app.mapper.PostMapper;
 
@@ -26,8 +31,11 @@ public class PostController {
     @Autowired
     private HashtagMapper hm;
 
+    @Autowired
+    private CommentMapper cm;
+
     @PostMapping("/")
-    public PostBean Post(@RequestBody PostBean pb, HttpSession session) {
+    public Object Post(@RequestBody PostBean pb, HttpSession session) {
         try {
             final String regex = "#[^\\s]+";
             final String string = pb.getContent();
@@ -53,8 +61,43 @@ public class PostController {
             PostBean newPost = pm.SelectPost(postId);
             return newPost;
         } catch (Exception e) {
-            System.out.println(e);
-            return null;
+            System.err.println(e);
+            return e;
+        }
+    }
+
+    @GetMapping("/{id}/comments")
+    public Object LoadComments(@PathVariable int id){
+        try {
+            PostBean post = pm.SelectPost(id);
+            if(post == null){
+                return "존재하지 않는 포스트입니다.";
+            }
+            Collection<CommentBean> comments = cm.LoadComments(id);
+            return comments;
+        } catch (Exception e) {
+            System.err.println(e);
+            return e;
+        }
+    }
+
+    @PostMapping("/{id}/comment")
+    public Object AddComment(@PathVariable int id, HttpSession session){
+        try {
+            Object user = (Object) session.getAttribute("rslc");
+            if(user == null){
+                return "로그인이 필요합니다.";
+            }
+            PostBean post = pm.SelectPost(id);
+            if(post == null){
+                return "존재하지 않는 포스트입니다.";
+            }
+            CommentBean comment = new CommentBean();
+            cm.AddComment(comment);
+            return comment;
+        } catch (Exception e) {
+            System.err.println(e);
+            return e;
         }
     }
 }

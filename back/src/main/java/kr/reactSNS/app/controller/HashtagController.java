@@ -26,7 +26,7 @@ public class HashtagController {
             Collection<PostBean> loadHashtagPosts = hm.LoadHashtagPosts(hb.getId());
             return loadHashtagPosts;
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             return e;
         }
     }
