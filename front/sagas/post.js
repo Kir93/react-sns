@@ -25,7 +25,7 @@ import {
 } from '../reducers/post';
 
 function loadMainPostAPI() {
-  return axios.get('/posts');
+  return axios.get('/posts/');
 }
 
 function* loadMainPost() {
