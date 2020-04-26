@@ -36,26 +36,18 @@ function loginAPI(loginData) {
 function* login(action) {
   try {
     const result = yield call(loginAPI, action.data);
-    if (result.data.id > 0) {
-      return yield put({
-        // put은 dispatch 동일
-        type: LOG_IN_SUCCESS,
-        data: result.data,
-      });
-    } else {
-      alert('로그인에 실패하셨습니다.');
-      return yield put({
-        // put은 dispatch 동일
-        type: LOG_IN_FAILURE,
-        error: result.data,
-      });
-    }
+    yield put({
+      // put은 dispatch 동일
+      type: LOG_IN_SUCCESS,
+      data: result.data,
+    });
   } catch (e) {
     // loginAPI 실패
+    alert('로그인에 실패하셨습니다.');
     console.error(e);
     yield put({
       type: LOG_IN_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }
@@ -72,27 +64,19 @@ function signUpAPI(signUpData) {
 function* signUp(action) {
   try {
     const result = yield call(signUpAPI, action.data);
-    if (result.data === 0) {
-      alert('회원가입에 실패하셨습니다.');
-      return yield put({
-        // put은 dispatch 동일
-        type: SIGN_UP_FAILURE,
-      });
-    }
-    if (result.data >= 1) {
-      alert('회원가입에 성공하셨습니다.');
-      yield put({
-        // put은 dispatch 동일
-        type: SIGN_UP_SUCCESS,
-      });
-      Router.push('/');
-    }
+    alert('회원가입에 성공하셨습니다.');
+    yield put({
+      // put은 dispatch 동일
+      type: SIGN_UP_SUCCESS,
+      data: result.data,
+    });
+    Router.push('/');
   } catch (e) {
     // loginAPI 실패
     console.log(result.data);
     yield put({
       type: SIGN_UP_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }
@@ -117,7 +101,7 @@ function* logout() {
     // loginAPI 실패
     yield put({
       type: LOG_OUT_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }
@@ -143,10 +127,9 @@ function* loadUser(action) {
       me: !action.data,
     });
   } catch (e) {
-    // loginAPI 실패
     yield put({
       type: LOAD_USER_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }
@@ -171,7 +154,7 @@ function* checkId(action) {
     // loginAPI 실패
     yield put({
       type: CHECK_ID_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }

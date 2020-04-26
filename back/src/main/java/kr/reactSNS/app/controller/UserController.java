@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ public class UserController {
     private UserMapper um;
 
     @GetMapping("/")
-    public Object LoadUser(HttpServletResponse res, HttpSession session) {
+    public ResponseEntity<Object> LoadUser(HttpServletResponse res, HttpSession session) {
         try {
             Object userId = session.getAttribute("rslc");
             if (userId == null) {
@@ -35,7 +36,7 @@ public class UserController {
                 rslc.setMaxAge(0);
                 rslc.setPath("/");
                 res.addCookie(rslc);
-                return "로그인이 필요합니다.";
+                return ResponseEntity.status(403).body("로그인 후 사용하세요.");
             }
             UserBean user = um.checkUser((int) userId);
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
@@ -45,29 +46,29 @@ public class UserController {
             user.setFollowing("");
             user.setFollower("");
             user.setPassword("");
-            return user;
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
             System.err.println(e);
-            return e;
+            return ResponseEntity.status(403).body(e);
         }
     }
 
     @PostMapping("/checkId")
-    public Object CheckId(@RequestBody UserBean ub) {
+    public ResponseEntity<Object> CheckId(@RequestBody UserBean ub) {
         try {
             Object result = um.checkUserId(ub.getUserId());
             if (result == null) {
-                return "중복된 아이디가 없습니다.";
+                return ResponseEntity.ok(0);
             }
-            return (int) result;
+            return ResponseEntity.ok((int) result);
         } catch (Exception e) {
             System.err.println(e);
-            return e;
+            return ResponseEntity.status(403).body(e);
         }
     }
 
     @PostMapping("/login")
-    public Object Login(HttpSession session, @RequestBody UserBean ub) {
+    public ResponseEntity<Object> Login(HttpSession session, @RequestBody UserBean ub) {
         try {
             Object userId = um.checkUserId(ub.getUserId());
             if (userId != null) {
@@ -82,33 +83,33 @@ public class UserController {
                     user.setFollowing("");
                     user.setFollower("");
                     user.setPassword("");
-                    return user;
+                    return ResponseEntity.ok(user);
                 }
             }
-            return "아이디와 패스워드를 재확인 후 실행하세요.";
+            return ResponseEntity.status(401).body("아이디와 패스워드를 재확인 후 실행하세요.");
         } catch (Exception e) {
             System.err.println(e);
-            return e;
+            return ResponseEntity.status(403).body(e);
         }
     }
 
     @PostMapping("/")
-    public Object Signup(@RequestBody UserBean ub) {
+    public ResponseEntity<Object> Signup(@RequestBody UserBean ub) {
         try {
             ub.setPassword(BCrypt.hashpw(ub.getPassword(), BCrypt.gensalt()));
-            return um.signUp(ub);
+            return ResponseEntity.ok(um.signUp(ub));
         } catch (Exception e) {
             System.err.println(e);
-            return e;
+            return ResponseEntity.status(403).body(e);
         }
     }
 
     @GetMapping("/{id}")
-    public Object LoadOtherUser(@PathVariable int id) {
+    public ResponseEntity<Object> LoadOtherUser(@PathVariable int id) {
         try {
             UserBean user = um.checkUser(id);
             if(user == null){
-                return "존재하지 않는 사용자입니다.";
+                return ResponseEntity.status(401).body("존재하지 않는 사용자입니다.");
             }
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
@@ -117,25 +118,25 @@ public class UserController {
             user.setFollowing("");
             user.setFollower("");
             user.setPassword("");
-            return user;
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
             System.err.println(e);
-            return e;
+            return ResponseEntity.status(403).body(e);
         }
     }
 
     @GetMapping("/{id}/posts")
-    public Object CheckUserId(@PathVariable int id) {
+    public ResponseEntity<Object> CheckUserId(@PathVariable int id) {
         try {
             UserBean user = um.checkUser(id);
             if(user==null){
-                return "존재하지 않는 사용자입니다.";
+                return ResponseEntity.status(401).body("존재하지 않는 사용자입니다.");
             }
             Collection<PostBean> loadUserPosts = um.LoadUserPosts(id);
-            return loadUserPosts;
+            return ResponseEntity.ok(loadUserPosts);
         } catch (Exception e) {
             System.err.println(e);
-            return e;
+            return ResponseEntity.status(403).body(e);
         }
     }
 }

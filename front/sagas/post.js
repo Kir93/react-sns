@@ -25,7 +25,6 @@ function loadMainPostAPI() {
 function* loadMainPost() {
   try {
     const result = yield call(loadMainPostAPI);
-    console.log(result);
     yield put({
       type: LOAD_MAIN_POSTS_SUCCESS,
       data: result.data,
@@ -33,7 +32,7 @@ function* loadMainPost() {
   } catch (e) {
     yield put({
       type: LOAD_MAIN_POSTS_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }
@@ -49,22 +48,14 @@ function addPostAPI(addPostData) {
 function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data);
-    console.log(result.data);
-    if (result.data == null) {
-      yield put({
-        type: ADD_POST_FAILURE,
-        error: alert('에러가 발생했습니다.'),
-      });
-    } else {
-      yield put({
-        type: ADD_POST_SUCCESS,
-        data: result.data,
-      });
-    }
+    yield put({
+      type: ADD_POST_SUCCESS,
+      data: result.data,
+    });
   } catch (e) {
     yield put({
       type: ADD_POST_FAILURE,
-      error: alert(e),
+      error: e.message,
     });
   }
 }
@@ -77,7 +68,7 @@ function addCommentAPI() {}
 
 function* addComment(action) {
   try {
-    yield delay(2000);
+    const result = yield call(addCommentAPI);
     yield put({
       type: ADD_COMMENT_SUCCESS,
       data: {
@@ -87,7 +78,7 @@ function* addComment(action) {
   } catch (e) {
     yield put({
       type: ADD_COMMENT_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }
@@ -103,7 +94,6 @@ function loadUserPostsAPI(id) {
 function* loadUserPosts(action) {
   try {
     const result = yield call(loadUserPostsAPI, action.data);
-    console.log(result);
     yield put({
       type: LOAD_USER_POSTS_SUCCESS,
       data: result.data,
@@ -111,7 +101,7 @@ function* loadUserPosts(action) {
   } catch (e) {
     yield put({
       type: LOAD_USER_POSTS_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }
@@ -135,7 +125,7 @@ function* loadHashtagPosts(action) {
   } catch (e) {
     yield put({
       type: LOAD_HASHTAG_POSTS_FAILURE,
-      error: e,
+      error: e.message,
     });
   }
 }
