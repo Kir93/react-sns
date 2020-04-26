@@ -86,18 +86,21 @@ public class PostController {
     }
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<Object> AddComment(@PathVariable int id, HttpSession session){
+    public ResponseEntity<Object> AddComment(@RequestBody CommentBean cb, @PathVariable int id, HttpSession session){
         try {
-            Object user = (Object) session.getAttribute("rslc");
-            if(user == null){
-                return ResponseEntity.status(403).body("로그인이 필요합니다.");
+            Object userId = (Object) session.getAttribute("rslc");
+            if(userId == null){
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
             }
             PostBean post = pm.SelectPost(id);
             if(post == null){
                 return ResponseEntity.status(403).body("존재하지 않는 포스트입니다.");
             }
-            CommentBean comment = new CommentBean();
-            cm.AddComment(comment);
+            cb.setUserId((int) userId);
+            cb.setPostId(id);
+            System.out.println(cb.getPostId());
+            cm.AddComment(cb);
+            CommentBean comment = cm.LoadComment(cb);
             return ResponseEntity.ok(comment);
         } catch (Exception e) {
             System.err.println(e);

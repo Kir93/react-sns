@@ -47,7 +47,9 @@ const configureStore = (initialState, options) => {
   const middlewares = [sagaMiddleware];
   const enhancer = compose(
     applyMiddleware(...middlewares),
-    !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
+    !options.isServer &&
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+      window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
       ? window.__REDUX_DEVTOOLS_EXTENSION__()
       : (f) => f,
   );

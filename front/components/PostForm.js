@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { Form, Input, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
-import { ADD_POST_REQUEST } from '../reducers/post';
+import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
 const InputPost = styled(Form)`
   margin-bottom: 30px;
 `;
@@ -23,6 +23,7 @@ const PostForm = () => {
   const { imagePaths, isAddingPost, postAdded } = useSelector(
     (state) => state.post,
   );
+  const imageInput = useRef();
 
   useEffect(() => {
     setText('');
@@ -48,8 +49,24 @@ const PostForm = () => {
     setText(e.target.value);
   }, []);
 
+  const onChangeImages = useCallback((e) => {
+    return console.log(e.target.files);
+    const imageFormData = new FormData();
+    [].forEach.call(e.target.files, (f) => {
+      imageFormData.append('image', f);
+    });
+    dispatch({
+      type: UPLOAD_IMAGES_REQUEST,
+      data: imageFormData,
+    });
+  }, []);
+
+  const onClickImagesUpload = useCallback(() => {
+    imageInput.current.click();
+  }, [imageInput.current]);
+
   return (
-    <InputPost encType="multiple" onSubmit={onSubmitForm}>
+    <InputPost encType="multipart/form-data" onSubmit={onSubmitForm}>
       <Input.TextArea
         maxLength={140}
         placeholder="당신의 일상을 기록하세요."
@@ -57,8 +74,14 @@ const PostForm = () => {
         value={text}
       />
       <div>
-        <input type="text" multiple hidden />
-        <Button>이미지 업로드</Button>
+        <input
+          type="file"
+          multiple
+          hidden
+          ref={imageInput}
+          onChange={onChangeImages}
+        />
+        <Button onClick={onClickImagesUpload}>이미지 업로드</Button>
         <PostBtn type="primary" htmlType="submit" loading={isAddingPost}>
           POST
         </PostBtn>

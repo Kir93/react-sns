@@ -14,6 +14,9 @@ public interface CommentMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     public int AddComment(CommentBean cb);
 
+    @Select("SELECT c.*, u.nickname FROM Comments AS c JOIN Users AS u ON (c.UserId = u.id) WHERE c.id=#{id}")
+    public CommentBean LoadComment(CommentBean cb);
+
     @Select("SELECT c.*, u.nickname FROM Comments AS c JOIN Users AS u ON (c.UserId = u.id) WHERE c.PostId=#{PostId} ORDER BY c.createdAt ASC")
     public Collection<CommentBean> LoadComments(int PostId);
 }

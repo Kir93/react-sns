@@ -4,7 +4,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
-import { ADD_COMMENT_REQUEST } from '../reducers/post';
+import { ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST } from '../reducers/post';
 import { useEffect } from 'react';
 
 const PostCard = ({ post }) => {
@@ -16,6 +16,12 @@ const PostCard = ({ post }) => {
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpend((prev) => !prev);
+    if (!commentFormOpend) {
+      dispatch({
+        type: LOAD_COMMENTS_REQUEST,
+        data: post.id,
+      });
+    }
   }, []);
 
   const onSubmitComment = useCallback(
@@ -31,6 +37,7 @@ const PostCard = ({ post }) => {
         type: ADD_COMMENT_REQUEST,
         data: {
           postId: post.id,
+          content: commentText,
         },
       });
     },
@@ -107,6 +114,7 @@ const PostCard = ({ post }) => {
               등록
             </Button>
           </Form>
+          {console.log(post)}
           <List
             header={`${post.Comments ? post.Comments.length : 0} 댓글`}
             itemLayout="horizontal"
@@ -143,7 +151,7 @@ PostCard.PropTypes = {
     content: PropTypes.string,
     img: PropTypes.string,
     createdAt: PropTypes.object,
-  }),
+  }).isRequired,
 };
 
 export default PostCard;
