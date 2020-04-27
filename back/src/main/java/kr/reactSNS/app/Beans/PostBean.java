@@ -1,5 +1,7 @@
 package kr.reactSNS.app.Beans;
 
+import java.util.List;
+
 public class PostBean {
     int id;
     String content;
@@ -9,6 +11,7 @@ public class PostBean {
     int UserId;
     int RetweetId;
     String nickname;
+    List<String> imagePaths;
 
     public int getId() {
         return id;
@@ -73,5 +76,13 @@ public class PostBean {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+	public List<String> getImagePaths() {
+		return imagePaths;
+	}
+
+	public void setImagePaths(List<String> imagePaths) {
+		this.imagePaths = imagePaths;
+	}
 
 }

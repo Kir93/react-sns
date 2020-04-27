@@ -46,6 +46,7 @@ public class PostController {
     @PostMapping("/")
     public ResponseEntity<Object> Post(@RequestBody PostBean pb, HttpSession session) {
         try {
+            System.out.println(pb.getImagePaths());
             final String regex = "#[^\\s]+";
             final String string = pb.getContent();
             final Pattern pattern = Pattern.compile(regex);
