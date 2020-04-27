@@ -73,6 +73,12 @@ export default (state = initialState, action) => {
         ...state,
       };
     }
+    case REMOVE_IMAGE: {
+      return {
+        ...state,
+        imagePaths: state.imagePaths.filter((v, i) => i !== action.data),
+      };
+    }
     case LOAD_HASHTAG_POSTS_REQUEST:
     case LOAD_USER_POSTS_REQUEST:
     case LOAD_MAIN_POSTS_REQUEST: {

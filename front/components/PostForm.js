@@ -1,12 +1,20 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Row, Col } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
-import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
+import {
+  ADD_POST_REQUEST,
+  UPLOAD_IMAGES_REQUEST,
+  REMOVE_IMAGE,
+} from '../reducers/post';
 const InputPost = styled(Form)`
   margin-bottom: 30px;
+`;
+
+const ImageRow = styled(Row)`
+  margin-top: 30px;
 `;
 
 const PostBtn = styled(Button)`
@@ -14,7 +22,11 @@ const PostBtn = styled(Button)`
 `;
 
 const PostImg = styled.img`
-  width: 200px;
+  width: 100%;
+`;
+
+const RemoveBtn = styled(Button)`
+  margin-top: 10px;
 `;
 
 const PostForm = () => {
@@ -65,6 +77,16 @@ const PostForm = () => {
     imageInput.current.click();
   }, [imageInput.current]);
 
+  const onRemoveImage = useCallback(
+    (index) => () => {
+      dispatch({
+        type: REMOVE_IMAGE,
+        data: index,
+      });
+    },
+    [],
+  );
+
   return (
     <InputPost encType="multipart/form-data" onSubmit={onSubmitForm}>
       <Input.TextArea
@@ -86,18 +108,20 @@ const PostForm = () => {
           POST
         </PostBtn>
       </div>
-      <div>
-        {imagePaths.map((v) => {
+      <ImageRow gutter={16}>
+        {imagePaths.map((v, i) => {
           return (
-            <div key={v} style={{ display: 'inline-block' }}>
-              <PostImg src={`http://localhost:3065/uploads/` + v} alt={v} />
+            <Col key={v} style={{ display: 'inline-block' }} xs={12} md={6}>
               <div>
-                <Button>제거</Button>
+                <PostImg src={`http://localhost:3065/uploads/` + v} alt={v} />
+                <div>
+                  <RemoveBtn onClick={onRemoveImage(i)}>제거</RemoveBtn>
+                </div>
               </div>
-            </div>
+            </Col>
           );
         })}
-      </div>
+      </ImageRow>
     </InputPost>
   );
 };
