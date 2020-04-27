@@ -24,6 +24,11 @@ public class HomeController {
 		return "안녕하세요. 현재 서버시간은 " + new Date() + "입니다. \n";
 	}
 
+	// @GetMapping("/uploads/{path}")
+	// public String ImageLoader(@PathVariable String path) {
+	// return "/uploads/" + path;
+	// }
+
 	@RequestMapping("/test")
 	public String home() {
 		System.out.println("home");

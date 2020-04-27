@@ -1,7 +1,5 @@
 package kr.reactSNS.app.config;
 
-import java.util.Arrays;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,11 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("userId").passwordParameter("password").permitAll();
 
         http.logout().logoutUrl("/api/user/logout").deleteCookies("rslc").invalidateHttpSession(true)
-                .logoutSuccessUrl("/api/user/").clearAuthentication(true).permitAll();
+                .logoutSuccessUrl("/api/posts/").clearAuthentication(true).permitAll();
 
         http.sessionManagement().maximumSessions(1).expiredUrl("/api/user/").maxSessionsPreventsLogin(true);
-        ;
-
     }
 
     @Bean
@@ -38,8 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3060");
         configuration.addAllowedMethod("*");
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "TOKEN_ID", "X-Requested-With", "Authorization",
-                "Content-Type", "Content-Length", "Cache-Control", "Set-Cookie"));
+        configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

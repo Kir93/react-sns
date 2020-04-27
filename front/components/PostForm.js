@@ -50,7 +50,7 @@ const PostForm = () => {
   }, []);
 
   const onChangeImages = useCallback((e) => {
-    return console.log(e.target.files);
+    console.log(e.target.files);
     const imageFormData = new FormData();
     [].forEach.call(e.target.files, (f) => {
       imageFormData.append('image', f);
@@ -90,7 +90,7 @@ const PostForm = () => {
         {imagePaths.map((v) => {
           return (
             <div key={v} style={{ display: 'inline-block' }}>
-              <PostImg src={`http://localhost:3065/` + v} alt={v} />
+              <PostImg src={`http://localhost:3065/uploads/` + v} alt={v} />
               <div>
                 <Button>제거</Button>
               </div>
