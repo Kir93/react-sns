@@ -11,7 +11,8 @@ public class PostBean {
     int UserId;
     int RetweetId;
     String nickname;
-    List<String> imagePaths;
+    List<String> images;
+    String[] src;
 
     public int getId() {
         return id;
@@ -77,12 +78,20 @@ public class PostBean {
         this.nickname = nickname;
     }
 
-	public List<String> getImagePaths() {
-		return imagePaths;
-	}
+    public List<String> getImages() {
+        return images;
+    }
 
-	public void setImagePaths(List<String> imagePaths) {
-		this.imagePaths = imagePaths;
-	}
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public String[] getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src.split(",");
+    }
 
 }

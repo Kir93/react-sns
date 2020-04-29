@@ -47,31 +47,36 @@ const PostForm = () => {
       if (!text || !text.trim()) {
         return alert('글자를 입력하세요.');
       }
+      console.log(imagePaths);
       return dispatch({
         type: ADD_POST_REQUEST,
         data: {
           content: text,
+          images: imagePaths,
         },
       });
     },
-    [text],
+    [text, imagePaths],
   );
 
   const onChangeText = useCallback((e) => {
     setText(e.target.value);
   }, []);
 
-  const onChangeImages = useCallback((e) => {
-    console.log(e.target.files);
-    const imageFormData = new FormData();
-    [].forEach.call(e.target.files, (f) => {
-      imageFormData.append('image', f);
-    });
-    dispatch({
-      type: UPLOAD_IMAGES_REQUEST,
-      data: imageFormData,
-    });
-  }, []);
+  const onChangeImages = useCallback(
+    (e) => {
+      console.log(e.target.files);
+      const imageFormData = new FormData();
+      [].forEach.call(e.target.files, (f) => {
+        imageFormData.append('image', f);
+      });
+      dispatch({
+        type: UPLOAD_IMAGES_REQUEST,
+        data: imageFormData,
+      });
+    },
+    [imagePaths],
+  );
 
   const onClickImagesUpload = useCallback(() => {
     imageInput.current.click();

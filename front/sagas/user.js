@@ -58,7 +58,7 @@ function* watchLogin() {
 
 function signUpAPI(signUpData) {
   // 서버에 요청을 보내는 부분
-  return axios.post('/user', signUpData);
+  return axios.post('/user/', signUpData);
 }
 
 function* signUp(action) {

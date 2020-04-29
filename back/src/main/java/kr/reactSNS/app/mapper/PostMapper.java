@@ -15,7 +15,7 @@ public interface PostMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     public int AddPost(PostBean pb);
 
-    @Select("SELECT p.*, u.nickname FROM Posts AS p JOIN Users AS u ON (p.UserId = u.id) WHERE p.id=#{id}")
+    @Select("SELECT p.*, u.nickname, GROUP_CONCAT(DISTINCT i.src) as src FROM Posts AS p JOIN Users AS u ON (p.UserId = u.id) LEFT JOIN Images AS i ON (p.id = i.PostId) WHERE p.id=#{id}")
     public PostBean SelectPost(int id);
 
     @Insert("INSERT INTO Hashtags (name) value (#{name})")
@@ -25,4 +25,6 @@ public interface PostMapper {
     @Insert("INSERT INTO `PostHashtag` (`HashtagId`, `PostId`) VALUES (#{HashtagId}, #{PostId})")
     public int AddPostHashtag(int PostId, int HashtagId);
 
+    @Insert("INSERT INTO Images (src, PostId) value (#{src}, #{PostId})")
+    public int InsertImage(String src, int PostId);
 }

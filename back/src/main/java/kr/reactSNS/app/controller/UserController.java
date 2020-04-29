@@ -108,7 +108,7 @@ public class UserController {
     public ResponseEntity<Object> LoadOtherUser(@PathVariable int id) {
         try {
             UserBean user = um.checkUser(id);
-            if(user == null){
+            if (user == null) {
                 return ResponseEntity.status(401).body("존재하지 않는 사용자입니다.");
             }
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
@@ -129,7 +129,7 @@ public class UserController {
     public ResponseEntity<Object> CheckUserId(@PathVariable int id) {
         try {
             UserBean user = um.checkUser(id);
-            if(user==null){
+            if (user == null) {
                 return ResponseEntity.status(401).body("존재하지 않는 사용자입니다.");
             }
             Collection<PostBean> loadUserPosts = um.LoadUserPosts(id);

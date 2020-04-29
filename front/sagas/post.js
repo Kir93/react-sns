@@ -48,7 +48,7 @@ function* watchLoadMainPost() {
 }
 
 function addPostAPI(addPostData) {
-  return axios.post('/post', addPostData, { withCredentials: true });
+  return axios.post('/post/', addPostData, { withCredentials: true });
 }
 
 function* addPost(action) {

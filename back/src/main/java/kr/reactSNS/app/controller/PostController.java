@@ -46,7 +46,6 @@ public class PostController {
     @PostMapping("/")
     public ResponseEntity<Object> Post(@RequestBody PostBean pb, HttpSession session) {
         try {
-            System.out.println(pb.getImagePaths());
             final String regex = "#[^\\s]+";
             final String string = pb.getContent();
             final Pattern pattern = Pattern.compile(regex);
@@ -55,12 +54,16 @@ public class PostController {
             String[] hashtags = new String[size];
             int x = 0;
             Object userId = session.getAttribute("rslc");
+            List<String> images = pb.getImages();
             if (userId == null) {
                 return ResponseEntity.status(403).body("로그인 후 이용하세요.");
             }
             pb.setUserId((int) userId);
             pm.AddPost(pb);
             int postId = pb.getId();
+            for (int i = 0; i < images.size(); i++) {
+                pm.InsertImage(images.get(i), postId);
+            }
             while (matcher.find()) {
                 hashtags[x] = matcher.group(0).substring(1).toLowerCase();
                 HashtagBean hb = hm.CheckHashtag(hashtags[x]);
