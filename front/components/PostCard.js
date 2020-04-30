@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST } from '../reducers/post';
 import { useEffect } from 'react';
+import PostImages from './PostImages';
 
 const PostCard = ({ post }) => {
   const [commentFormOpend, setCommentFormOpend] = useState(false);
@@ -57,14 +58,7 @@ const PostCard = ({ post }) => {
       {console.log(post)}
       <Card
         key={+post.createdAt}
-        cover={
-          post.src && (
-            <img
-              alt="example"
-              src={'http://localhost:3065/uploads/' + post.src[0]}
-            />
-          )
-        }
+        cover={post.src && <PostImages src={post.src} />}
         actions={[
           <Icon type="retweet" key="retweet" />,
           <Icon type="heart" key="heart" />,
