@@ -1,4 +1,4 @@
-package kr.reactSNS.app.Beans;
+package kr.reactSNS.app.beans;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ public class PostBean {
     String nickname;
     List<String> images;
     String[] src;
+    String[] likers;
 
     public int getId() {
         return id;
@@ -94,4 +95,11 @@ public class PostBean {
         this.src = src.split(",");
     }
 
+    public String[] getLikers() {
+        return likers;
+    }
+
+    public void setLikers(String likers) {
+        this.likers = likers.split(",");
+    }
 }

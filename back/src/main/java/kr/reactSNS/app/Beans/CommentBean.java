@@ -1,4 +1,4 @@
-package kr.reactSNS.app.Beans;
+package kr.reactSNS.app.beans;
 
 public class CommentBean {
     int id;

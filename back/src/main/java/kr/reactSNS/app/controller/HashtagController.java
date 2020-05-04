@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.reactSNS.app.Beans.HashtagBean;
-import kr.reactSNS.app.Beans.PostBean;
+import kr.reactSNS.app.beans.HashtagBean;
+import kr.reactSNS.app.beans.PostBean;
 import kr.reactSNS.app.mapper.HashtagMapper;
 
 @RestController

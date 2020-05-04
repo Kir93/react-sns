@@ -157,14 +157,6 @@ export default (state = initialState, action) => {
       };
     }
     case LOAD_COMMENTS_SUCCESS: {
-      // const postIndex = state.mainPosts.findIndex(
-      //   (v) => v.id === action.data.postId,
-      // );
-      // const post = state.mainPosts[postIndex];
-      // console.log(post);
-      // const comments = action.data.comments;
-      // const mainPosts = [...state.mainPosts];
-      // mainPosts[postIndex] = { ...post, comments };
       const postIndex = state.mainPosts.findIndex(
         (v) => v.id === action.data.postId,
       );
@@ -175,6 +167,54 @@ export default (state = initialState, action) => {
       return {
         ...state,
         mainPosts,
+      };
+    }
+    case LIKE_POST_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case LIKE_POST_SUCCESS: {
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.data.postId,
+      );
+      const post = state.mainPosts[postIndex];
+      const likers = [action.data.userId, ...post.likers];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = { ...post, likers };
+      return {
+        ...state,
+        mainPosts,
+      };
+    }
+    case LIKE_POST_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case UNLIKE_POST_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case UNLIKE_POST_SUCCESS: {
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.data.postId,
+      );
+      const post = state.mainPosts[postIndex];
+      const likers = post.likers.filter(
+        (v) => parseInt(v) !== action.data.userId,
+      );
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = { ...post, likers };
+      return {
+        ...state,
+        mainPosts,
+      };
+    }
+    case UNLIKE_POST_FAILURE: {
+      return {
+        ...state,
       };
     }
     default: {

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.reactSNS.app.Beans.PostBean;
-import kr.reactSNS.app.Beans.UserBean;
+import kr.reactSNS.app.beans.PostBean;
+import kr.reactSNS.app.beans.UserBean;
 import kr.reactSNS.app.mapper.UserMapper;
 
 @RestController

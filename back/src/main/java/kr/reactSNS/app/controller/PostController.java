@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.reactSNS.app.Beans.CommentBean;
-import kr.reactSNS.app.Beans.HashtagBean;
-import kr.reactSNS.app.Beans.PostBean;
+import kr.reactSNS.app.beans.CommentBean;
+import kr.reactSNS.app.beans.HashtagBean;
+import kr.reactSNS.app.beans.PostBean;
 import kr.reactSNS.app.mapper.CommentMapper;
 import kr.reactSNS.app.mapper.HashtagMapper;
 import kr.reactSNS.app.mapper.PostMapper;
@@ -142,4 +143,42 @@ public class PostController {
             return ResponseEntity.status(403).body(e);
         }
     }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Object> LikePost(@PathVariable int postId, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            PostBean post = pm.SelectPost(postId);
+            if (post == null) {
+                return ResponseEntity.status(403).body("존재하지 않는 포스트입니다.");
+            }
+            pm.InsertLike(postId, (int) userId);
+            return ResponseEntity.ok(userId);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+    @DeleteMapping("/{postId}/like")
+    public ResponseEntity<Object> UnlikePost(@PathVariable int postId, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            PostBean post = pm.SelectPost(postId);
+            if (post == null) {
+                return ResponseEntity.status(403).body("존재하지 않는 포스트입니다.");
+            }
+            pm.UnLike(postId, (int) userId);
+            return ResponseEntity.ok(userId);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
 }

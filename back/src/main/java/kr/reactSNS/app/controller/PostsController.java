@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.reactSNS.app.Beans.PostBean;
+import kr.reactSNS.app.beans.PostBean;
 import kr.reactSNS.app.mapper.PostsMapper;
 
 @RestController
