@@ -47,7 +47,7 @@ function* login(action) {
     console.error(e);
     yield put({
       type: LOG_IN_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -76,7 +76,7 @@ function* signUp(action) {
     console.log(result.data);
     yield put({
       type: SIGN_UP_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -101,7 +101,7 @@ function* logout() {
     // loginAPI 실패
     yield put({
       type: LOG_OUT_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -129,7 +129,7 @@ function* loadUser(action) {
   } catch (e) {
     yield put({
       type: LOAD_USER_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }

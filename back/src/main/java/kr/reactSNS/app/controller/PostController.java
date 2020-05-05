@@ -181,4 +181,37 @@ public class PostController {
         }
     }
 
+    @PostMapping("/{postId}/retweet")
+    public ResponseEntity<Object> Retweet(@PathVariable int postId, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            PostBean post = pm.SelectPost(postId);
+            if (post == null) {
+                return ResponseEntity.status(403).body("존재하지 않는 포스트입니다.");
+            }
+            if ((int) userId == post.getUserId()){
+                return ResponseEntity.status(403).body("자신의 포스트는 리트윗할 수 없습니다.");
+            }
+            int retweetTargetId = post.getRetweetId();
+            if(retweetTargetId == 0){
+                retweetTargetId = post.getId();
+            }
+            Object exPost = pm.CheckRetweet((int) userId, retweetTargetId);
+            if(exPost != null){
+                return ResponseEntity.status(403).body("이미 리트윗한 포스트입니다.");
+            }
+            post.setRetweetId(retweetTargetId);
+            post.setUserId((int) userId);
+            pm.InsertRetweet(post);
+            int retweetPostId = post.getId();
+            PostBean retweetPost = pm.SelectRetweetPost(retweetPostId);
+            return ResponseEntity.ok(retweetPost);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
 }

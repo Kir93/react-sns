@@ -28,6 +28,9 @@ import {
   UNLIKE_POST_REQUEST,
   LIKE_POST_FAILURE,
   UNLIKE_POST_FAILURE,
+  RETWEET_SUCCESS,
+  RETWEET_FAILURE,
+  RETWEET_REQUEST,
 } from '../reducers/post';
 
 function loadMainPostAPI() {
@@ -44,7 +47,7 @@ function* loadMainPost() {
   } catch (e) {
     yield put({
       type: LOAD_MAIN_POSTS_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -67,7 +70,7 @@ function* addPost(action) {
   } catch (e) {
     yield put({
       type: ADD_POST_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -97,7 +100,7 @@ function* addComment(action) {
   } catch (e) {
     yield put({
       type: ADD_COMMENT_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -123,7 +126,7 @@ function* loadComments(action) {
   } catch (e) {
     yield put({
       type: LOAD_COMMENTS_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -146,7 +149,7 @@ function* loadUserPosts(action) {
   } catch (e) {
     yield put({
       type: LOAD_USER_POSTS_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -170,7 +173,7 @@ function* loadHashtagPosts(action) {
   } catch (e) {
     yield put({
       type: LOAD_HASHTAG_POSTS_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -195,7 +198,7 @@ function* uploadImages(action) {
   } catch (e) {
     yield put({
       type: UPLOAD_IMAGES_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -227,7 +230,7 @@ function* likePost(action) {
   } catch (e) {
     yield put({
       type: LIKE_POST_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
@@ -255,13 +258,44 @@ function* unlikePost(action) {
   } catch (e) {
     yield put({
       type: UNLIKE_POST_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
 
 function* watchUnlikePost() {
   yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
+}
+
+function retweetAPI(postId) {
+  return axios.post(
+    `/post/${postId}/retweet`,
+    {},
+    {
+      withCredentials: true,
+    },
+  );
+}
+
+function* retweet(action) {
+  try {
+    const result = yield call(retweetAPI, action.data);
+    yield put({
+      type: RETWEET_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    console.dir(e);
+    alert(e.response && e.response.data);
+    yield put({
+      type: RETWEET_FAILURE,
+      error: e.response ? e.response.data : e.message,
+    });
+  }
+}
+
+function* watchRetweet() {
+  yield takeLatest(RETWEET_REQUEST, retweet);
 }
 
 export default function* postSaga() {
@@ -275,5 +309,6 @@ export default function* postSaga() {
     fork(watchUploadImages),
     fork(watchLikePost),
     fork(watchUnlikePost),
+    fork(watchRetweet),
   ]);
 }

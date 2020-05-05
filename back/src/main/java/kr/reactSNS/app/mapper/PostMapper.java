@@ -39,4 +39,19 @@ public interface PostMapper {
 
     @Delete("DELETE FROM `Like` WHERE PostId = #{PostId} AND UserId = #{UserId}")
     public int UnLike(int PostId, int UserId);
+
+    @Select("SELECT id FROM Posts WHERE UserId=#{UserId} AND RetweetId=#{retweetTargetId}")
+    public Object CheckRetweet(int UserId, int retweetTargetId);
+
+    @Insert("insert into Posts (UserId, RetweetId, content) value (#{UserId}, #{RetweetId}, 'retweetPost')")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    public int InsertRetweet(PostBean pb);
+
+    @Select("SELECT r.*, u.nickname AS myNickname, ru.nickname, GROUP_CONCAT(DISTINCT i.src) as src FROM Posts p "
+    + "JOIN Users u ON (p.UserId = u.id) "
+    + "JOIN Posts r ON (p.RetweetId = r.id) "
+    + "JOIN Users ru ON (r.UserId = ru.id) " 
+    + "LEFT JOIN Images AS i ON (p.id = i.PostId) "
+    + "WHERE p.id = #{id}")
+    public PostBean SelectRetweetPost(int id);
 }
