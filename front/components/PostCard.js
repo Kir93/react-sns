@@ -13,6 +13,7 @@ import {
 } from '../reducers/post';
 import { useEffect } from 'react';
 import PostImages from './PostImages';
+import PostCardContent from './PostCardContent';
 
 const PostCard = ({ post }) => {
   if (post.likers === null) post.likers = [];
@@ -121,27 +122,7 @@ const PostCard = ({ post }) => {
             </Link>
           }
           title={post.nickname}
-          description={
-            <div>
-              {post.content.split(/(#[^\s]+)/g).map((v) => {
-                if (v.match(/#[^\s]+/)) {
-                  return (
-                    <Link
-                      href={{
-                        pathname: '/hashtag',
-                        query: { tag: v.slice(1) },
-                      }}
-                      as={`/hashtag/${v.slice(1)}`}
-                      key={v}
-                    >
-                      <a>{v}</a>
-                    </Link>
-                  );
-                }
-                return v;
-              })}
-            </div>
-          }
+          description={<PostCardContent postData={post.content} />}
         />
       </Card>
       {commentFormOpend && (

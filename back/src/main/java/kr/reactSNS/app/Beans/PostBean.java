@@ -1,6 +1,7 @@
 package kr.reactSNS.app.beans;
 
 import java.util.List;
+import java.util.Map;
 
 public class PostBean {
     int id;
@@ -14,6 +15,7 @@ public class PostBean {
     List<String> images;
     String[] src;
     String[] likers;
+    Map<String, Object> retweet;
 
     public int getId() {
         return id;
@@ -102,4 +104,13 @@ public class PostBean {
     public void setLikers(String likers) {
         this.likers = likers.split(",");
     }
+
+    public Map<String, Object> getRetweet() {
+        return retweet;
+    }
+
+    public void setRetweet(Map<String, Object> retweet) {
+        this.retweet = retweet;
+    }
+
 }

@@ -1,5 +1,7 @@
 package kr.reactSNS.app.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,11 +19,9 @@ public interface PostMapper {
     public int AddPost(PostBean pb);
 
     @Select("SELECT p.*, u.nickname, GROUP_CONCAT(DISTINCT i.src) as src, "
-    + "GROUP_CONCAT(DISTINCT l.userId) as Likers FROM Posts AS p "
-    + "JOIN Users AS u ON (p.UserId = u.id) "
-    + "LEFT JOIN Images AS i ON (p.id = i.PostId) "
-    + "LEFT JOIN `Like` AS l ON (p.id = l.PostId) "
-    + "WHERE p.id=#{id} AND p.delYn='N'")
+            + "GROUP_CONCAT(DISTINCT l.userId) as Likers FROM Posts AS p " + "JOIN Users AS u ON (p.UserId = u.id) "
+            + "LEFT JOIN Images AS i ON (p.id = i.PostId) " + "LEFT JOIN `Like` AS l ON (p.id = l.PostId) "
+            + "WHERE p.id=#{id} AND p.delYn='N'")
     public PostBean SelectPost(int id);
 
     @Insert("INSERT INTO Hashtags (name) value (#{name})")
@@ -48,10 +48,8 @@ public interface PostMapper {
     public int InsertRetweet(PostBean pb);
 
     @Select("SELECT r.*, u.nickname AS myNickname, ru.nickname, GROUP_CONCAT(DISTINCT i.src) as src FROM Posts p "
-    + "JOIN Users u ON (p.UserId = u.id) "
-    + "JOIN Posts r ON (p.RetweetId = r.id) "
-    + "JOIN Users ru ON (r.UserId = ru.id) " 
-    + "LEFT JOIN Images AS i ON (p.id = i.PostId) "
-    + "WHERE p.id = #{id}")
-    public PostBean SelectRetweetPost(int id);
+            + "JOIN Users u ON (p.UserId = u.id) " + "JOIN Posts r ON (p.RetweetId = r.id) "
+            + "JOIN Users ru ON (r.UserId = ru.id) " + "LEFT JOIN Images AS i ON (p.id = i.PostId) "
+            + "WHERE p.id = #{id}")
+    public Map<String, Object> SelectRetweetPost(int id);
 }
