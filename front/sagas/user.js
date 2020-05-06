@@ -24,6 +24,12 @@ import {
   CHECK_ID_REQUEST,
   CHECK_ID_SUCCESS,
   CHECK_ID_FAILURE,
+  FOLLOW_USER_SUCCESS,
+  FOLLOW_USER_FAILURE,
+  FOLLOW_USER_REQUEST,
+  UNFOLLOW_USER_SUCCESS,
+  UNFOLLOW_USER_REQUEST,
+  UNFOLLOW_USER_FAILURE,
 } from '../reducers/user';
 
 function loginAPI(loginData) {
@@ -154,13 +160,63 @@ function* checkId(action) {
     // loginAPI 실패
     yield put({
       type: CHECK_ID_FAILURE,
-      error: e.message,
+      error: e.response ? e.response.data : e.message,
     });
   }
 }
 
 function* watchCheckId() {
   yield takeLatest(CHECK_ID_REQUEST, checkId);
+}
+
+function unfollowAPI(userId) {
+  return axios.delete(`/user/${userId}/follow`, { withCredentials: true });
+}
+
+function* unfollow(action) {
+  try {
+    const result = yield call(unfollowAPI, action.data);
+    yield put({
+      // put은 dispatch 동일
+      type: UNFOLLOW_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    // loginAPI 실패
+    yield put({
+      type: UNFOLLOW_USER_FAILURE,
+      error: e.response ? e.response.data : e.message,
+    });
+  }
+}
+
+function* watchUnfollow() {
+  yield takeLatest(UNFOLLOW_USER_REQUEST, unfollow);
+}
+
+function followAPI(userId) {
+  return axios.post(`/user/${userId}/follow`, {}, { withCredentials: true });
+}
+
+function* follow(action) {
+  try {
+    const result = yield call(followAPI, action.data);
+    yield put({
+      // put은 dispatch 동일
+      type: FOLLOW_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    // loginAPI 실패
+    yield put({
+      type: FOLLOW_USER_FAILURE,
+      error: e.response ? e.response.data : e.message,
+    });
+  }
+}
+
+function* watchFollow() {
+  yield takeLatest(FOLLOW_USER_REQUEST, follow);
 }
 
 export default function* userSaga() {
@@ -170,5 +226,7 @@ export default function* userSaga() {
     fork(watchCheckId),
     fork(watchLogout),
     fork(watchLoadUser),
+    fork(watchUnfollow),
+    fork(watchFollow),
   ]);
 }

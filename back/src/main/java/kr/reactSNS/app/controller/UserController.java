@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +44,6 @@ public class UserController {
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
             user.setPost("");
-            user.setFollowing("");
             user.setFollower("");
             user.setPassword("");
             return ResponseEntity.ok(user);
@@ -80,7 +80,6 @@ public class UserController {
                     user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
                     user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
                     user.setPost("");
-                    user.setFollowing("");
                     user.setFollower("");
                     user.setPassword("");
                     return ResponseEntity.ok(user);
@@ -115,7 +114,6 @@ public class UserController {
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
             user.setPost("");
-            user.setFollowing("");
             user.setFollower("");
             user.setPassword("");
             return ResponseEntity.ok(user);
@@ -134,6 +132,36 @@ public class UserController {
             }
             Collection<PostBean> loadUserPosts = um.LoadUserPosts(id);
             return ResponseEntity.ok(loadUserPosts);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
+    @PostMapping("/{id}/follow")
+    public ResponseEntity<Object> Follow(@PathVariable int id, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            um.Follow((int) userId, id);
+            return ResponseEntity.ok(id);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
+    @DeleteMapping("/{id}/follow")
+    public ResponseEntity<Object> Unfollow(@PathVariable int id, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            um.Unfollow((int) userId, id);
+            return ResponseEntity.ok(id);
         } catch (Exception e) {
             System.err.println(e);
             return ResponseEntity.status(403).body(e);

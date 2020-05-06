@@ -2,6 +2,7 @@ package kr.reactSNS.app.mapper;
 
 import java.util.Collection;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -31,4 +32,10 @@ public interface UserMapper {
     + "LEFT JOIN `Like` AS l ON (p.id = l.PostId) "
     + "WHERE u.id=#{id} AND p.delYn = 'N' AND p.RetweetId IS NULL GROUP BY p.id ORDER BY p.createdAt DESC")
     public Collection<PostBean> LoadUserPosts(int id);
+
+    @Insert("INSERT INTO Follow (followingId, followerId) VALUE (#{followingId}, #{followerId})")
+    public int Follow(int followingId, int followerId);
+
+    @Delete("DELETE FROM Follow WHERE followingId = #{followingId} AND followerId = #{followerId}")
+    public int Unfollow(int followingId, int followerId);
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Avatar, Button, Card } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
-import { logoutAction, LOG_OUT_REQUEST } from '../reducers/user';
+import { LOG_OUT_REQUEST } from '../reducers/user';
 
 const LoginCard = styled(Card)`
   border: 0;

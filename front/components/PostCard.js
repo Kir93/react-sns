@@ -14,6 +14,7 @@ import {
 import { useEffect } from 'react';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
+import { FOLLOW_USER_REQUEST, UNFOLLOW_USER_REQUEST } from '../reducers/user';
 
 const PostCard = ({ post }) => {
   if (post.likers === null) post.likers = [];
@@ -91,6 +92,25 @@ const PostCard = ({ post }) => {
     });
   }, [me && me.id, post && post.id]);
 
+  const onUnfollow = useCallback(
+    (userId) => () => {
+      dispatch({
+        type: UNFOLLOW_USER_REQUEST,
+        data: userId,
+      });
+    },
+    [],
+  );
+  const onFollow = useCallback(
+    (userId) => () => {
+      dispatch({
+        type: FOLLOW_USER_REQUEST,
+        data: userId,
+      });
+    },
+    [],
+  );
+
   return (
     <div>
       <Card
@@ -111,7 +131,14 @@ const PostCard = ({ post }) => {
         title={
           post.retweetId ? `${post.nickname}님이 리트윗 하셨습니다.` : null
         }
-        extra={<Button>팔로우</Button>}
+        extra={
+          !me || post.userId === me.id ? null : me.following &&
+            me.following.find((v) => parseInt(v) === post.userId) ? (
+            <Button onClick={onUnfollow(post.userId)}>언팔로우</Button>
+          ) : (
+            <Button onClick={onFollow(post.userId)}>팔로우</Button>
+          )
+        }
       >
         {post.retweetId && post.retweet ? (
           <Card

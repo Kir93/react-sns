@@ -14,11 +14,11 @@ export const initialState = {
   isSignedUp: false, // 회원가입 성공
   isSigningUp: false, // 회원가입 시도중
   signUpErrorReason: '', // 회원가입 실패 사유
-  me: null, // 내 정보
+  me: null,
   followingList: [], // 팔로잉 리스트
   followerList: [], // 팔로워 리스트
-  userInfo: null, // 남의 정보
   idError: false,
+  userInfo: null,
 };
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
@@ -163,6 +163,46 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loadUserErrorReason: action.error,
+      };
+    }
+    case FOLLOW_USER_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case FOLLOW_USER_SUCCESS: {
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          following: [action.data, ...state.me.following],
+        },
+      };
+    }
+    case FOLLOW_USER_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case UNFOLLOW_USER_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case UNFOLLOW_USER_SUCCESS: {
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          following: [...state.me.following].filter(
+            (v) => parseInt(v) !== action.data,
+          ),
+        },
+      };
+    }
+    case UNFOLLOW_USER_FAILURE: {
+      return {
+        ...state,
       };
     }
     default: {
