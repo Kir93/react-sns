@@ -29,6 +29,6 @@ public interface UserMapper {
     + "JOIN Users AS u ON (p.UserId = u.id) "
     + "LEFT JOIN Images AS i ON (p.id = i.PostId) "
     + "LEFT JOIN `Like` AS l ON (p.id = l.PostId) "
-    + "WHERE u.id=#{id} AND p.delYn = 'N' GROUP BY p.id ORDER BY p.createdAt DESC")
+    + "WHERE u.id=#{id} AND p.delYn = 'N' AND p.RetweetId IS NULL GROUP BY p.id ORDER BY p.createdAt DESC")
     public Collection<PostBean> LoadUserPosts(int id);
 }

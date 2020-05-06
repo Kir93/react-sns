@@ -108,22 +108,49 @@ const PostCard = ({ post }) => {
           <Icon type="message" key="message" onClick={onToggleComment} />,
           <Icon type="ellipsis" key="ellipsis" />,
         ]}
+        title={
+          post.retweetId ? `${post.nickname}님이 리트윗 하셨습니다.` : null
+        }
         extra={<Button>팔로우</Button>}
       >
-        <Card.Meta
-          avatar={
-            <Link
-              href={{ pathname: '/user', query: { id: post.userId } }}
-              as={`/user/${post.userId}/posts`}
-            >
-              <a>
-                <Avatar>{post.nickname[0]}</Avatar>
-              </a>
-            </Link>
-          }
-          title={post.nickname}
-          description={<PostCardContent postData={post.content} />}
-        />
+        {post.retweetId && post.retweet ? (
+          <Card
+            cover={post.retweet.src && <PostImages src={post.retweet.src} />}
+          >
+            <Card.Meta
+              avatar={
+                <Link
+                  href={{
+                    pathname: '/user',
+                    query: { id: post.retweet.UserId },
+                  }}
+                  as={`/user/${post.retweet.UserId}/posts`}
+                >
+                  <a>
+                    <Avatar>{post.retweet.nickname[0]}</Avatar>
+                  </a>
+                </Link>
+              }
+              title={post.retweet.nickname}
+              description={<PostCardContent postData={post.retweet.content} />}
+            />
+          </Card>
+        ) : (
+          <Card.Meta
+            avatar={
+              <Link
+                href={{ pathname: '/user', query: { id: post.userId } }}
+                as={`/user/${post.userId}/posts`}
+              >
+                <a>
+                  <Avatar>{post.nickname[0]}</Avatar>
+                </a>
+              </Link>
+            }
+            title={post.nickname}
+            description={<PostCardContent postData={post.content} />}
+          />
+        )}
       </Card>
       {commentFormOpend && (
         <>

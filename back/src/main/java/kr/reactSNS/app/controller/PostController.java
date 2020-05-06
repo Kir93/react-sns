@@ -193,7 +193,10 @@ public class PostController {
             if (post == null) {
                 return ResponseEntity.status(403).body("존재하지 않는 포스트입니다.");
             }
-            if ((int) userId == post.getUserId()) {
+            if(post.getRetweetId() != 0){
+                post.setRetweet(pm.SelectRetweetPost(post.getId()));
+            }
+            if ((int) userId == post.getUserId() || (post.getRetweet() != null && post.getRetweet().get("UserId").equals(userId))) {
                 return ResponseEntity.status(403).body("자신의 포스트는 리트윗할 수 없습니다.");
             }
             int retweetTargetId = post.getRetweetId();
@@ -208,8 +211,13 @@ public class PostController {
             post.setUserId((int) userId);
             pm.InsertRetweet(post);
             int retweetPostId = post.getId();
-            PostBean retweetPost = new PostBean();
+            PostBean retweetPost = pm.SelectPost(retweetPostId);
             retweetPost.setRetweet(pm.SelectRetweetPost(retweetPostId));
+            if(retweetPost.getRetweet().get("src") != null){
+                PostBean setRetweetSrc = new PostBean();
+                setRetweetSrc.setSrc((String) retweetPost.getRetweet().get("src"));
+                retweetPost.getRetweet().put("src", setRetweetSrc.getSrc());
+            }
             return ResponseEntity.ok(retweetPost);
         } catch (Exception e) {
             System.err.println(e);

@@ -47,9 +47,9 @@ public interface PostMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public int InsertRetweet(PostBean pb);
 
-    @Select("SELECT r.*, u.nickname AS myNickname, ru.nickname, GROUP_CONCAT(DISTINCT i.src) as src FROM Posts p "
+    @Select("SELECT r.*, ru.nickname, GROUP_CONCAT(DISTINCT i.src) as src FROM Posts p "
             + "JOIN Users u ON (p.UserId = u.id) " + "JOIN Posts r ON (p.RetweetId = r.id) "
-            + "JOIN Users ru ON (r.UserId = ru.id) " + "LEFT JOIN Images AS i ON (p.id = i.PostId) "
+            + "JOIN Users ru ON (r.UserId = ru.id) " + "LEFT JOIN Images AS i ON (p.RetweetId = i.PostId) "
             + "WHERE p.id = #{id}")
     public Map<String, Object> SelectRetweetPost(int id);
 }

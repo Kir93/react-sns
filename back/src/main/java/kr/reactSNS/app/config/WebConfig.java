@@ -15,8 +15,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // String filePath = "file:///D:/Work/reactSNS/back/src/main/resources/static/";
-        String filePath = "file:///D:/IDE/workspace/ReactSNS/back/src/main/resources/static/";
+        String filePath = "file:///D:/Work/reactSNS/back/src/main/resources/static/";
+        // String filePath = "file:///D:/IDE/workspace/ReactSNS/back/src/main/resources/static/";
         registry.addResourceHandler("/**").addResourceLocations(filePath);
     }
 
