@@ -150,6 +150,48 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}/followings")
+    public ResponseEntity<Object> LoadFollowings(@PathVariable int id, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            return ResponseEntity.ok(id);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
+    @GetMapping("/{id}/followers")
+    public ResponseEntity<Object> LoadFollowers(@PathVariable int id, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            return ResponseEntity.ok(id);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
+    @DeleteMapping("/{id}/follower")
+    public ResponseEntity<Object> RemoveFollower(@PathVariable int id, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            return ResponseEntity.ok(id);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
     @DeleteMapping("/{id}/follow")
     public ResponseEntity<Object> Unfollow(@PathVariable int id, HttpSession session){
         try {

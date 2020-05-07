@@ -30,6 +30,15 @@ import {
   UNFOLLOW_USER_SUCCESS,
   UNFOLLOW_USER_REQUEST,
   UNFOLLOW_USER_FAILURE,
+  LOAD_FOLLOWINGS_REQUEST,
+  LOAD_FOLLOWINGS_SUCCESS,
+  LOAD_FOLLOWINGS_FAILURE,
+  LOAD_FOLLOWERS_REQUEST,
+  LOAD_FOLLOWERS_SUCCESS,
+  LOAD_FOLLOWERS_FAILURE,
+  REMOVE_FOLLOWER_REQUEST,
+  REMOVE_FOLLOWER_FAILURE,
+  REMOVE_FOLLOWER_SUCCESS,
 } from '../reducers/user';
 
 function loginAPI(loginData) {
@@ -219,6 +228,81 @@ function* watchFollow() {
   yield takeLatest(FOLLOW_USER_REQUEST, follow);
 }
 
+function loadFollowingsAPI(userId) {
+  return axios.get(`/user/${userId}/followings`, { withCredentials: true });
+}
+
+function* loadFollowings(action) {
+  try {
+    const result = yield call(loadFollowingsAPI, action.data);
+    yield put({
+      // put은 dispatch 동일
+      type: LOAD_FOLLOWINGS_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    // loginAPI 실패
+    yield put({
+      type: LOAD_FOLLOWINGS_FAILURE,
+      error: e.response ? e.response.data : e.message,
+    });
+  }
+}
+
+function* watchLoadFollowings() {
+  yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+
+function loadfollowersAPI(userId) {
+  return axios.get(`/user/${userId}/followers`, { withCredentials: true });
+}
+
+function* loadfollowers(action) {
+  try {
+    const result = yield call(loadfollowersAPI, action.data);
+    yield put({
+      // put은 dispatch 동일
+      type: LOAD_FOLLOWERS_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    // loginAPI 실패
+    yield put({
+      type: LOAD_FOLLOWERS_FAILURE,
+      error: e.response ? e.response.data : e.message,
+    });
+  }
+}
+
+function* watchLoadFollowers() {
+  yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadfollowers);
+}
+
+function removeFollowerAPI(userId) {
+  return axios.delete(`/user/${userId}/follower`, { withCredentials: true });
+}
+
+function* removeFollower(action) {
+  try {
+    const result = yield call(removeFollowerAPI, action.data);
+    yield put({
+      // put은 dispatch 동일
+      type: REMOVE_FOLLOWER_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    // loginAPI 실패
+    yield put({
+      type: REMOVE_FOLLOWER_FAILURE,
+      error: e.response ? e.response.data : e.message,
+    });
+  }
+}
+
+function* watchRemoveFollower() {
+  yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchLogin),
@@ -228,5 +312,8 @@ export default function* userSaga() {
     fork(watchLoadUser),
     fork(watchUnfollow),
     fork(watchFollow),
+    fork(watchLoadFollowings),
+    fork(watchLoadFollowers),
+    fork(watchRemoveFollower),
   ]);
 }
