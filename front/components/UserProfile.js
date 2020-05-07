@@ -59,15 +59,15 @@ const UserProfile = () => {
       </GridCard>
       <GridCard>
         포스트
-        <Span>{me.posts}</Span>
+        <Span>{me.post.length}</Span>
       </GridCard>
       <GridCard>
         팔로잉
-        <Span>{me.followings}</Span>
+        <Span>{me.following.length}</Span>
       </GridCard>
       <GridCard>
         팔로워
-        <Span>{me.followers}</Span>
+        <Span>{me.follower.length}</Span>
       </GridCard>
       <GridCard hoverable={false}>
         <Button onClick={onLogout} loading={false}>

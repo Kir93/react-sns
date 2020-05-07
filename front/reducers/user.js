@@ -15,8 +15,6 @@ export const initialState = {
   isSigningUp: false, // 회원가입 시도중
   signUpErrorReason: '', // 회원가입 실패 사유
   me: null,
-  followingList: [], // 팔로잉 리스트
-  followerList: [], // 팔로워 리스트
   idError: false,
   userInfo: null,
 };
@@ -203,6 +201,15 @@ export default (state = initialState, action) => {
     case UNFOLLOW_USER_FAILURE: {
       return {
         ...state,
+      };
+    }
+    case ADD_POST_TO_ME: {
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          post: [action.data, ...state.me.post],
+        },
       };
     }
     default: {

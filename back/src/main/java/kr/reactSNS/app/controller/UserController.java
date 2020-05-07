@@ -43,8 +43,6 @@ public class UserController {
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
-            user.setPost("");
-            user.setFollower("");
             user.setPassword("");
             return ResponseEntity.ok(user);
         } catch (Exception e) {
@@ -79,8 +77,6 @@ public class UserController {
                     user.setPosts(user.getPost() != null ? user.getPost().length : 0);
                     user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
                     user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
-                    user.setPost("");
-                    user.setFollower("");
                     user.setPassword("");
                     return ResponseEntity.ok(user);
                 }
@@ -114,6 +110,7 @@ public class UserController {
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
             user.setPost("");
+            user.setFollowing("");
             user.setFollower("");
             user.setPassword("");
             return ResponseEntity.ok(user);
