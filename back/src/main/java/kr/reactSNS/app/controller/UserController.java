@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.reactSNS.app.beans.FollowBean;
 import kr.reactSNS.app.beans.PostBean;
 import kr.reactSNS.app.beans.UserBean;
 import kr.reactSNS.app.mapper.UserMapper;
@@ -157,7 +158,8 @@ public class UserController {
             if (userId == null) {
                 return ResponseEntity.status(403).body("로그인 후 이용하세요.");
             }
-            return ResponseEntity.ok(id);
+            Collection<FollowBean> followings = um.LoadFollowings(id);
+            return ResponseEntity.ok(followings);
         } catch (Exception e) {
             System.err.println(e);
             return ResponseEntity.status(403).body(e);
@@ -171,7 +173,8 @@ public class UserController {
             if (userId == null) {
                 return ResponseEntity.status(403).body("로그인 후 이용하세요.");
             }
-            return ResponseEntity.ok(id);
+            Collection<FollowBean> followers = um.LoadFollowers(id);
+            return ResponseEntity.ok(followers);
         } catch (Exception e) {
             System.err.println(e);
             return ResponseEntity.status(403).body(e);
@@ -185,6 +188,7 @@ public class UserController {
             if (userId == null) {
                 return ResponseEntity.status(403).body("로그인 후 이용하세요.");
             }
+            um.RemoveFollower((int) userId, id);
             return ResponseEntity.ok(id);
         } catch (Exception e) {
             System.err.println(e);

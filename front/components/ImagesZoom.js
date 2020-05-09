@@ -1,9 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'antd';
 import Slick from 'react-slick';
 import styled from 'styled-components';
-import { useCallback } from 'react';
 
 const DetailImage = styled.div`
   position: fixed;
@@ -40,13 +39,16 @@ const CarouselDiv = styled.div`
 const ImageDiv = styled.div`
   padding: 3rem;
   text-align: center;
+  @media only screen and (max-width: 576px) {
+    padding-top: 15rem;
+  }
+  & img {
+    margin: 0 auto;
+    max-height: 53rem;
+  }
 `;
 
-const Image = styled.img`
-  margin: 0 auto;
-  max-width: 100%;
-  max-height: 50rem;
-`;
+const Image = styled.img``;
 
 const ImagesZoom = ({ src, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -66,7 +68,7 @@ const ImagesZoom = ({ src, onClose }) => {
           {src.map((v) => {
             return (
               <ImageDiv>
-                <Image src={`http://localhost:3065/uploads/${v}`} alt={v} />
+                <img src={`http://58.236.217.124:3065/uploads/${v}`} alt={v} />
               </ImageDiv>
             );
           })}

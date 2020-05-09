@@ -15,6 +15,8 @@ export const initialState = {
   isSigningUp: false, // 회원가입 시도중
   signUpErrorReason: '', // 회원가입 실패 사유
   me: null,
+  followingList: [], // 팔로잉 리스트
+  followerList: [], // 팔로워 리스트
   idError: false,
   userInfo: null,
 };
@@ -168,6 +170,9 @@ export default (state = initialState, action) => {
       };
     }
     case FOLLOW_USER_REQUEST: {
+      if (state.me.following === null) {
+        state.me.following = [];
+      }
       return {
         ...state,
       };
@@ -196,10 +201,11 @@ export default (state = initialState, action) => {
         ...state,
         me: {
           ...state.me,
-          following: [...state.me.following].filter(
+          following: state.me.following.filter(
             (v) => parseInt(v) !== action.data,
           ),
         },
+        followingList: state.followingList.filter((v) => v.id !== action.data),
       };
     }
     case UNFOLLOW_USER_FAILURE: {
@@ -214,6 +220,60 @@ export default (state = initialState, action) => {
           ...state.me,
           post: [action.data, ...state.me.post],
         },
+      };
+    }
+    case LOAD_FOLLOWERS_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case LOAD_FOLLOWERS_SUCCESS: {
+      return {
+        ...state,
+        followerList: action.data,
+      };
+    }
+    case LOAD_FOLLOWERS_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case LOAD_FOLLOWINGS_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case LOAD_FOLLOWINGS_SUCCESS: {
+      return {
+        ...state,
+        followingList: action.data,
+      };
+    }
+    case LOAD_FOLLOWINGS_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case REMOVE_FOLLOWER_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case REMOVE_FOLLOWER_SUCCESS: {
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          follower: state.me.follower.filter(
+            (v) => parseInt(v) !== action.data,
+          ),
+        },
+        followerList: state.followerList.filter((v) => v.id !== action.data),
+      };
+    }
+    case REMOVE_FOLLOWER_FAILURE: {
+      return {
+        ...state,
       };
     }
     default: {

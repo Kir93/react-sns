@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import kr.reactSNS.app.beans.FollowBean;
 import kr.reactSNS.app.beans.PostBean;
 import kr.reactSNS.app.beans.UserBean;
 
@@ -18,8 +19,8 @@ public interface UserMapper {
 
     @Select("SELECT u.*, GROUP_CONCAT(DISTINCT p.id) Post," + "GROUP_CONCAT(DISTINCT fing.followerId) Following, "
             + "GROUP_CONCAT(DISTINCT fer.followingId) Follower FROM Users AS u "
-            + "JOIN Posts AS p ON (u.id = p.UserId) " + "JOIN Follow AS fing ON (u.id = fing.followingId) "
-            + "JOIN Follow AS fer ON (u.id = fer.followerId) " + "WHERE u.id = #{id}")
+            + "LEFT JOIN Posts AS p ON (u.id = p.UserId) " + "LEFT JOIN Follow AS fing ON (u.id = fing.followingId) "
+            + "LEFT JOIN Follow AS fer ON (u.id = fer.followerId) " + "WHERE u.id = #{id}")
     public UserBean checkUser(int id);
 
     @Insert("INSERT INTO Users (userId, nickname, password) VALUE (#{userId}, #{nickname}, #{password})")
@@ -38,4 +39,13 @@ public interface UserMapper {
 
     @Delete("DELETE FROM Follow WHERE followingId = #{followingId} AND followerId = #{followerId}")
     public int Unfollow(int followingId, int followerId);
+
+    @Delete("DELETE FROM Follow WHERE followerId = #{followerId} AND followingId = #{followingId}")
+    public int RemoveFollower(int followerId, int followingId);
+    
+    @Select("SELECT f.followingId AS id, u.nickname FROM Follow f JOIN Users u ON(f.followingId=u.id) WHERE f.followerId=#{id}")
+    public Collection<FollowBean> LoadFollowers(int id);
+
+    @Select("SELECT f.followerId AS id, u.nickname FROM Follow f JOIN Users u ON(f.followerId=u.id) WHERE f.followingId=#{id}")
+    public Collection<FollowBean> LoadFollowings(int id);
 }
