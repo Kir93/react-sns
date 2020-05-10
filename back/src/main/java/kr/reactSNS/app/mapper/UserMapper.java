@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import kr.reactSNS.app.beans.FollowBean;
 import kr.reactSNS.app.beans.PostBean;
@@ -48,4 +49,7 @@ public interface UserMapper {
 
     @Select("SELECT f.followerId AS id, u.nickname FROM Follow f JOIN Users u ON(f.followerId=u.id) WHERE f.followingId=#{id}")
     public Collection<FollowBean> LoadFollowings(int id);
+
+    @Update("UPDATE Users SET nickname=#{nickname} WHERE id=#{id}")
+    public boolean EditNickname(String nickname, int id);
 }

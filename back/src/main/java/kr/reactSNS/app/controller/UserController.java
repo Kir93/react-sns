@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -205,6 +206,23 @@ public class UserController {
             }
             um.Unfollow((int) userId, id);
             return ResponseEntity.ok(id);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
+    @PatchMapping("/nickname")
+    public ResponseEntity<Object> EditNickname(@RequestBody UserBean ub, HttpSession session){
+        try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            if(!um.EditNickname(ub.getNickname(), (int) userId)){
+                return ResponseEntity.status(403).body("문제가 발생했습니다.");
+            }
+            return ResponseEntity.ok(ub.getNickname());
         } catch (Exception e) {
             System.err.println(e);
             return ResponseEntity.status(403).body(e);

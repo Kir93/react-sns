@@ -39,6 +39,9 @@ import {
   REMOVE_FOLLOWER_REQUEST,
   REMOVE_FOLLOWER_FAILURE,
   REMOVE_FOLLOWER_SUCCESS,
+  EDIT_NICKNAME_SUCCESS,
+  EDIT_NICKNAME_FAILURE,
+  EDIT_NICKNAME_REQUEST,
 } from '../reducers/user';
 
 function loginAPI(loginData) {
@@ -303,6 +306,32 @@ function* watchRemoveFollower() {
   yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
 }
 
+function editNicknameAPI(nickname) {
+  return axios.patch(`/user/nickname`, { nickname }, { withCredentials: true });
+}
+
+function* editNickname(action) {
+  try {
+    const result = yield call(editNicknameAPI, action.data);
+    console.log(result);
+    yield put({
+      // put은 dispatch 동일
+      type: EDIT_NICKNAME_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    // loginAPI 실패
+    yield put({
+      type: EDIT_NICKNAME_FAILURE,
+      error: e.response ? e.response.data : e.message,
+    });
+  }
+}
+
+function* watchEditNickname() {
+  yield takeLatest(EDIT_NICKNAME_REQUEST, editNickname);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchLogin),
@@ -315,5 +344,6 @@ export default function* userSaga() {
     fork(watchLoadFollowings),
     fork(watchLoadFollowers),
     fork(watchRemoveFollower),
+    fork(watchEditNickname),
   ]);
 }

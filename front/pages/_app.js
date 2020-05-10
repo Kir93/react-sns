@@ -44,7 +44,6 @@ ReactSNS.propTypes = {
 };
 
 ReactSNS.getInitialProps = async (context) => {
-  console.log(context);
   const { ctx, Component } = context;
   let pageProps = {};
   if (Component.getInitialProps) {
