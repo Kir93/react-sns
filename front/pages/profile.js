@@ -1,8 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { List, Button, Card, Icon } from 'antd';
 import styled from 'styled-components';
 import NicknameEditForm from '../components/NicknameEditForm';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   LOAD_FOLLOWERS_REQUEST,
@@ -12,6 +11,7 @@ import {
 } from '../reducers/user';
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import PostCard from '../components/PostCard';
+import Router from 'next/router';
 
 const ProfileList = styled(List)`
   margin-bottom: 20px;
@@ -28,29 +28,12 @@ const ListItem = styled(List.Item)`
   margin-top: 20px;
 `;
 
-const profile = () => {
+const Profile = () => {
   const dispatch = useDispatch();
   const { me, followerList, followingList } = useSelector(
     (state) => state.user,
   );
   const { mainPosts } = useSelector((state) => state.post);
-
-  useEffect(() => {
-    if (me) {
-      dispatch({
-        type: LOAD_FOLLOWERS_REQUEST,
-        data: me.id,
-      });
-      dispatch({
-        type: LOAD_FOLLOWINGS_REQUEST,
-        data: me.id,
-      });
-      dispatch({
-        type: LOAD_USER_POSTS_REQUEST,
-        data: me.id,
-      });
-    }
-  }, [me && me.id]);
 
   const onUnfollow = useCallback(
     (userId) => () => {
@@ -72,6 +55,7 @@ const profile = () => {
     },
     [],
   );
+
   return (
     <>
       <NicknameEditForm />
@@ -84,7 +68,6 @@ const profile = () => {
         dataSource={followingList}
         renderItem={(item) => (
           <ListItem>
-            {console.log(item)}
             <Card
               actions={[
                 <Icon key="stop" type="stop" onClick={onUnfollow(item.id)} />,
@@ -127,4 +110,20 @@ const profile = () => {
   );
 };
 
-export default profile;
+Profile.getInitialProps = async (context) => {
+  const state = context.store.getState();
+  context.store.dispatch({
+    type: LOAD_FOLLOWERS_REQUEST,
+    data: state.user.me && state.user.me.id,
+  });
+  context.store.dispatch({
+    type: LOAD_FOLLOWINGS_REQUEST,
+    data: state.user.me && state.user.me.id,
+  });
+  context.store.dispatch({
+    type: LOAD_USER_POSTS_REQUEST,
+    data: state.user.me && state.user.me.id,
+  });
+};
+
+export default Profile;

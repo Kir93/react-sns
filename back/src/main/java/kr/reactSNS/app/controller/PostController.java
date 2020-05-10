@@ -111,7 +111,6 @@ public class PostController {
             }
             cb.setUserId((int) userId);
             cb.setPostId(id);
-            System.out.println(cb.getPostId());
             cm.AddComment(cb);
             CommentBean comment = cm.LoadComment(cb);
             return ResponseEntity.ok(comment);
@@ -127,12 +126,9 @@ public class PostController {
         try {
             List<String> list = new ArrayList<String>();
             String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/";
-            System.out.println(baseDir);
             for (MultipartFile image : images) {
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
-                System.out.println(ext);
                 String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
-                System.out.println(basename);
                 File dest = new File(baseDir + basename + "." + ext);
                 image.transferTo(dest);
                 list.add((basename + "." + ext));

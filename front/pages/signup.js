@@ -100,6 +100,9 @@ const signup = () => {
     [id, nickname, password, passwordCheck],
   );
 
+  if (me) {
+    return null;
+  }
   const onChangeId = useCallback(
     (e) => {
       const idReg = /^[a-z]+[a-z0-9]{5,12}$/g;

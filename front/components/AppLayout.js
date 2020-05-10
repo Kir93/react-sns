@@ -5,9 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import LoginForm from './LoginForm';
 import UserProfile from './UserProfile';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { LOAD_USER_REQUEST } from '../reducers/user';
+import { useSelector } from 'react-redux';
 
 const middleAlign = 'vertical-align: middle;';
 const SearchBar = styled(Input.Search)`
@@ -25,14 +23,6 @@ const Header = styled(Menu)`
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (!me) {
-      dispatch({
-        type: LOAD_USER_REQUEST,
-      });
-    }
-  }, []);
 
   return (
     <>

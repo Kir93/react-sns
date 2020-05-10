@@ -232,7 +232,7 @@ function* watchFollow() {
 }
 
 function loadFollowingsAPI(userId) {
-  return axios.get(`/user/${userId}/followings`, { withCredentials: true });
+  return axios.get(`/user/${userId || 0}/followings`, { withCredentials: true });
 }
 
 function* loadFollowings(action) {
@@ -257,7 +257,7 @@ function* watchLoadFollowings() {
 }
 
 function loadfollowersAPI(userId) {
-  return axios.get(`/user/${userId}/followers`, { withCredentials: true });
+  return axios.get(`/user/${userId || 0}/followers`, { withCredentials: true });
 }
 
 function* loadfollowers(action) {

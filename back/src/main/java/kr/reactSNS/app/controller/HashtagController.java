@@ -30,10 +30,8 @@ public class HashtagController {
             HashtagBean hb = hm.CheckHashtag(tag);
             Collection<PostBean> loadHashtagPosts = hm.LoadHashtagPosts(hb.getId());
             for(PostBean p : loadHashtagPosts){
-                System.out.println(p.getRetweetId());
                 if(p.getRetweetId() != 0){
                     p.setRetweet(pm.SelectRetweetPost(p.getId()));
-                    System.out.println(p.getRetweet());
                 }
             }
             return ResponseEntity.ok(loadHashtagPosts);

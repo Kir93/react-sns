@@ -3,11 +3,14 @@ import Head from 'next/head';
 import AppLayout from '../components/AppLayout';
 import PropTypes from 'prop-types';
 import withRedux from 'next-redux-wrapper';
+import withReduxSaga from 'next-redux-saga';
+import axios from 'axios';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import reducer from '../reducers';
 import rootSaga from '../sagas';
+import { LOAD_USER_REQUEST } from '../reducers/user';
 
 const ReactSNS = ({ Component, store, pageProps }) => {
   return (
@@ -46,6 +49,17 @@ ReactSNS.propTypes = {
 ReactSNS.getInitialProps = async (context) => {
   const { ctx, Component } = context;
   let pageProps = {};
+  const state = ctx.store.getState();
+  const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
+  console.log('cookie', cookie);
+  if (ctx.isServer && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  if (!state.user.me) {
+    ctx.store.dispatch({
+      type: LOAD_USER_REQUEST,
+    });
+  }
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
   }
@@ -64,8 +78,8 @@ const configureStore = (initialState, options) => {
       : (f) => f,
   );
   const store = createStore(reducer, initialState, enhancer);
-  sagaMiddleware.run(rootSaga);
+  store.sagaTask = sagaMiddleware.run(rootSaga);
   return store;
 };
 
-export default withRedux(configureStore)(ReactSNS);
+export default withRedux(configureStore)(withReduxSaga(ReactSNS));

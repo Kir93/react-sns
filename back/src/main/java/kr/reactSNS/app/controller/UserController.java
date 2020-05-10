@@ -123,8 +123,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}/posts")
-    public ResponseEntity<Object> CheckUserId(@PathVariable int id) {
+    public ResponseEntity<Object> CheckUserId(@PathVariable int id, HttpSession session) {
         try {
+            Object userId = (Object) session.getAttribute("rslc");
+            if(id == 0){
+                id = (int) userId;
+            }
             UserBean user = um.checkUser(id);
             if (user == null) {
                 return ResponseEntity.status(401).body("존재하지 않는 사용자입니다.");
@@ -159,6 +163,9 @@ public class UserController {
             if (userId == null) {
                 return ResponseEntity.status(403).body("로그인 후 이용하세요.");
             }
+            if(id == 0){
+                id = (int) userId;
+            }
             Collection<FollowBean> followings = um.LoadFollowings(id);
             return ResponseEntity.ok(followings);
         } catch (Exception e) {
@@ -173,6 +180,9 @@ public class UserController {
             Object userId = (Object) session.getAttribute("rslc");
             if (userId == null) {
                 return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            if(id == 0){
+                id = (int) userId;
             }
             Collection<FollowBean> followers = um.LoadFollowers(id);
             return ResponseEntity.ok(followers);
