@@ -115,6 +115,7 @@ function* logout() {
       // put은 dispatch 동일
       type: LOG_OUT_SUCCESS,
     });
+    Router.push('/');
   } catch (e) {
     // loginAPI 실패
     yield put({
@@ -231,13 +232,16 @@ function* watchFollow() {
   yield takeLatest(FOLLOW_USER_REQUEST, follow);
 }
 
-function loadFollowingsAPI(userId) {
-  return axios.get(`/user/${userId || 0}/followings`, { withCredentials: true });
+function loadFollowingsAPI(userId, offset = 0, limit = 3) {
+  return axios.get(
+    `/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`,
+    { withCredentials: true },
+  );
 }
 
 function* loadFollowings(action) {
   try {
-    const result = yield call(loadFollowingsAPI, action.data);
+    const result = yield call(loadFollowingsAPI, action.data, action.offset);
     yield put({
       // put은 dispatch 동일
       type: LOAD_FOLLOWINGS_SUCCESS,
@@ -256,13 +260,16 @@ function* watchLoadFollowings() {
   yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
 }
 
-function loadfollowersAPI(userId) {
-  return axios.get(`/user/${userId || 0}/followers`, { withCredentials: true });
+function loadfollowersAPI(userId, offset = 0, limit = 3) {
+  return axios.get(
+    `/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`,
+    { withCredentials: true },
+  );
 }
 
 function* loadfollowers(action) {
   try {
-    const result = yield call(loadfollowersAPI, action.data);
+    const result = yield call(loadfollowersAPI, action.data, action.offset);
     yield put({
       // put은 dispatch 동일
       type: LOAD_FOLLOWERS_SUCCESS,

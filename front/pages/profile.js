@@ -11,7 +11,6 @@ import {
 } from '../reducers/user';
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import PostCard from '../components/PostCard';
-import Router from 'next/router';
 
 const ProfileList = styled(List)`
   margin-bottom: 20px;
@@ -30,9 +29,12 @@ const ListItem = styled(List.Item)`
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const { me, followerList, followingList } = useSelector(
-    (state) => state.user,
-  );
+  const {
+    followerList,
+    followingList,
+    hasMoreFollower,
+    hasMoreFollowing,
+  } = useSelector((state) => state.user);
   const { mainPosts } = useSelector((state) => state.post);
 
   const onUnfollow = useCallback(
@@ -56,6 +58,19 @@ const Profile = () => {
     [],
   );
 
+  const loadMoreFollowings = useCallback(() => {
+    dispatch({
+      type: LOAD_FOLLOWINGS_REQUEST,
+      offset: followingList.length,
+    });
+  }, [followingList.length]);
+  const loadMoreFollowers = useCallback(() => {
+    dispatch({
+      type: LOAD_FOLLOWERS_REQUEST,
+      offset: followerList.length,
+    });
+  }, [followerList.length]);
+
   return (
     <>
       <NicknameEditForm />
@@ -63,7 +78,9 @@ const Profile = () => {
         grid={{ gutter: 4, xs: 2, md: 3 }}
         size="small"
         header={<div>팔로잉 목록</div>}
-        loadMore={<More>더보기</More>}
+        loadMore={
+          hasMoreFollowing && <More onClick={loadMoreFollowings}>더보기</More>
+        }
         bordered
         dataSource={followingList}
         renderItem={(item) => (
@@ -82,7 +99,9 @@ const Profile = () => {
         grid={{ gutter: 4, xs: 2, md: 3 }}
         size="small"
         header={<div>팔로워 목록</div>}
-        loadMore={<More>더보기</More>}
+        loadMore={
+          hasMoreFollower && <More onClick={loadMoreFollowers}>더보기</More>
+        }
         bordered
         dataSource={followerList}
         renderItem={(item) => (

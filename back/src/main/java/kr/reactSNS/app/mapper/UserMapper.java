@@ -44,11 +44,11 @@ public interface UserMapper {
     @Delete("DELETE FROM Follow WHERE followerId = #{followerId} AND followingId = #{followingId}")
     public int RemoveFollower(int followerId, int followingId);
     
-    @Select("SELECT f.followingId AS id, u.nickname FROM Follow f JOIN Users u ON(f.followingId=u.id) WHERE f.followerId=#{id}")
-    public Collection<FollowBean> LoadFollowers(int id);
+    @Select("SELECT f.followingId AS id, u.nickname FROM Follow f JOIN Users u ON(f.followingId=u.id) WHERE f.followerId=#{id} LIMIT #{limit} OFFSET #{offset}")
+    public Collection<FollowBean> LoadFollowers(int id, int offset, int limit);
 
-    @Select("SELECT f.followerId AS id, u.nickname FROM Follow f JOIN Users u ON(f.followerId=u.id) WHERE f.followingId=#{id}")
-    public Collection<FollowBean> LoadFollowings(int id);
+    @Select("SELECT f.followerId AS id, u.nickname FROM Follow f JOIN Users u ON(f.followerId=u.id) WHERE f.followingId=#{id} LIMIT #{limit} OFFSET #{offset}")
+    public Collection<FollowBean> LoadFollowings(int id, int offset, int limit);
 
     @Update("UPDATE Users SET nickname=#{nickname} WHERE id=#{id}")
     public boolean EditNickname(String nickname, int id);

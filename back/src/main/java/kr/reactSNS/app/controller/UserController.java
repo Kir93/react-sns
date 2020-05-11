@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.reactSNS.app.beans.FollowBean;
@@ -157,7 +158,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/followings")
-    public ResponseEntity<Object> LoadFollowings(@PathVariable int id, HttpSession session){
+    public ResponseEntity<Object> LoadFollowings(@PathVariable int id, HttpSession session, @RequestParam int offset, @RequestParam int limit){
         try {
             Object userId = (Object) session.getAttribute("rslc");
             if (userId == null) {
@@ -166,7 +167,7 @@ public class UserController {
             if(id == 0){
                 id = (int) userId;
             }
-            Collection<FollowBean> followings = um.LoadFollowings(id);
+            Collection<FollowBean> followings = um.LoadFollowings(id, offset, limit);
             return ResponseEntity.ok(followings);
         } catch (Exception e) {
             System.err.println(e);
@@ -175,7 +176,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/followers")
-    public ResponseEntity<Object> LoadFollowers(@PathVariable int id, HttpSession session){
+    public ResponseEntity<Object> LoadFollowers(@PathVariable int id, HttpSession session, @RequestParam int offset, @RequestParam int limit){
         try {
             Object userId = (Object) session.getAttribute("rslc");
             if (userId == null) {
@@ -184,7 +185,7 @@ public class UserController {
             if(id == 0){
                 id = (int) userId;
             }
-            Collection<FollowBean> followers = um.LoadFollowers(id);
+            Collection<FollowBean> followers = um.LoadFollowers(id, offset, limit);
             return ResponseEntity.ok(followers);
         } catch (Exception e) {
             System.err.println(e);
