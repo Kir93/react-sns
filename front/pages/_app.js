@@ -52,6 +52,7 @@ ReactSNS.getInitialProps = async (context) => {
   const state = ctx.store.getState();
   const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
   console.log('cookie', cookie);
+  axios.defaults.headers.Cookie = '';
   if (ctx.isServer && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }

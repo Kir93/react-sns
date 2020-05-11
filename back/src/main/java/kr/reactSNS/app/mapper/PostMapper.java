@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import kr.reactSNS.app.beans.HashtagBean;
 import kr.reactSNS.app.beans.PostBean;
@@ -52,4 +53,7 @@ public interface PostMapper {
             + "JOIN Users ru ON (r.UserId = ru.id) " + "LEFT JOIN Images AS i ON (p.RetweetId = i.PostId) "
             + "WHERE p.id = #{id}")
     public Map<String, Object> SelectRetweetPost(int id);
+
+    @Update("UPDATE Posts SET delYn='Y' WHERE id=#{id}")
+    public boolean RemovePost(int id);
 }

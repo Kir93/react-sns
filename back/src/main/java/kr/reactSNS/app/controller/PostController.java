@@ -83,6 +83,21 @@ public class PostController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> RemovePost(@PathVariable int id){
+        try {
+            PostBean post = pm.SelectPost(id);
+            if (post == null) {
+                return ResponseEntity.status(401).body("존재하지 않는 포스트입니다.");
+            }
+            pm.RemovePost(id);
+            return ResponseEntity.ok(id);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
     @GetMapping("/{id}/comments")
     public ResponseEntity<Object> LoadComments(@PathVariable int id) {
         try {

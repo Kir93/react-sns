@@ -60,6 +60,7 @@ export const EDIT_NICKNAME_SUCCESS = 'EDIT_NICKNAME_SUCCESS';
 export const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE';
 
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
+export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -217,6 +218,15 @@ export default (state = initialState, action) => {
         me: {
           ...state.me,
           post: [action.data, ...state.me.post],
+        },
+      };
+    }
+    case REMOVE_POST_OF_ME: {
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          post: state.me.post.filter((v) => parseInt(v) !== action.data),
         },
       };
     }
