@@ -131,6 +131,9 @@ public class UserController {
                 where = "WHERE u.id=#{id} AND p.delYn = 'N' AND p.RetweetId IS NULL AND p.id <" + lastId;
             }
             Object userId = (Object) session.getAttribute("rslc");
+            if (userId == null && id == 0) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
             if(id == 0){
                 id = (int) userId;
             }

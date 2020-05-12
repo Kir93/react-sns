@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("userId").passwordParameter("password").permitAll();
 
         http.logout().logoutUrl("/api/user/logout").deleteCookies("rslc").invalidateHttpSession(true)
-                .logoutSuccessUrl("/api/posts/").clearAuthentication(true).permitAll();
+                .logoutSuccessUrl("/").clearAuthentication(true).permitAll();
 
         http.sessionManagement().maximumSessions(1).expiredUrl("/api/user/").maxSessionsPreventsLogin(true);
     }
