@@ -30,12 +30,13 @@ const ListItem = styled(List.Item)`
 const Profile = () => {
   const dispatch = useDispatch();
   const {
+    me,
     followerList,
     followingList,
     hasMoreFollower,
     hasMoreFollowing,
   } = useSelector((state) => state.user);
-  const { mainPosts } = useSelector((state) => state.post);
+  const { mainPosts, hasMorePost } = useSelector((state) => state.post);
 
   const onUnfollow = useCallback(
     (userId) => () => {
@@ -64,12 +65,39 @@ const Profile = () => {
       offset: followingList.length,
     });
   }, [followingList.length]);
+
   const loadMoreFollowers = useCallback(() => {
     dispatch({
       type: LOAD_FOLLOWERS_REQUEST,
       offset: followerList.length,
     });
   }, [followerList.length]);
+
+  const onScroll = useCallback(() => {
+    console.log(
+      window.scrollY,
+      document.documentElement.clientHeight,
+      document.documentElement.scrollHeight,
+    );
+    if (
+      window.scrollY + document.documentElement.clientHeight >
+      document.documentElement.scrollHeight - 300
+    ) {
+      if (hasMorePost) {
+        dispatch({
+          type: LOAD_USER_POSTS_REQUEST,
+          data: me.id,
+          lastId: mainPosts[mainPosts.length - 1].id,
+        });
+      }
+    }
+  }, [mainPosts, hasMorePost]);
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [mainPosts.length]);
 
   return (
     <>

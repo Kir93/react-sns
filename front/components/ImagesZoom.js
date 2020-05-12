@@ -38,18 +38,20 @@ const CarouselDiv = styled.div`
 
 const ImageDiv = styled.div`
   padding: 3rem;
+  padding-top: 8rem;
   text-align: center;
   @media only screen and (max-width: 576px) {
     padding-top: 15rem;
   }
   & img {
     margin: 0 auto;
-    max-height: 53rem;
+    max-width: 100%;
+    max-height: 45rem;
+    @media only screen and (max-width: 576px) {
+      max-height: 30rem;
+    }
   }
 `;
-
-const Image = styled.img``;
-
 const ImagesZoom = ({ src, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   return (

@@ -124,8 +124,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}/posts")
-    public ResponseEntity<Object> CheckUserId(@PathVariable int id, HttpSession session) {
+    public ResponseEntity<Object> CheckUserId(@RequestParam int lastId, @PathVariable int id, HttpSession session) {
         try {
+            String where = "WHERE u.id=#{id} AND p.delYn = 'N' AND p.RetweetId IS NULL";
+            if(lastId != 0){ 
+                where = "WHERE u.id=#{id} AND p.delYn = 'N' AND p.RetweetId IS NULL AND p.id <" + lastId;
+            }
             Object userId = (Object) session.getAttribute("rslc");
             if(id == 0){
                 id = (int) userId;
@@ -134,7 +138,7 @@ public class UserController {
             if (user == null) {
                 return ResponseEntity.status(401).body("존재하지 않는 사용자입니다.");
             }
-            Collection<PostBean> loadUserPosts = um.LoadUserPosts(id);
+            Collection<PostBean> loadUserPosts = um.LoadUserPosts(id, where);
             return ResponseEntity.ok(loadUserPosts);
         } catch (Exception e) {
             System.err.println(e);

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.reactSNS.app.beans.HashtagBean;
@@ -25,10 +26,14 @@ public class HashtagController {
     PostMapper pm;
 
     @GetMapping("/{tag}")
-    public ResponseEntity<Object> hashtagPosts(@PathVariable String tag) {
+    public ResponseEntity<Object> hashtagPosts(@RequestParam int lastId, @PathVariable String tag) {
         try {
+            String where = "WHERE ph.HashtagId=#{HashtagId} AND p.RetweetId IS NULL AND p.delYn='N'";
+            if(lastId != 0){ 
+                where = "WHERE ph.HashtagId=#{HashtagId} AND p.RetweetId IS NULL AND p.delYn='N' AND p.id <" + lastId;
+            }
             HashtagBean hb = hm.CheckHashtag(tag);
-            Collection<PostBean> loadHashtagPosts = hm.LoadHashtagPosts(hb.getId());
+            Collection<PostBean> loadHashtagPosts = hm.LoadHashtagPosts(hb.getId(), where);
             for(PostBean p : loadHashtagPosts){
                 if(p.getRetweetId() != 0){
                     p.setRetweet(pm.SelectRetweetPost(p.getId()));

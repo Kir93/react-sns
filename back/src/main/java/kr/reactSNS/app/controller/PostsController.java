@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.reactSNS.app.beans.PostBean;
@@ -23,9 +24,13 @@ public class PostsController {
     PostsMapper pm;
 
     @GetMapping("/")
-    public ResponseEntity<Object> Posts() {
+    public ResponseEntity<Object> Posts(@RequestParam int lastId) {
         try {
-            Collection<PostBean> loadPosts = pm.LoadMainPosts();
+            String where = "WHERE p.delYn = 'N'";
+            if(lastId != 0){ 
+                where = "WHERE p.delYn = 'N' AND p.id <" + lastId;
+            }
+            Collection<PostBean> loadPosts = pm.LoadMainPosts(where);
             for(PostBean p : loadPosts){
                 if(p.getRetweetId() != 0){
                     p.setRetweet(pom.SelectRetweetPost(p.getId()));

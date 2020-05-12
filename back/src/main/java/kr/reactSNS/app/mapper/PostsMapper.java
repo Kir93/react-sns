@@ -12,7 +12,7 @@ public interface PostsMapper {
     + "JOIN Users AS u ON (p.UserId = u.id) "
     + "LEFT JOIN Images AS i ON (p.id = i.PostId) "
     + "LEFT JOIN `Like` AS l ON (p.id = l.PostId) "
-    + "WHERE p.delYn = 'N' "
-    + "GROUP BY p.id ORDER BY p.createdAt DESC")
-    public Collection<PostBean> LoadMainPosts();
+    + "${where} "
+    + "GROUP BY p.id ORDER BY p.createdAt DESC limit 10")
+    public Collection<PostBean> LoadMainPosts(String where);
 }

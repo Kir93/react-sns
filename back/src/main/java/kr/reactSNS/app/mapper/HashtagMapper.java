@@ -19,7 +19,7 @@ public interface HashtagMapper {
     + "JOIN Posts AS p ON (ph.PostId = p.id) JOIN Users AS u ON (p.UserId = u.id) " 
     + "LEFT JOIN Images AS i ON (p.id = i.PostId) "
     + "LEFT JOIN `Like` AS l ON (p.id = l.PostId) "
-    + "WHERE ph.HashtagId=#{HashtagId} AND p.RetweetId IS NULL AND p.delYn='N' " 
-    + "GROUP BY p.id ORDER BY p.createdAt DESC")
-    public Collection<PostBean> LoadHashtagPosts(int HashtagId);
+    + "${where} "
+    + "GROUP BY p.id ORDER BY p.createdAt DESC limit 10")
+    public Collection<PostBean> LoadHashtagPosts(int HashtagId, String where);
 }

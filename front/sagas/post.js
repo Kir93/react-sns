@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { all, delay, fork, put, call, takeLatest } from 'redux-saga/effects';
+import { all, fork, put, call, takeLatest, throttle } from 'redux-saga/effects';
 import {
   ADD_COMMENT_FAILURE,
   ADD_COMMENT_REQUEST,
@@ -37,13 +37,13 @@ import {
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
-function loadMainPostAPI() {
-  return axios.get('/posts/');
+function loadMainPostAPI(lastId = 0) {
+  return axios.get(`/posts/?lastId=${lastId}`);
 }
 
-function* loadMainPost() {
+function* loadMainPost(action) {
   try {
-    const result = yield call(loadMainPostAPI);
+    const result = yield call(loadMainPostAPI, action.lastId);
     yield put({
       type: LOAD_MAIN_POSTS_SUCCESS,
       data: result.data,
@@ -57,7 +57,7 @@ function* loadMainPost() {
 }
 
 function* watchLoadMainPost() {
-  yield takeLatest(LOAD_MAIN_POSTS_REQUEST, loadMainPost);
+  yield throttle(2000, LOAD_MAIN_POSTS_REQUEST, loadMainPost);
 }
 
 function addPostAPI(addPostData) {
@@ -143,13 +143,13 @@ function* watchLoadComments() {
   yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
 }
 
-function loadUserPostsAPI(id) {
-  return axios.get(`/user/${id || 0}/posts`);
+function loadUserPostsAPI(id, lastId = 0) {
+  return axios.get(`/user/${id || 0}/posts?lastId=${lastId}`);
 }
 
 function* loadUserPosts(action) {
   try {
-    const result = yield call(loadUserPostsAPI, action.data);
+    const result = yield call(loadUserPostsAPI, action.data, action.lastId);
     yield put({
       type: LOAD_USER_POSTS_SUCCESS,
       data: result.data,
@@ -163,16 +163,16 @@ function* loadUserPosts(action) {
 }
 
 function* watchLoadUserPosts() {
-  yield takeLatest(LOAD_USER_POSTS_REQUEST, loadUserPosts);
+  yield throttle(2000, LOAD_USER_POSTS_REQUEST, loadUserPosts);
 }
 
-function loadHashtagPostsAPI(tag) {
-  return axios.get(`/hashtag/${encodeURIComponent(tag)}`);
+function loadHashtagPostsAPI(tag, lastId = 0) {
+  return axios.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}`);
 }
 
 function* loadHashtagPosts(action) {
   try {
-    const result = yield call(loadHashtagPostsAPI, action.data);
+    const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
     console.log(result);
     yield put({
       type: LOAD_HASHTAG_POSTS_SUCCESS,
@@ -187,7 +187,7 @@ function* loadHashtagPosts(action) {
 }
 
 function* watchLoadHashtagPosts() {
-  yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+  yield throttle(2000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
 
 function uploadImagesAPI(uploadImagesData) {

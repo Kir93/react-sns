@@ -1,14 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import { Card, Avatar } from 'antd';
 import { LOAD_USER_REQUEST } from '../reducers/user';
 import PostCard from '../components/PostCard';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useCallback } from 'react';
 
 const User = () => {
-  const { mainPosts } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
+  const { mainPosts, hasMorePost } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.user);
-
+  const onScroll = useCallback(() => {
+    console.log(
+      window.scrollY,
+      document.documentElement.clientHeight,
+      document.documentElement.scrollHeight,
+    );
+    if (
+      window.scrollY + document.documentElement.clientHeight >
+      document.documentElement.scrollHeight - 300
+    ) {
+      if (hasMorePost) {
+        dispatch({
+          type: LOAD_USER_POSTS_REQUEST,
+          data: userInfo.id,
+          lastId: mainPosts[mainPosts.length - 1].id,
+        });
+      }
+    }
+  }, [mainPosts, hasMorePost]);
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [mainPosts.length !== 0]);
   return (
     <div>
       {userInfo ? (
