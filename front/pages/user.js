@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import { Card, Avatar } from 'antd';
 import { LOAD_USER_REQUEST } from '../reducers/user';
@@ -10,22 +10,23 @@ const User = () => {
   const dispatch = useDispatch();
   const { mainPosts, hasMorePost } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.user);
+  const countRef = useRef([]);
+
   const onScroll = useCallback(() => {
-    console.log(
-      window.scrollY,
-      document.documentElement.clientHeight,
-      document.documentElement.scrollHeight,
-    );
     if (
       window.scrollY + document.documentElement.clientHeight >
       document.documentElement.scrollHeight - 300
     ) {
       if (hasMorePost) {
-        dispatch({
-          type: LOAD_USER_POSTS_REQUEST,
-          data: userInfo.id,
-          lastId: mainPosts[mainPosts.length - 1].id,
-        });
+        const lastId = mainPosts[mainPosts.length - 1].id;
+        if (!countRef.current.includes(lastId)) {
+          dispatch({
+            type: LOAD_USER_POSTS_REQUEST,
+            data: userInfo.id,
+            lastId: lastId,
+          });
+        }
+        countRef.current.push(lastId);
       }
     }
   }, [mainPosts, hasMorePost]);

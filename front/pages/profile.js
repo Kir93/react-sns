@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { List, Button, Card, Icon } from 'antd';
 import styled from 'styled-components';
 import NicknameEditForm from '../components/NicknameEditForm';
@@ -37,6 +37,7 @@ const Profile = () => {
     hasMoreFollowing,
   } = useSelector((state) => state.user);
   const { mainPosts, hasMorePost } = useSelector((state) => state.post);
+  const countRef = useRef([]);
 
   const onUnfollow = useCallback(
     (userId) => () => {
@@ -74,21 +75,20 @@ const Profile = () => {
   }, [followerList.length]);
 
   const onScroll = useCallback(() => {
-    console.log(
-      window.scrollY,
-      document.documentElement.clientHeight,
-      document.documentElement.scrollHeight,
-    );
     if (
       window.scrollY + document.documentElement.clientHeight >
       document.documentElement.scrollHeight - 300
     ) {
       if (hasMorePost) {
-        dispatch({
-          type: LOAD_USER_POSTS_REQUEST,
-          data: me.id,
-          lastId: mainPosts[mainPosts.length - 1].id,
-        });
+        const lastId = mainPosts[mainPosts.length - 1].id;
+        if (!countRef.current.includes(lastId)) {
+          dispatch({
+            type: LOAD_USER_POSTS_REQUEST,
+            data: me.id,
+            lastId: lastId,
+          });
+        }
+        countRef.current.push(lastId);
       }
     }
   }, [mainPosts, hasMorePost]);
