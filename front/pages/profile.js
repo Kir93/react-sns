@@ -11,6 +11,7 @@ import {
 } from '../reducers/user';
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import PostCard from '../components/PostCard';
+import Router from 'next/router';
 
 const ProfileList = styled(List)`
   margin-bottom: 20px;
@@ -159,6 +160,10 @@ const Profile = () => {
 
 Profile.getInitialProps = async (context) => {
   const state = context.store.getState();
+  if (!state.user.me) {
+    alert('로그인 후 이용하세요.');
+    return Router.push('/');
+  }
   context.store.dispatch({
     type: LOAD_FOLLOWERS_REQUEST,
     data: state.user.me && state.user.me.id,

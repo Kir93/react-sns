@@ -90,8 +90,8 @@ ReactSNS.getInitialProps = async (context) => {
   let pageProps = {};
   const state = ctx.store.getState();
   const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
   if (ctx.isServer && cookie) {
+    axios.defaults.headers.Cookie = '';
     axios.defaults.headers.Cookie = cookie;
   }
   if (!state.user.me) {
