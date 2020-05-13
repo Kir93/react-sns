@@ -33,7 +33,7 @@ class MyDocument extends Document {
   }
 }
 
-MyDocument.PropTypes = {
+MyDocument.propTypes = {
   helmet: PropTypes.object.isRequired,
   styleTags: PropTypes.object.isRequired,
 };

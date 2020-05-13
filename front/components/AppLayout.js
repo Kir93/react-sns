@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import LoginForm from './LoginForm';
 import UserProfile from './UserProfile';
 import { useSelector } from 'react-redux';
+import Router from 'next/router';
 
 const middleAlign = 'vertical-align: middle;';
 const SearchBar = styled(Input.Search)`
@@ -23,7 +24,12 @@ const Header = styled(Menu)`
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
-
+  const onSearch = (value) => {
+    Router.push(
+      { pathname: '/hashtag', query: { tag: value } },
+      `/hashtag/${value}`,
+    );
+  };
   return (
     <>
       <HeadBox>
@@ -39,8 +45,8 @@ const AppLayout = ({ children }) => {
                 <a>Profile</a>
               </Link>
             </Menu.Item>
-            <Menu.Item key="home">
-              <SearchBar enterButton />
+            <Menu.Item key="mail">
+              <SearchBar enterButton onClick={onSearch} />
             </Menu.Item>
           </Header>
         </Col>
@@ -59,8 +65,8 @@ const AppLayout = ({ children }) => {
   );
 };
 
-AppLayout.PropTypes = {
-  children: PropTypes.elementType,
+AppLayout.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default AppLayout;
