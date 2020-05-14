@@ -10,7 +10,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-		System.out.println("server is running on http://localhost:3065");
+		System.out.println("server is running on http://58.236.217.124:3065");
 	}
 
 }

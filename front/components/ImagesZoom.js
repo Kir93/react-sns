@@ -1,57 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'antd';
 import Slick from 'react-slick';
-import styled from 'styled-components';
+import { DetailImage, CloseIcon, CarouselDiv, ImageDiv } from './Styles';
 
-const DetailImage = styled.div`
-  position: fixed;
-  z-index: 9999;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-`;
-
-const CloseIcon = styled(Icon)`
-  position: absolute;
-  z-index: 10000;
-  font-size: 1.2rem;
-  right: 0;
-  top: 0;
-  padding: 1rem;
-  line-height: 1.5rem;
-  cusor: pointer;
-  color: white;
-`;
-
-const CarouselDiv = styled.div`
-  height: 100%;
-  background-color: #090909;
-  & .slick-dots li.slick-active button:before {
-    color: #1890ff !important;
-  }
-  & .slick-dots li button:before {
-    color: white !important;
-  }
-`;
-
-const ImageDiv = styled.div`
-  padding: 3rem;
-  padding-top: 8rem;
-  text-align: center;
-  @media only screen and (max-width: 576px) {
-    padding-top: 15rem;
-  }
-  & img {
-    margin: 0 auto;
-    max-width: 100%;
-    max-height: 45rem;
-    @media only screen and (max-width: 576px) {
-      max-height: 30rem;
-    }
-  }
-`;
 const ImagesZoom = ({ src, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   return (

@@ -1,41 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { Form, Input, Button } from 'antd';
-import styled from 'styled-components';
+import { Button, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import { SIGN_UP_REQUEST, CHECK_ID_REQUEST } from '../reducers/user';
 import { useEffect } from 'react';
-
-const Label = styled.label`
-  font-weight: bold;
-`;
-
-const SignupInput = styled(Input)`
-  margin-top: 10px;
-`;
-
-const SignupForm = styled(Form)`
-  padding: 30px;
-`;
-const CheckDiv = styled.div`
-  color: red;
-`;
-const ButtonDiv = styled.div`
-  margin-top: 10px;
-
-  .ant-btn {
-    width: 100%;
-  }
-
-  .ant-btn-lg {
-    height: 60px;
-    font-weight: bold;
-  }
-`;
-
-const InputDiv = styled.div`
-  margin-bottom: 20px;
-`;
+import { SignupForm, InputDiv, CheckDiv, ButtonDiv } from './Styles';
 
 export const useInput = (initValue = null) => {
   const [value, setter] = useState(initValue);
@@ -100,9 +69,6 @@ const signup = () => {
     [id, nickname, password, passwordCheck],
   );
 
-  if (me) {
-    return null;
-  }
   const onChangeId = useCallback(
     (e) => {
       const idReg = /^[a-z]+[a-z0-9]{5,12}$/g;
@@ -126,13 +92,15 @@ const signup = () => {
     },
     [passwordCheck],
   );
-
+  if (me) {
+    return null;
+  }
   return (
     <>
       <SignupForm onSubmit={onSubmit}>
         <InputDiv>
-          <Label htmlFor="user-id">아이디</Label>
-          <SignupInput
+          <label htmlFor="user-id">아이디</label>
+          <Input
             value={id}
             name="user-id"
             required
@@ -147,8 +115,8 @@ const signup = () => {
           )}
         </InputDiv>
         <InputDiv>
-          <Label htmlFor="user-nickname">닉네임</Label>
-          <SignupInput
+          <label htmlFor="user-nickname">닉네임</label>
+          <Input
             value={nickname}
             name="user-nickname"
             required
@@ -156,8 +124,8 @@ const signup = () => {
           />
         </InputDiv>
         <InputDiv>
-          <Label htmlFor="user-password">비밀번호</Label>
-          <SignupInput
+          <label htmlFor="user-password">비밀번호</label>
+          <Input
             value={password}
             name="user-password"
             type="password"
@@ -166,8 +134,8 @@ const signup = () => {
           />
         </InputDiv>
         <InputDiv>
-          <Label htmlFor="user-password-chk">비밀번호체크</Label>
-          <SignupInput
+          <label htmlFor="user-password-chk">비밀번호체크</label>
+          <Input
             value={passwordCheck}
             name="user-password-check"
             type="password"

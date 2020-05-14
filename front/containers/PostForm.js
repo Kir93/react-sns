@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
-import styled from 'styled-components';
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Input, Button, Col } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
@@ -9,25 +8,7 @@ import {
   UPLOAD_IMAGES_REQUEST,
   REMOVE_IMAGE,
 } from '../reducers/post';
-const InputPost = styled(Form)`
-  margin-bottom: 30px;
-`;
-
-const ImageRow = styled(Row)`
-  margin-top: 30px;
-`;
-
-const PostBtn = styled(Button)`
-  float: right;
-`;
-
-const PostImg = styled.img`
-  width: 100%;
-`;
-
-const RemoveBtn = styled(Button)`
-  margin-top: 10px;
-`;
+import { InputPost, PostBtn, ImageRow } from './Styles';
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -118,9 +99,9 @@ const PostForm = () => {
           return (
             <Col key={v} style={{ display: 'inline-block' }} xs={12} md={6}>
               <div>
-                <PostImg src={`http://localhost:3065/uploads/` + v} alt={v} />
+                <img src={`http://localhost:3065/uploads/` + v} alt={v} />
                 <div>
-                  <RemoveBtn onClick={onRemoveImage(i)}>제거</RemoveBtn>
+                  <Button onClick={onRemoveImage(i)}>제거</Button>
                 </div>
               </div>
             </Col>

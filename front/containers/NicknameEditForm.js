@@ -1,26 +1,10 @@
 import React from 'react';
 import { Button, Input, Form } from 'antd';
-import styled from 'styled-components';
 import { useState } from 'react';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { EDIT_NICKNAME_REQUEST } from '../reducers/user';
-
-const NicknameForm = styled(Form)`
-  margin-bottom: 20px;
-  border: 1px solid #d9d9d9;
-  padding: 20px;
-
-  button {
-    width: 19%;
-    margin-left: 1%;
-    top: 1px;
-  }
-`;
-
-const NicknameInput = styled(Input)`
-  width: 80%;
-`;
+import { NicknameForm, NicknameInput } from './Styles';
 
 const NicknameEditForm = () => {
   const dispatch = useDispatch();

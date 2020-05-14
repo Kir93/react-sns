@@ -42,6 +42,6 @@ app.prepare().then(() => {
     return handle(req, res);
   });
   server.listen(3060, () => {
-    console.log('next+express is running on http://localhost:3060');
+    console.log('next+express is running on http://58.236.217.124:3060');
   });
 });

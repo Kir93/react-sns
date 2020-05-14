@@ -21,8 +21,8 @@ class MyDocument extends Document {
     return (
       <html {...htmlAttrs}>
         <head>
-          {this.props.styleTags}
           {Object.values(helmet).map((el) => el.toComponent())}
+          {this.props.styleTags}
         </head>
         <body {...bodyAttrs}>
           <Main />

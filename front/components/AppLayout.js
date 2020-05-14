@@ -1,26 +1,12 @@
 import React from 'react';
-import { Menu, Input, Row, Col } from 'antd';
+import { Menu, Row, Col } from 'antd';
 import Link from 'next/link';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import LoginForm from './LoginForm';
-import UserProfile from './UserProfile';
+import LoginForm from '../containers/LoginForm';
+import UserProfile from '../containers/UserProfile';
 import { useSelector } from 'react-redux';
 import Router from 'next/router';
-
-const middleAlign = 'vertical-align: middle;';
-const SearchBar = styled(Input.Search)`
-  ${middleAlign}
-`;
-
-const HeadBox = styled(Row)`
-  border-bottom: 1px solid #e8e8e8;
-  margin-bottom: 50px;
-`;
-
-const Header = styled(Menu)`
-  border-bottom: 0;
-`;
+import { HeadBox, Header, SearchBar } from './Styles';
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
@@ -46,7 +32,7 @@ const AppLayout = ({ children }) => {
               </Link>
             </Menu.Item>
             <Menu.Item key="mail">
-              <SearchBar enterButton onClick={onSearch} />
+              <SearchBar enterButton onSearch={onSearch} />
             </Menu.Item>
           </Header>
         </Col>

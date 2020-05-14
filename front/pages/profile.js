@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { List, Button, Card, Icon } from 'antd';
-import styled from 'styled-components';
-import NicknameEditForm from '../components/NicknameEditForm';
+import { Card, Icon } from 'antd';
+import NicknameEditForm from '../containers/NicknameEditForm';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   LOAD_FOLLOWERS_REQUEST,
@@ -10,23 +9,9 @@ import {
   REMOVE_FOLLOWER_REQUEST,
 } from '../reducers/user';
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
-import PostCard from '../components/PostCard';
+import PostCard from '../containers/PostCard';
 import Router from 'next/router';
-
-const ProfileList = styled(List)`
-  margin-bottom: 20px;
-  text-align: center;
-`;
-
-const More = styled(Button)`
-  width: 100%;
-  // border: 0;
-  // border-top: 1px solid #d9d9d9;
-`;
-
-const ListItem = styled(List.Item)`
-  margin-top: 20px;
-`;
+import { ProfileList, More, ListItem } from './Styles';
 
 const Profile = () => {
   const dispatch = useDispatch();

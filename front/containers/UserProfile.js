@@ -1,47 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Avatar, Button, Card } from 'antd';
+import { Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { LOG_OUT_REQUEST } from '../reducers/user';
 import Link from 'next/link';
-
-const LoginCard = styled(Card)`
-  border: 0;
-  margin-top: 5px;
-  margin-right: 40px;
-  & .ant-card-body {
-    padding: 0;
-  }
-`;
-const AvatarIcon = styled(Avatar)`
-  margin-top: -5px;
-`;
-const GridCard = styled(Card.Grid)`
-  width: 20%;
-  padding: 0;
-  text-align: center;
-  box-shadow: none;
-  line-height: 50px;
-`;
-const Nickname = styled.span`
-  font-size: 18px;
-  font-weight: bold;
-  padding-left: 10px;
-  @media only screen and (max-width: 576px) {
-    display: none;
-  }
-`;
-const Span = styled.span`
-  color: #1890ff;
-  padding-left: 10px;
-  @media only screen and (max-width: 576px) {
-    padding-left: 0px;
-    display: block;
-    line-height: 0px;
-    padding-bottom: 20px;
-  }
-`;
+import { LoginCard, GridCard, AvatarIcon, Nickname, Span } from './Styles';
 
 const UserProfile = () => {
   const { me } = useSelector((state) => state.user);
