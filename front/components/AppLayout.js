@@ -27,7 +27,7 @@ const AppLayout = ({ children }) => {
               </Link>
             </Menu.Item>
             <Menu.Item key="profile">
-              <Link href="/profile">
+              <Link href="/profile" prefetch>
                 <a>Profile</a>
               </Link>
             </Menu.Item>

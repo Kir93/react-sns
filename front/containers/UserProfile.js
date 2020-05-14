@@ -21,7 +21,7 @@ const UserProfile = () => {
         <AvatarIcon>{me.nickname[0]}</AvatarIcon>
         <Nickname>{me.nickname}</Nickname>
       </GridCard>
-      <Link href="/profile">
+      <Link href="/profile" prefetch>
         <a>
           <GridCard>
             포스트
@@ -29,7 +29,7 @@ const UserProfile = () => {
           </GridCard>
         </a>
       </Link>
-      <Link href="/profile">
+      <Link href="/profile" prefetch>
         <a>
           <GridCard>
             팔로잉
@@ -37,7 +37,7 @@ const UserProfile = () => {
           </GridCard>
         </a>
       </Link>
-      <Link href="/profile">
+      <Link href="/profile" prefetch>
         <a>
           <GridCard>
             팔로워

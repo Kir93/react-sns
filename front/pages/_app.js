@@ -52,7 +52,8 @@ const ReactSNS = ({ Component, store, pageProps }) => {
           ]}
           link={[
             {
-              // rel: 'shortcut icon', href: '/favicon.ico',
+              rel: 'shortcut icon',
+              href: '/favicon.ico',
             },
             {
               rel: 'stylesheet',
