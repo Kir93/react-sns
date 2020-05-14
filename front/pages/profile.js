@@ -85,6 +85,16 @@ const Profile = () => {
     };
   }, [mainPosts.length]);
 
+  useEffect(() => {
+    if (!me) {
+      alert('로그인 된 사용자는 접근 할 수 없는 페이지 입니다.');
+      Router.push('/');
+    }
+  }, [me && me.id]);
+
+  if (!me) {
+    return null;
+  }
   return (
     <>
       <NicknameEditForm />
@@ -145,10 +155,6 @@ const Profile = () => {
 
 Profile.getInitialProps = async (context) => {
   const state = context.store.getState();
-  if (!state.user.me) {
-    alert('로그인 후 이용하세요.');
-    return Router.push('/');
-  }
   context.store.dispatch({
     type: LOAD_FOLLOWERS_REQUEST,
     data: state.user.me && state.user.me.id,

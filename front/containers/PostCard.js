@@ -56,13 +56,15 @@ const PostCard = ({ post }) => {
       if (!me) {
         return alert('로그인이 필요합니다.');
       }
-      dispatch({
-        type: ADD_COMMENT_REQUEST,
-        data: {
-          postId: post.id,
-          content: commentText,
-        },
-      });
+      if (confirm('댓글을 등록하시겠습니까?')) {
+        dispatch({
+          type: ADD_COMMENT_REQUEST,
+          data: {
+            postId: post.id,
+            content: commentText,
+          },
+        });
+      }
     },
     [me && me.id, commentText],
   );
@@ -236,7 +238,7 @@ const PostCard = ({ post }) => {
             itemLayout="horizontal"
             dataSource={post.Comments || []}
             renderItem={(item) => (
-              <li>
+              <li style={{ listStyle: 'none' }}>
                 <Comment
                   author={item.nickname}
                   avatar={
