@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,6 +93,48 @@ public class PostController {
             }
             pm.RemovePost(id);
             return ResponseEntity.ok(id);
+        } catch (Exception e) {
+            System.err.println(e);
+            return ResponseEntity.status(403).body(e);
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> EditPost(@PathVariable int id, @RequestBody PostBean pb, HttpSession session) {
+        try {
+            final String regex = "#[^\\s]+";
+            final String string = pb.getContent();
+            final Pattern pattern = Pattern.compile(regex);
+            final Matcher matcher = pattern.matcher(string);
+            int size = pb.getContent().split("#").length;
+            String[] hashtags = new String[size];
+            int x = 0;
+            Object userId = session.getAttribute("rslc");
+            List<String> images = pb.getImages();
+            if (userId == null) {
+                return ResponseEntity.status(403).body("로그인 후 이용하세요.");
+            }
+            pb.setUserId((int) userId);
+            pm.EditPost(string, id);
+            for (int i = 0; i < images.size(); i++) {
+                System.out.println(images.get(i));
+                if(pm.SelectImage(images.get(i)) == null){
+                    pm.InsertImage(images.get(i), id);
+                }
+            }
+            while (matcher.find()) {
+                hashtags[x] = matcher.group(0).substring(1).toLowerCase();
+                System.out.println(hashtags[x]);
+                HashtagBean hb = hm.CheckHashtag(hashtags[x]);
+                hb.setName(hashtags[x]);
+                if (hb.getId() == 0) {
+                    pm.InsertHashtag(hb);
+                }
+                pm.AddPostHashtag(id, hb.getId());
+                x++;
+            }
+            PostBean newPost = pm.SelectPost(id);
+            return ResponseEntity.ok(newPost);
         } catch (Exception e) {
             System.err.println(e);
             return ResponseEntity.status(403).body(e);

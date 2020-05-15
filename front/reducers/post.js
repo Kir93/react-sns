@@ -3,8 +3,10 @@ import produce from 'immer';
 export const initialState = {
   mainPosts: [], // 화면에 보일 포스트들
   imagePaths: [], // 미리보기 이미지 경로
+  editImagePaths: [], // 수정 미리보기 이미지 경로
   addPostErrorReason: '', // 포스트 업로드 실패 사유
   isAddingPost: false, // 포스트 업로드 중
+  isEdittingPost: false, // 포스트 수정 중
   postAdded: false, // 포스트 업로드 성공
   isAddingComment: false,
   addCommentErrorReason: '',
@@ -29,10 +31,18 @@ export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+export const EDITTING_POST = 'EDITTING_POST';
+export const EDIT_IMAGE = 'EDIT_IMAGE';
+export const EDIT_REMOVE_IMAGE = 'EDIT_REMOVE_IMAGE';
+export const CANCLED_EDIT_POST = 'CANCLED_EDIT_POST';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+
+export const EDIT_POST_REQUEST = 'EDIT_POST_REQUEST';
+export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';
+export const EDIT_POST_FAILURE = 'EDIT_POST_FAILURE';
 
 export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
@@ -65,9 +75,15 @@ export default (state = initialState, action) => {
         break;
       }
       case UPLOAD_IMAGES_SUCCESS: {
-        action.data.forEach((p) => {
-          draft.imagePaths.push(p);
-        });
+        if (!action.id) {
+          action.data.forEach((p) => {
+            draft.imagePaths.push(p);
+          });
+        } else {
+          action.data.forEach((p) => {
+            draft.editImagePaths.push(p);
+          });
+        }
         break;
       }
       case UPLOAD_IMAGES_FAILURE: {
@@ -76,6 +92,28 @@ export default (state = initialState, action) => {
       case REMOVE_IMAGE: {
         const index = draft.imagePaths.findIndex((v, i) => i === action.data);
         draft.imagePaths.splice(index, 1);
+        break;
+      }
+      case EDIT_IMAGE: {
+        action.data.forEach((p) => {
+          draft.editImagePaths.push(p);
+        });
+        break;
+      }
+      case EDIT_REMOVE_IMAGE: {
+        const index = draft.editImagePaths.findIndex(
+          (v, i) => i === action.data,
+        );
+        draft.editImagePaths.splice(index, 1);
+        break;
+      }
+      case EDITTING_POST: {
+        draft.isEdittingPost = true;
+        break;
+      }
+      case CANCLED_EDIT_POST: {
+        draft.editImagePaths = [];
+        draft.isEdittingPost = false;
         break;
       }
       case ADD_POST_REQUEST: {
@@ -95,6 +133,18 @@ export default (state = initialState, action) => {
         draft.isAddingPost = false;
         draft.addPostErrorReason = action.error;
         break;
+      }
+      case EDIT_POST_REQUEST: {
+        break;
+      }
+      case EDIT_POST_SUCCESS: {
+        const postIndex = draft.mainPosts.findIndex(
+          (v) => v.id === action.data.id,
+        );
+        draft.mainPosts[postIndex].content = action.data.content;
+        draft.mainPosts[postIndex].src = action.data.src;
+        draft.mainPosts[postIndex].updatedAt = action.data.updatedAt;
+        draft.isEdittingPost = false;
       }
       case ADD_COMMENT_REQUEST: {
         draft.isAddingComment = true;

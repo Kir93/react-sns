@@ -1,26 +1,30 @@
-import React, { useState, useRef } from 'react';
-import { Input, Button, Col } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Button, Input, Col } from 'antd';
+import { PostBtn, ImageRow, InputPost } from './Styles';
 import { useCallback } from 'react';
 import {
-  ADD_POST_REQUEST,
   UPLOAD_IMAGES_REQUEST,
-  REMOVE_IMAGE,
+  EDIT_REMOVE_IMAGE,
+  EDIT_IMAGE,
+  CANCLED_EDIT_POST,
+  EDIT_POST_REQUEST,
 } from '../reducers/post';
-import { InputPost, PostBtn, ImageRow } from './Styles';
 
-const PostForm = () => {
+const EditPostForm = ({ post, finishEdit }) => {
   const dispatch = useDispatch();
-  const [text, setText] = useState('');
-  const { imagePaths, isAddingPost, postAdded } = useSelector(
-    (state) => state.post,
-  );
+  const [text, setText] = useState(post.content);
+  const { editImagePaths } = useSelector((state) => state.post);
   const imageInput = useRef();
-
   useEffect(() => {
-    setText('');
-  }, [postAdded === true]);
+    if (post.src) {
+      dispatch({
+        type: EDIT_IMAGE,
+        data: post.src,
+      });
+    }
+  }, [post.src]);
 
   const onSubmitForm = useCallback(
     (e) => {
@@ -28,16 +32,25 @@ const PostForm = () => {
       if (!text || !text.trim()) {
         return alert('글자를 입력하세요.');
       }
-      return dispatch({
-        type: ADD_POST_REQUEST,
+      dispatch({
+        type: EDIT_POST_REQUEST,
+        id: post.id,
         data: {
           content: text,
-          images: imagePaths,
+          images: editImagePaths,
         },
       });
+      finishEdit();
     },
-    [text, imagePaths],
+    [text, editImagePaths],
   );
+
+  const onEdittingCancled = useCallback(() => {
+    dispatch({
+      type: CANCLED_EDIT_POST,
+    });
+    finishEdit();
+  }, [finishEdit]);
 
   const onChangeText = useCallback((e) => {
     setText(e.target.value);
@@ -53,9 +66,10 @@ const PostForm = () => {
       dispatch({
         type: UPLOAD_IMAGES_REQUEST,
         data: imageFormData,
+        id: post.id,
       });
     },
-    [imagePaths],
+    [editImagePaths],
   );
 
   const onClickImagesUpload = useCallback(() => {
@@ -65,7 +79,7 @@ const PostForm = () => {
   const onRemoveImage = useCallback(
     (index) => () => {
       dispatch({
-        type: REMOVE_IMAGE,
+        type: EDIT_REMOVE_IMAGE,
         data: index,
       });
     },
@@ -89,12 +103,19 @@ const PostForm = () => {
           onChange={onChangeImages}
         />
         <Button onClick={onClickImagesUpload}>이미지 업로드</Button>
-        <PostBtn type="primary" htmlType="submit" loading={isAddingPost}>
+        <PostBtn
+          type="danger"
+          style={{ marginLeft: '5px' }}
+          onClick={onEdittingCancled}
+        >
+          취소
+        </PostBtn>
+        <PostBtn type="primary" htmlType="submit">
           POST
         </PostBtn>
       </div>
       <ImageRow gutter={16}>
-        {imagePaths.map((v, i) => {
+        {editImagePaths.map((v, i) => {
           return (
             <Col key={v} style={{ display: 'inline-block' }} xs={12} md={6}>
               <div>
@@ -111,4 +132,9 @@ const PostForm = () => {
   );
 };
 
-export default PostForm;
+EditPostForm.prototype = {
+  post: PropTypes.object.isRequired,
+  edittingPostFrom: PropTypes.bool.isRequired,
+};
+
+export default EditPostForm;

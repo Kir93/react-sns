@@ -35,6 +35,9 @@ public interface PostMapper {
     @Insert("INSERT INTO Images (src, PostId) value (#{src}, #{PostId})")
     public int InsertImage(String src, int PostId);
 
+    @Select("SELECT id FROM Images WHERE src=#{src}")
+    public Object SelectImage(String src);
+
     @Insert("INSERT INTO `Like` (PostId, UserId) value (#{PostId}, #{UserId})")
     public int InsertLike(int PostId, int UserId);
 
@@ -56,4 +59,7 @@ public interface PostMapper {
 
     @Update("UPDATE Posts SET delYn='Y' WHERE id=#{id}")
     public boolean RemovePost(int id);
+
+    @Update("UPDATE Posts SET content=#{content} WHERE id=#{id}")
+    public boolean EditPost(String content, int id);
 }

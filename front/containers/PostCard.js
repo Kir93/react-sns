@@ -10,15 +10,19 @@ import {
   LIKE_POST_REQUEST,
   RETWEET_REQUEST,
   REMOVE_POST_REQUEST,
+  EDITTING_POST,
 } from '../reducers/post';
 import PostImages from '../components/PostImages';
 import PostCardContent from '../components/PostCardContent';
 import CommentForm from './CommentForm';
 import FollowButton from './FollowButton';
+import EditPostForm from './EditPostForm';
 
 const PostCard = memo(({ post }) => {
   const [commentFormOpend, setCommentFormOpend] = useState(false);
+  const [edittingPostFrom, setEdittingPostForm] = useState(false);
   const id = useSelector((state) => state.user.me && state.user.me.id);
+  const isEdittingPost = useSelector((state) => state.post.isEdittingPost);
   const liked =
     id && post.likers && post.likers.find((v) => parseInt(v) === id);
   const dispatch = useDispatch();
@@ -61,16 +65,35 @@ const PostCard = memo(({ post }) => {
 
   const onRemovePost = useCallback(
     (userId) => () => {
-      dispatch({
-        type: REMOVE_POST_REQUEST,
-        data: userId,
-      });
+      if (confirm('정말 포스트를 삭제하시겠습니까?')) {
+        dispatch({
+          type: REMOVE_POST_REQUEST,
+          data: userId,
+        });
+      }
     },
     [],
   );
 
+  const onEditPost = useCallback(() => {
+    if (isEdittingPost) {
+      return alert('다른 포스트가 수정중입니다.');
+    }
+    dispatch({
+      type: EDITTING_POST,
+    });
+    setEdittingPostForm(true);
+  }, [isEdittingPost, edittingPostFrom]);
+
+  const onFinishEdit = useCallback(() => {
+    setEdittingPostForm(false);
+  }, [edittingPostFrom]);
+
+  if (edittingPostFrom) {
+    return <EditPostForm post={post} finishEdit={onFinishEdit} />;
+  }
   return (
-    <div>
+    <div style={{ marginBottom: '2rem' }}>
       <Card
         cover={post.src && <PostImages src={post.src} />}
         actions={[
@@ -89,7 +112,7 @@ const PostCard = memo(({ post }) => {
               <Button.Group>
                 {id && post.userId === id ? (
                   <>
-                    <Button>수정</Button>
+                    <Button onClick={onEditPost}>수정</Button>
                     <Button type="danger" onClick={onRemovePost(post.id)}>
                       삭제
                     </Button>

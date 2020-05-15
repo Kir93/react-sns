@@ -34,6 +34,9 @@ import {
   REMOVE_POST_SUCCESS,
   REMOVE_POST_FAILURE,
   REMOVE_POST_REQUEST,
+  EDIT_POST_SUCCESS,
+  EDIT_POST_FAILURE,
+  EDIT_POST_REQUEST,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -201,6 +204,7 @@ function* uploadImages(action) {
     yield put({
       type: UPLOAD_IMAGES_SUCCESS,
       data: result.data,
+      id: action.id,
     });
   } catch (e) {
     yield put({
@@ -334,6 +338,32 @@ function* watchRemovePost() {
   yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
 
+function editPostAPI(id, editPostData) {
+  return axios.patch(`/post/${id}`, editPostData, {
+    withCredentials: true,
+  });
+}
+
+function* editPost(action) {
+  try {
+    const result = yield call(editPostAPI, action.id, action.data);
+    yield put({
+      type: EDIT_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    alert(e.response ? e.response.data : e.message);
+    yield put({
+      type: EDIT_POST_FAILURE,
+      error: e.response ? e.response.data : e.message,
+    });
+  }
+}
+
+function* watchEditPost() {
+  yield takeLatest(EDIT_POST_REQUEST, editPost);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadMainPost),
@@ -347,5 +377,6 @@ export default function* postSaga() {
     fork(watchUnlikePost),
     fork(watchRetweet),
     fork(watchRemovePost),
+    fork(watchEditPost),
   ]);
 }
