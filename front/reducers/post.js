@@ -151,6 +151,9 @@ export default (state = initialState, action) => {
         const postIndex = draft.mainPosts.findIndex(
           (v) => v.id === action.data.postId,
         );
+        if (draft.mainPosts[postIndex].likers === null) {
+          draft.mainPosts[postIndex].likers = [];
+        }
         draft.mainPosts[postIndex].likers.unshift(action.data.userId);
         break;
       }

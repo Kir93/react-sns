@@ -49,6 +49,10 @@ const ReactSNS = ({ Component, store, pageProps }) => {
               property: 'og:type',
               content: 'website',
             },
+            {
+              property: 'og:image',
+              content: '/favicon.ico',
+            },
           ]}
           link={[
             {

@@ -61,8 +61,6 @@ function* login(action) {
     });
   } catch (e) {
     // loginAPI 실패
-    alert('로그인에 실패하셨습니다.');
-    console.error(e);
     yield put({
       type: LOG_IN_FAILURE,
       error: e.response ? e.response.data : e.message,
@@ -91,7 +89,6 @@ function* signUp(action) {
     Router.push('/');
   } catch (e) {
     // loginAPI 실패
-    console.log(result.data);
     yield put({
       type: SIGN_UP_FAILURE,
       error: e.response ? e.response.data : e.message,
@@ -320,7 +317,6 @@ function editNicknameAPI(nickname) {
 function* editNickname(action) {
   try {
     const result = yield call(editNicknameAPI, action.data);
-    console.log(result);
     yield put({
       // put은 dispatch 동일
       type: EDIT_NICKNAME_SUCCESS,

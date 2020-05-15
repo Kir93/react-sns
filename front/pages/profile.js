@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { Card, Icon } from 'antd';
 import NicknameEditForm from '../containers/NicknameEditForm';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -11,7 +10,7 @@ import {
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import PostCard from '../containers/PostCard';
 import Router from 'next/router';
-import { ProfileList, More, ListItem } from './Styles';
+import FollowList from '../components/FollowList';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -66,7 +65,8 @@ const Profile = () => {
       document.documentElement.scrollHeight - 300
     ) {
       if (hasMorePost) {
-        const lastId = mainPosts[mainPosts.length - 1].id;
+        const lastId =
+          mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id;
         if (!countRef.current.includes(lastId)) {
           dispatch({
             type: LOAD_USER_POSTS_REQUEST,
@@ -98,51 +98,19 @@ const Profile = () => {
   return (
     <>
       <NicknameEditForm />
-      <ProfileList
-        grid={{ gutter: 4, xs: 2, md: 3 }}
-        size="small"
-        header={<div>팔로잉 목록</div>}
-        loadMore={
-          hasMoreFollowing && <More onClick={loadMoreFollowings}>더보기</More>
-        }
-        bordered
-        dataSource={followingList}
-        renderItem={(item) => (
-          <ListItem>
-            <Card
-              actions={[
-                <Icon key="stop" type="stop" onClick={onUnfollow(item.id)} />,
-              ]}
-            >
-              <Card.Meta description={item.nickname} />
-            </Card>
-          </ListItem>
-        )}
+      <FollowList
+        header="팔로잉 목록"
+        hasMore={hasMoreFollowing}
+        onClickMore={loadMoreFollowings}
+        data={followingList}
+        onClickStop={onUnfollow}
       />
-      <ProfileList
-        grid={{ gutter: 4, xs: 2, md: 3 }}
-        size="small"
-        header={<div>팔로워 목록</div>}
-        loadMore={
-          hasMoreFollower && <More onClick={loadMoreFollowers}>더보기</More>
-        }
-        bordered
-        dataSource={followerList}
-        renderItem={(item) => (
-          <ListItem>
-            <Card
-              actions={[
-                <Icon
-                  key="stop"
-                  type="stop"
-                  onClick={onRemovefollower(item.id)}
-                />,
-              ]}
-            >
-              <Card.Meta description={item.nickname} />
-            </Card>
-          </ListItem>
-        )}
+      <FollowList
+        header="팔로워 목록"
+        hasMore={hasMoreFollower}
+        onClickMore={loadMoreFollowers}
+        data={followerList}
+        onClickStop={onRemovefollower}
       />
       <div>
         {mainPosts.map((c) => (

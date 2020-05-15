@@ -173,7 +173,6 @@ function loadHashtagPostsAPI(tag, lastId = 0) {
 function* loadHashtagPosts(action) {
   try {
     const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
-    console.log(result);
     yield put({
       type: LOAD_HASHTAG_POSTS_SUCCESS,
       data: result.data,
@@ -293,8 +292,7 @@ function* retweet(action) {
       data: result.data,
     });
   } catch (e) {
-    console.dir(e);
-    alert(e.response && e.response.data);
+    alert(e.response ? e.response.data : e.message);
     yield put({
       type: RETWEET_FAILURE,
       error: e.response ? e.response.data : e.message,
@@ -324,8 +322,7 @@ function* removePost(action) {
       data: result.data,
     });
   } catch (e) {
-    console.dir(e);
-    alert(e.response && e.response.data);
+    alert(e.response ? e.response.data : e.message);
     yield put({
       type: REMOVE_POST_FAILURE,
       error: e.response ? e.response.data : e.message,

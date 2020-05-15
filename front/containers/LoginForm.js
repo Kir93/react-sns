@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Form, Input, Button, Icon } from 'antd';
+import { Input, Button, Icon } from 'antd';
 import { useInput } from '../pages/signup';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import { LoginMenu, InputFrom, Signup } from './Styles';
 const LoginForm = () => {
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
-  const { isLoggingIn } = useSelector((state) => state.user);
+  const { isLoggingIn, logInErrorReason } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const isEnabled = useCallback(() => {
@@ -70,6 +70,7 @@ const LoginForm = () => {
           </a>
         </Link>
       </InputFrom>
+      <p>{logInErrorReason}</p>
     </LoginMenu>
   );
 };

@@ -18,7 +18,8 @@ const Home = () => {
       document.documentElement.scrollHeight - 300
     ) {
       if (hasMorePost) {
-        const lastId = mainPosts[mainPosts.length - 1].id;
+        const lastId =
+          mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id;
         if (!countRef.current.includes(lastId)) {
           dispatch({
             type: LOAD_MAIN_POSTS_REQUEST,

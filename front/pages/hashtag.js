@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { LOAD_HASHTAG_POSTS_REQUEST } from '../reducers/post';
 import PostCard from '../containers/PostCard';
 import { useCallback } from 'react';
 
-const Hashtag = ({ tag }) => {
+const Hashtag = memo(({ tag }) => {
   const dispatch = useDispatch();
   const { mainPosts, hasMorePost } = useSelector((state) => state.post);
   const countRef = useRef([]);
@@ -16,7 +16,8 @@ const Hashtag = ({ tag }) => {
       document.documentElement.scrollHeight - 300
     ) {
       if (hasMorePost) {
-        const lastId = mainPosts[mainPosts.length - 1].id;
+        const lastId =
+          mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id;
         if (!countRef.current.includes(lastId)) {
           dispatch({
             type: LOAD_HASHTAG_POSTS_REQUEST,
@@ -41,7 +42,7 @@ const Hashtag = ({ tag }) => {
       ))}
     </div>
   );
-};
+});
 
 Hashtag.propTypes = {
   tag: PropTypes.string.isRequired,

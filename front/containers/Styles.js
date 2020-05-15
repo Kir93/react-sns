@@ -5,6 +5,10 @@ import { Card, Avatar, Button, Form, Input, Row } from 'antd';
 export const LoginMenu = styled(Form)`
   padding-top: 5px;
   text-align: center;
+
+  & p {
+    color: red;
+  }
 `;
 export const InputFrom = styled(Form.Item)`
   @media only screen and (max-width: 576px) {

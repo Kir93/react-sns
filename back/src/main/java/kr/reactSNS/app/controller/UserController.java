@@ -84,7 +84,7 @@ public class UserController {
                     return ResponseEntity.ok(user);
                 }
             }
-            return ResponseEntity.status(401).body("아이디와 패스워드를 재확인 후 실행하세요.");
+            return ResponseEntity.status(401).body("아이디와 패스워드를 확인하시고 다시 시도하세요.");
         } catch (Exception e) {
             System.err.println(e);
             return ResponseEntity.status(403).body(e);
