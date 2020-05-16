@@ -9,6 +9,7 @@ import {
   REMOVE_IMAGE,
 } from '../reducers/post';
 import { InputPost, PostBtn, ImageRow } from './Styles';
+import { backUrl } from '../config/config';
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -98,7 +99,7 @@ const PostForm = () => {
           return (
             <Col key={v} style={{ display: 'inline-block' }} xs={12} md={6}>
               <div>
-                <img src={`http://localhost:3065/uploads/` + v} alt={v} />
+                <img src={`${backUrl}uploads/` + v} alt={v} />
                 <div>
                   <Button onClick={onRemoveImage(i)}>제거</Button>
                 </div>

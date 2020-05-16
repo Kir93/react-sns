@@ -11,6 +11,7 @@ import {
   CANCLED_EDIT_POST,
   EDIT_POST_REQUEST,
 } from '../reducers/post';
+import { backUrl } from '../config/config';
 
 const EditPostForm = ({ post, finishEdit }) => {
   const dispatch = useDispatch();
@@ -119,7 +120,7 @@ const EditPostForm = ({ post, finishEdit }) => {
           return (
             <Col key={v} style={{ display: 'inline-block' }} xs={12} md={6}>
               <div>
-                <img src={`http://localhost:3065/uploads/` + v} alt={v} />
+                <img src={`${backUrl}uploads/` + v} alt={v} />
                 <div>
                   <Button onClick={onRemoveImage(i)}>제거</Button>
                 </div>

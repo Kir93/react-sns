@@ -51,7 +51,7 @@ const ReactSNS = ({ Component, store, pageProps }) => {
             },
             {
               property: 'og:image',
-              content: '/favicon.ico',
+              content: 'http://kir93.me/favicon.ico',
             },
           ]}
           link={[

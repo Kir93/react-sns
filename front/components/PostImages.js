@@ -4,6 +4,7 @@ import { Icon } from 'antd';
 import { useCallback } from 'react';
 import ImagesZoom from './ImagesZoom';
 import { SoloImg, ImageBox } from './Styles';
+import { backUrl } from '../config/config';
 
 const PostImages = ({ src }) => {
   const [showImagesZoom, setShowImagesZoom] = useState(false);
@@ -16,10 +17,7 @@ const PostImages = ({ src }) => {
   if (src.length === 1) {
     return (
       <>
-        <SoloImg
-          src={`http://58.236.217.124:3065/uploads/${src[0]}`}
-          onClick={onZoom}
-        />
+        <SoloImg src={`${backUrl}uploads/${src[0]}`} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom src={src} onClose={onClose} />}
       </>
     );
@@ -28,14 +26,8 @@ const PostImages = ({ src }) => {
     return (
       <>
         <ImageBox>
-          <img
-            src={`http://58.236.217.124:3065/uploads/${src[0]}`}
-            onClick={onZoom}
-          />
-          <img
-            src={`http://58.236.217.124:3065/uploads/${src[1]}`}
-            onClick={onZoom}
-          />
+          <img src={`${backUrl}uploads/${src[0]}`} onClick={onZoom} />
+          <img src={`${backUrl}uploads/${src[1]}`} onClick={onZoom} />
         </ImageBox>
         {showImagesZoom && <ImagesZoom src={src} onClose={onClose} />}
       </>
@@ -44,10 +36,7 @@ const PostImages = ({ src }) => {
   return (
     <>
       <ImageBox>
-        <img
-          src={`http://58.236.217.124:3065/uploads/${src[0]}`}
-          onClick={onZoom}
-        />
+        <img src={`${backUrl}uploads/${src[0]}`} onClick={onZoom} />
         <div onClick={onZoom}>
           <Icon type="plus" />
           <br />

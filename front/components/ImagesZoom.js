@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Slick from 'react-slick';
 import { DetailImage, CloseIcon, CarouselDiv, ImageDiv } from './Styles';
+import { backUrl } from '../config/config';
 
 const ImagesZoom = ({ src, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -21,7 +22,7 @@ const ImagesZoom = ({ src, onClose }) => {
           {src.map((v) => {
             return (
               <ImageDiv>
-                <img src={`http://58.236.217.124:3065/uploads/${v}`} alt={v} />
+                <img src={`${backUrl}uploads/${v}`} alt={v} />
               </ImageDiv>
             );
           })}
