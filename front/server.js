@@ -41,7 +41,7 @@ app.prepare().then(() => {
     return app.render(req, res, '/user', { id: req.params.id });
   });
 
-  server.get('/', (req, res) => {
+  server.get('/testpage', (req, res) => {
     return app.render(req, res, '/');
   });
 
