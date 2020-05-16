@@ -41,10 +41,6 @@ app.prepare().then(() => {
     return app.render(req, res, '/user', { id: req.params.id });
   });
 
-  server.get('/', (req, res) => {
-    res.send('Hello');
-  });
-
   server.get('*', (req, res) => {
     return handle(req, res);
   });
