@@ -40,6 +40,11 @@ app.prepare().then(() => {
   server.get('/user/:id/posts', (req, res) => {
     return app.render(req, res, '/user', { id: req.params.id });
   });
+
+  server.get('/', (req, res) => {
+    res.send('Hello');
+  });
+
   server.get('*', (req, res) => {
     return handle(req, res);
   });
