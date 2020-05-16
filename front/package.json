@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "build": "cross-env ANALYZE=true next build",
     "prestart": "npm run build",
-    "start": "cross-env NODE_ENV=production next start"
+    "start": "cross-env NODE_ENV=production PORT=80 pm2 start server"
   },
   "author": "Kir",
   "license": "MIT",
@@ -26,6 +26,7 @@
     "next": "^8.1.0",
     "next-redux-saga": "^4.1.2",
     "next-redux-wrapper": "^5.0.0",
+    "pm2": "^4.4.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
