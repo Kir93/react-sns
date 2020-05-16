@@ -20,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("*").permitAll();
 
-        http.formLogin().loginPage("http://58.236.217.124:3060").loginProcessingUrl("api/user/login")
+        http.formLogin().loginPage("http://kir93.me").loginProcessingUrl("api/user/login")
                 .usernameParameter("userId").passwordParameter("password").permitAll();
 
         http.logout().logoutUrl("/api/user/logout").deleteCookies("rslc").invalidateHttpSession(true)
@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://58.236.217.124:3060");
+        configuration.addAllowedOrigin("http://kir93.me");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
