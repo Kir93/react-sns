@@ -43,7 +43,7 @@ app.prepare().then(() => {
   server.get('*', (req, res) => {
     return handle(req, res);
   });
-  server.listen(3060, () => {
-    console.log('next+express is running on http://58.236.217.124:3060');
+  server.listen(prod ? process.env.PORT : 3060, () => {
+    console.log(`next+express is running on ${process.env.PORT}`);
   });
 });
