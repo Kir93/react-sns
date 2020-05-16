@@ -145,6 +145,7 @@ export default (state = initialState, action) => {
         draft.mainPosts[postIndex].src = action.data.src;
         draft.mainPosts[postIndex].updatedAt = action.data.updatedAt;
         draft.isEdittingPost = false;
+        draft.editImagePaths = [];
       }
       case ADD_COMMENT_REQUEST: {
         draft.isAddingComment = true;

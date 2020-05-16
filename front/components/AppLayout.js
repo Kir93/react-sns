@@ -1,12 +1,12 @@
 import React from 'react';
-import { Menu, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import LoginForm from '../containers/LoginForm';
 import UserProfile from '../containers/UserProfile';
 import { useSelector } from 'react-redux';
 import Router from 'next/router';
-import { HeadBox, Header, SearchBar } from './Styles';
+import { HeadBox, Header, SearchBar, MenuItem, SearchMenu } from './Styles';
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
@@ -21,19 +21,19 @@ const AppLayout = ({ children }) => {
       <HeadBox>
         <Col xs={24} md={13}>
           <Header mode="horizontal">
-            <Menu.Item key="home">
+            <MenuItem key="home">
               <Link href="/">
                 <a>ReactSNS</a>
               </Link>
-            </Menu.Item>
-            <Menu.Item key="profile">
+            </MenuItem>
+            <MenuItem key="profile">
               <Link href="/profile" prefetch>
                 <a>Profile</a>
               </Link>
-            </Menu.Item>
-            <Menu.Item key="mail">
+            </MenuItem>
+            <SearchMenu key="mail">
               <SearchBar enterButton onSearch={onSearch} />
-            </Menu.Item>
+            </SearchMenu>
           </Header>
         </Col>
         <Col xs={24} md={11}>

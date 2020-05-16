@@ -14,6 +14,9 @@ public interface HashtagMapper {
     @Select("SELECT IFNULL(id, COUNT(id)) AS id FROM Hashtags WHERE `name`=#{name}")
     public HashtagBean CheckHashtag(String name);
 
+    @Select("SELECT * from PostHashtag WHERE HashtagId=#{hashtagId} AND PostId=#{id}")
+    public Object CheckPostHashtag(int hashtagId, int id);
+
     @Select("SELECT p.*, u.nickname, GROUP_CONCAT(DISTINCT i.src) as src, "
     + "GROUP_CONCAT(DISTINCT l.userId) as Likers FROM PostHashtag AS ph "
     + "JOIN Posts AS p ON (ph.PostId = p.id) JOIN Users AS u ON (p.UserId = u.id) " 

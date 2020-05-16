@@ -9,6 +9,16 @@ export const HeadBox = styled(Row)`
 export const Header = styled(Menu)`
   border-bottom: 0;
 `;
+export const MenuItem = styled(Menu.Item)`
+  @media only screen and (max-width: 576px) {
+    width: 20%;
+  }
+`;
+export const SearchMenu = styled(Menu.Item)`
+  @media only screen and (max-width: 576px) {
+    width: 60%;
+  }
+`;
 export const SearchBar = styled(Input.Search)`
   vertical-align: middle;
 `;

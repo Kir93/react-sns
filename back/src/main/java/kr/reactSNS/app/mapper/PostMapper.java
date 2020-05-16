@@ -1,5 +1,6 @@
 package kr.reactSNS.app.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
@@ -37,6 +38,12 @@ public interface PostMapper {
 
     @Select("SELECT id FROM Images WHERE src=#{src}")
     public Object SelectImage(String src);
+
+    @Select("SELECT src FROM Images WHERE PostId=#{id}")
+    public List<String> SelectImages(int id);
+
+    @Delete("DELETE FROM Images WHERE src=#{src} AND PostId=#{id}")
+    public int DeleteImage(String src, int id);
 
     @Insert("INSERT INTO `Like` (PostId, UserId) value (#{PostId}, #{UserId})")
     public int InsertLike(int PostId, int UserId);

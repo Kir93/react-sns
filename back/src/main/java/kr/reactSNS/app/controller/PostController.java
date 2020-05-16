@@ -108,29 +108,39 @@ public class PostController {
             final Matcher matcher = pattern.matcher(string);
             int size = pb.getContent().split("#").length;
             String[] hashtags = new String[size];
-            int x = 0;
             Object userId = session.getAttribute("rslc");
-            List<String> images = pb.getImages();
             if (userId == null) {
                 return ResponseEntity.status(403).body("로그인 후 이용하세요.");
             }
             pb.setUserId((int) userId);
             pm.EditPost(string, id);
+            List<String> oldImages = pm.SelectImages(id);
+            List<String> images = pb.getImages();
             for (int i = 0; i < images.size(); i++) {
-                System.out.println(images.get(i));
+                for (int j = 0; j < oldImages.size(); j++){
+                    if(images.get(i).equals(oldImages.get(j))){
+                        oldImages.remove(j);
+                        break;
+                    }
+                }
                 if(pm.SelectImage(images.get(i)) == null){
                     pm.InsertImage(images.get(i), id);
                 }
             }
+            for(int i = 0; i< oldImages.size(); i++){
+                pm.DeleteImage(oldImages.get(i), id);
+            }
+            int x = 0;
             while (matcher.find()) {
                 hashtags[x] = matcher.group(0).substring(1).toLowerCase();
-                System.out.println(hashtags[x]);
                 HashtagBean hb = hm.CheckHashtag(hashtags[x]);
                 hb.setName(hashtags[x]);
                 if (hb.getId() == 0) {
                     pm.InsertHashtag(hb);
                 }
-                pm.AddPostHashtag(id, hb.getId());
+                if(hm.CheckPostHashtag(hb.getId(), id) == null){
+                    pm.AddPostHashtag(id, hb.getId());
+                }
                 x++;
             }
             PostBean newPost = pm.SelectPost(id);
