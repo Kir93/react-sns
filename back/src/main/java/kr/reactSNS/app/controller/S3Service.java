@@ -58,7 +58,7 @@ public class S3Service {
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
                 String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
                 String newFile = basename + "." + ext;
-                System.out.println("여기일듯?" + image.getInputStream());
+                System.out.println("여기일듯?");
                 s3Client.putObject(new PutObjectRequest(bucket, newFile, byteArrayInputStream, null)
                              .withCannedAcl(CannedAccessControlList.PublicRead));
                 System.out.println("맞지?");
