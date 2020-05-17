@@ -52,14 +52,16 @@ public class S3Service {
             for (MultipartFile image : images) {
                 byte[] bytes = IOUtils.toByteArray(image.getInputStream());
                 ObjectMetadata objmeta = new ObjectMetadata();
+                objmeta.setContentType(image.getContentType());
                 objmeta.setContentLength(bytes.length);
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
                 String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
                 String newFile = basename + "." + ext;
+                objmeta.setHeader("filename", newFile);
                 System.out.println("여기일듯?");
-                s3Client.putObject(new PutObjectRequest(bucket, newFile, byteArrayInputStream, objmeta)
+                s3Client.putObject( new PutObjectRequest(bucket, "testfile", image.getInputStream(), objmeta)
                              .withCannedAcl(CannedAccessControlList.PublicRead));
                 System.out.println("맞지?");
                 // File dest = new File(baseDir + basename + "." + ext); // 개발환경
