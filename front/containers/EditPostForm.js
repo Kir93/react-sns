@@ -120,7 +120,7 @@ const EditPostForm = ({ post, finishEdit }) => {
           return (
             <Col key={v} style={{ display: 'inline-block' }} xs={12} md={6}>
               <div>
-                <img src={`${backUrl}uploads/` + v} alt={v} />
+                <img src={v} alt={v} />
                 <div>
                   <Button onClick={onRemoveImage(i)}>제거</Button>
                 </div>

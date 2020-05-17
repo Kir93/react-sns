@@ -9,7 +9,6 @@ import {
   REMOVE_IMAGE,
 } from '../reducers/post';
 import { InputPost, PostBtn, ImageRow } from './Styles';
-import { backUrl } from '../config/config';
 
 const PostForm = () => {
   const dispatch = useDispatch();
