@@ -51,6 +51,8 @@ public class S3Service {
             // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
             for (MultipartFile image : images) {
                 byte[] bytes = IOUtils.toByteArray(image.getInputStream());
+                ObjectMetadata objmeta = new ObjectMetadata();
+                objmeta.setContentLength(bytes.length);
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
