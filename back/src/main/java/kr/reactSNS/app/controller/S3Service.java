@@ -49,7 +49,7 @@ public class S3Service {
             for (MultipartFile image : images) {
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
                 String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
-                String newFile = basename + ext;
+                String newFile = basename + "." + ext;
                 System.out.println("여기일듯?");
                 s3Client.putObject(new PutObjectRequest(bucket, newFile, image.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
                 System.out.println("맞지?");
