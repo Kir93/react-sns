@@ -59,7 +59,7 @@ public class S3Service {
                 String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
                 String newFile = basename + "." + ext;
                 System.out.println("여기일듯?");
-                s3Client.putObject(new PutObjectRequest(bucket, newFile, byteArrayInputStream, null)
+                s3Client.putObject(new PutObjectRequest(bucket, newFile, byteArrayInputStream, objmeta)
                              .withCannedAcl(CannedAccessControlList.PublicRead));
                 System.out.println("맞지?");
                 // File dest = new File(baseDir + basename + "." + ext); // 개발환경
