@@ -234,7 +234,7 @@ public class PostController {
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
-                if(ext =="png" || ext == "jpg" || ext == "jpeg"){
+                if(ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")){
                     String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
                     String newFile = basename + "." + ext;
                     s3Client.putObject(new PutObjectRequest(bucket, newFile, byteArrayInputStream, objmeta));
