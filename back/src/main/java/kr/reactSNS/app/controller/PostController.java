@@ -207,20 +207,17 @@ public class PostController {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    @PostConstruct
-    public void setS3Client(){
-        AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
-
-        s3Client = AmazonS3ClientBuilder.standard()
-                        .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                        .withRegion(this.region)
-                        .build();
-    }
-
     @PostMapping("/images")
     public ResponseEntity<Object> AddImages(@RequestParam("image") List<MultipartFile> images,
             HttpServletRequest request) {
         try {
+            AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
+
+            s3Client = AmazonS3ClientBuilder.standard()
+                        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                        .withRegion(this.region)
+                        .build();
+
             System.out.println("in " + images);
             List<String> list = new ArrayList<String>();
             // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
