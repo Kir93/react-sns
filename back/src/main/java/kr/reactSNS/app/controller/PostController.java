@@ -234,6 +234,7 @@ public class PostController {
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
+                System.out.println(ext);
                 if(ext != "jpg" || ext != "jpeg" || ext != "png" || ext != "pneg"){
                     return ResponseEntity.status(403).body("JPG나 PNG 파일을 등록하세요");
                 }

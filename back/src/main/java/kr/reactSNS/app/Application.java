@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = { "classpath:${jdbc.config}" })
 public class Application {
 
-	@Value("${server.port}")
+	@Value("${local.server.port}")
     private static String port;
 
 	public static void main(String[] args) {
