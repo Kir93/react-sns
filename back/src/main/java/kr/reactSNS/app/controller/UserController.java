@@ -35,7 +35,6 @@ public class UserController {
     public ResponseEntity<Object> LoadUser(HttpServletResponse res, HttpSession session) {
         try {
             Object userId = session.getAttribute("rslc");
-            System.out.println(userId);
             if (userId == null) {
                 Cookie rslc = new Cookie("rslc", null);
                 rslc.setMaxAge(0);

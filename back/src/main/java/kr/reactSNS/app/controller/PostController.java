@@ -1,15 +1,29 @@
 package kr.reactSNS.app.controller;
 
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 // import java.io.File; //개발환경
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.IOUtils;
+
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -184,14 +198,53 @@ public class PostController {
         }
     }
 
-    @Autowired
-    S3Service s3;
+    @Value("${cloud.aws.credentials.accessKey}")
+    private String accessKey;
+    @Value("${cloud.aws.credentials.secretKey}")
+    private String secretKey;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
+    private AmazonS3 s3Client;
+
+    @PostConstruct
+    public void setS3Client() {
+        BasicAWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
+
+            s3Client = AmazonS3ClientBuilder.standard()
+                        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                        .withRegion(this.region)
+                        .build();
+
+    }
 
     @PostMapping("/images")
     public ResponseEntity<Object> AddImages(@RequestParam("image") List<MultipartFile> images,
             HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(s3.uploadImage(images));
+            List<String> list = new ArrayList<String>();
+            // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
+            for (MultipartFile image : images) {
+                byte[] bytes = IOUtils.toByteArray(image.getInputStream());
+                ObjectMetadata objmeta = new ObjectMetadata();
+                objmeta.setContentType(image.getContentType());
+                objmeta.setContentLength(bytes.length);
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
+                String ext = FilenameUtils.getExtension(image.getOriginalFilename());
+                if(ext != "jpg" || ext != "jpeg" || ext != "png" || ext != "pneg"){
+                    return ResponseEntity.status(403).body("JPG나 PNG 파일을 등록하세요");
+                }
+                String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
+                String newFile = basename + "." + ext;
+                s3Client.putObject(new PutObjectRequest(bucket, newFile, byteArrayInputStream, objmeta));
+                // File dest = new File(baseDir + basename + "." + ext); // 개발환경
+                // image.transferTo(dest); // 개발환경
+                list.add(s3Client.getUrl(bucket, newFile).toString());
+            }
+            return ResponseEntity.ok(list);
         } catch (Exception e) {
             System.err.println(e);
             return ResponseEntity.status(403).body(e);
