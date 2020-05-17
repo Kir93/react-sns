@@ -11,7 +11,6 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import org.apache.commons.io.FilenameUtils;
@@ -51,7 +50,7 @@ public class S3Service {
                 String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
                 String newFile = basename + "." + ext;
                 System.out.println("여기일듯?");
-                s3Client.putObject(new PutObjectRequest(bucket, newFile, image.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
+                s3Client.putObject(new PutObjectRequest(bucket, newFile, image.getInputStream(), null));
                 System.out.println("맞지?");
                 // File dest = new File(baseDir + basename + "." + ext); // 개발환경
                 // image.transferTo(dest); // 개발환경
