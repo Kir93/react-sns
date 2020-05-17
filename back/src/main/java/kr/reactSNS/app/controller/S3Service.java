@@ -37,12 +37,13 @@ public class S3Service {
 
     @PostConstruct
     public void setS3Client() {
-        AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
+        BasicAWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
 
             s3Client = AmazonS3ClientBuilder.standard()
                         .withCredentials(new AWSStaticCredentialsProvider(credentials))
                         .withRegion(this.region)
                         .build();
+
     }
 
     public List<String> uploadImage(List<MultipartFile> images){
