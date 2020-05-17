@@ -17,7 +17,7 @@ const PostImages = ({ src }) => {
   if (src.length === 1) {
     return (
       <>
-        <SoloImg src={`${backUrl}uploads/${src[0]}`} onClick={onZoom} />
+        <SoloImg src={src[0]} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom src={src} onClose={onClose} />}
       </>
     );
@@ -26,8 +26,8 @@ const PostImages = ({ src }) => {
     return (
       <>
         <ImageBox>
-          <img src={`${backUrl}uploads/${src[0]}`} onClick={onZoom} />
-          <img src={`${backUrl}uploads/${src[1]}`} onClick={onZoom} />
+          <img src={src[0]} onClick={onZoom} />
+          <img src={src[1]} onClick={onZoom} />
         </ImageBox>
         {showImagesZoom && <ImagesZoom src={src} onClose={onClose} />}
       </>
@@ -36,7 +36,7 @@ const PostImages = ({ src }) => {
   return (
     <>
       <ImageBox>
-        <img src={`${backUrl}uploads/${src[0]}`} onClick={onZoom} />
+        <img src={src[0]} onClick={onZoom} />
         <div onClick={onZoom}>
           <Icon type="plus" />
           <br />
