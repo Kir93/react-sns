@@ -221,6 +221,7 @@ public class PostController {
     public ResponseEntity<Object> AddImages(@RequestParam("image") List<MultipartFile> images,
             HttpServletRequest request) {
         try {
+            System.out.println("in " + images);
             List<String> list = new ArrayList<String>();
             // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
             for (MultipartFile image : images) {
