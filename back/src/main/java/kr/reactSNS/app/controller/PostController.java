@@ -1,28 +1,15 @@
 package kr.reactSNS.app.controller;
 
 // import java.io.File; //개발환경
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -197,42 +184,14 @@ public class PostController {
         }
     }
 
-    private AmazonS3 s3Client;
-    @Value("${cloud.aws.credentials.accessKey}")
-    private String accessKey;
-    @Value("${cloud.aws.credentials.secretKey}")
-    private String secretKey;
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-    @Value("${cloud.aws.region.static}")
-    private String region;
+    @Autowired
+    S3Service s3;
 
     @PostMapping("/images")
     public ResponseEntity<Object> AddImages(@RequestParam("image") List<MultipartFile> images,
             HttpServletRequest request) {
         try {
-            AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
-
-            s3Client = AmazonS3ClientBuilder.standard()
-                        .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                        .withRegion(this.region)
-                        .build();
-
-            System.out.println("in " + images);
-            List<String> list = new ArrayList<String>();
-            // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
-            for (MultipartFile image : images) {
-                String ext = FilenameUtils.getExtension(image.getOriginalFilename());
-                String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
-                String newFile = basename + ext;
-                System.out.println("여기일듯?");
-                s3Client.putObject(new PutObjectRequest(bucket, newFile, image.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
-                System.out.println("맞지?");
-                // File dest = new File(baseDir + basename + "." + ext); // 개발환경
-                // image.transferTo(dest); // 개발환경
-                list.add(s3Client.getUrl(bucket, newFile).toString());
-            }
-            return ResponseEntity.ok(list);
+            return ResponseEntity.ok(s3.uploadImage(images));
         } catch (Exception e) {
             System.err.println(e);
             return ResponseEntity.status(403).body(e);
