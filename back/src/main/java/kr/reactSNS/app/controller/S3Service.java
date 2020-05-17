@@ -64,6 +64,7 @@ public class S3Service {
                 PutObjectRequest putobj =  new PutObjectRequest(bucket, newFile, byteArrayInputStream, objmeta);
                 System.out.println("맞지?");
                 s3Client.putObject(putobj);
+                System.out.println("맞니??");
                 // File dest = new File(baseDir + basename + "." + ext); // 개발환경
                 // image.transferTo(dest); // 개발환경
                 list.add(s3Client.getUrl(bucket, newFile).toString());
