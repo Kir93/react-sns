@@ -36,10 +36,11 @@ public class UserController {
         try {
             Object userId = session.getAttribute("rslc");
             if (userId == null) {
-                // Cookie rslc = new Cookie("rslc", null);
-                // rslc.setMaxAge(0);
-                // rslc.setPath("/");
-                // res.addCookie(rslc);
+                Cookie rslc = new Cookie("rslc", null);
+                rslc.setDomain(".kir93.me");
+                rslc.setMaxAge(0);
+                rslc.setPath("/");
+                res.addCookie(rslc);
                 return ResponseEntity.status(403).body("로그인 후 사용하세요.");
             }
             UserBean user = um.checkUser((int) userId);
