@@ -1,5 +1,6 @@
 package kr.reactSNS.app.controller;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,9 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.IOUtils;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,11 +50,14 @@ public class S3Service {
             List<String> list = new ArrayList<String>();
             // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
             for (MultipartFile image : images) {
+                byte[] bytes = IOUtils.toByteArray(image.getInputStream());
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
                 String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
                 String newFile = basename + "." + ext;
                 System.out.println("여기일듯?" + image.getInputStream());
-                s3Client.putObject(new PutObjectRequest(bucket, newFile, image.getInputStream(), null)
+                s3Client.putObject(new PutObjectRequest(bucket, newFile, byteArrayInputStream, null)
                              .withCannedAcl(CannedAccessControlList.PublicRead));
                 System.out.println("맞지?");
                 // File dest = new File(baseDir + basename + "." + ext); // 개발환경
