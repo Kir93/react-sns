@@ -80,8 +80,8 @@ public class UserController {
                 if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
                     user.setPassword("");
                     session.setAttribute("rslc", user.getId());
+                    System.out.println(um.realPost(user.getId()));
                     if((Object) um.realPost(user.getId()) != null){
-                        System.out.println(um.realPost(user.getId()));
                         user.setPost(um.realPost(user.getId()));
                     }
                     user.setPosts(user.getPost() != null ? user.getPost().length : 0);
