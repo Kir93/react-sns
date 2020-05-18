@@ -1,6 +1,8 @@
 package kr.reactSNS.app.controller;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 // import java.io.File; //개발환경
 import java.util.Collection;
@@ -10,18 +12,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
 
 import org.apache.commons.io.FilenameUtils;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +48,7 @@ import kr.reactSNS.app.beans.PostBean;
 import kr.reactSNS.app.mapper.CommentMapper;
 import kr.reactSNS.app.mapper.HashtagMapper;
 import kr.reactSNS.app.mapper.PostMapper;
+import java.awt.image.BufferedImage;
 
 @RestController
 @RequestMapping("/api/post/*")
@@ -211,7 +218,7 @@ public class PostController {
 
     @PostConstruct
     public void setS3Client() {
-        BasicAWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
+        AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
 
             s3Client = AmazonS3ClientBuilder.standard()
                         .withCredentials(new AWSStaticCredentialsProvider(credentials))
@@ -227,20 +234,27 @@ public class PostController {
             List<String> list = new ArrayList<String>();
             // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
             for (MultipartFile image : images) {
-                byte[] bytes = IOUtils.toByteArray(image.getInputStream());
-                ObjectMetadata objmeta = new ObjectMetadata();
-                objmeta.setContentType(image.getContentType());
-                objmeta.setContentLength(bytes.length);
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
                 if(ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")){
+                    byte[] bytes = IOUtils.toByteArray(image.getInputStream());
+                    ObjectMetadata objmeta = new ObjectMetadata();
+                    objmeta.setContentType(image.getContentType());
+                    objmeta.setContentLength(bytes.length);
+                    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
                     String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
                     String newFile = basename + "." + ext;
-                    s3Client.putObject(new PutObjectRequest(bucket, newFile, byteArrayInputStream, objmeta));
+
+                    BufferedImage thumbImage = Scalr.resize((BufferedImage) image, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_TO_WIDTH, 800);
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    ImageIO.write(thumbImage, ext, os);
+                    InputStream is = new ByteArrayInputStream(os.toByteArray());
+                    s3Client.putObject(new PutObjectRequest(bucket, "/original/"+newFile, byteArrayInputStream, objmeta)
+                                .withCannedAcl(CannedAccessControlList.PublicRead));
+                    s3Client.putObject(new PutObjectRequest(bucket, "/thumbnail/"+newFile, is, null)
+                                .withCannedAcl(CannedAccessControlList.PublicRead));
                     // File dest = new File(baseDir + basename + "." + ext); // 개발환경
                     // image.transferTo(dest); // 개발환경
-                    list.add(s3Client.getUrl(bucket, newFile).toString());
+                    list.add(s3Client.getUrl(bucket, "/original/"+newFile).toString());
                 }else{
                     return ResponseEntity.status(403).body("JPG나 PNG 파일을 등록하세요");
                 }
