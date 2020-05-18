@@ -21,7 +21,7 @@ public interface UserMapper {
     @Select("SELECT u.*, GROUP_CONCAT(DISTINCT p.id) Post," + "GROUP_CONCAT(DISTINCT fing.followerId) Following, "
             + "GROUP_CONCAT(DISTINCT fer.followingId) Follower FROM Users AS u "
             + "LEFT JOIN Posts AS p ON (u.id = p.UserId) " + "LEFT JOIN Follow AS fing ON (u.id = fing.followingId) "
-            + "LEFT JOIN Follow AS fer ON (u.id = fer.followerId) " + "WHERE u.id = #{id}")
+            + "LEFT JOIN Follow AS fer ON (u.id = fer.followerId) " + "WHERE u.id = #{id} AND p.delYn = N")
     public UserBean checkUser(int id);
 
     @Insert("INSERT INTO Users (userId, nickname, password) VALUE (#{userId}, #{nickname}, #{password})")
