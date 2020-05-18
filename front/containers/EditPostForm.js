@@ -99,7 +99,6 @@ const EditPostForm = ({ post, finishEdit }) => {
           multiple
           hidden
           accept="image/*"
-          capture
           ref={imageInput}
           onChange={onChangeImages}
         />
