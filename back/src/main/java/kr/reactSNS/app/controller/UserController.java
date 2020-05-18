@@ -36,14 +36,16 @@ public class UserController {
         try {
             Object userId = session.getAttribute("rslc");
             if (userId == null) {
-                // Cookie rslc = new Cookie("rslc", null);
-                // rslc.setMaxAge(0);
-                // rslc.setPath("/");
-                // res.addCookie(rslc);
+                Cookie rslc = new Cookie("rslc", null);
+                rslc.setMaxAge(0);
+                rslc.setPath("/");
+                res.addCookie(rslc);
                 return ResponseEntity.status(403).body("로그인 후 사용하세요.");
             }
             UserBean user = um.checkUser((int) userId);
-            user.setPost(um.realPost(user.getId()));
+            if((Object) um.realPost(user.getId()) != null){
+                user.setPost(um.realPost(user.getId()));
+            }
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
@@ -78,7 +80,9 @@ public class UserController {
                 if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
                     user.setPassword("");
                     session.setAttribute("rslc", user.getId());
-                    user.setPost(um.realPost(user.getId()));
+                    if((Object) um.realPost(user.getId()) != null){
+                        user.setPost(um.realPost(user.getId()));
+                    }
                     user.setPosts(user.getPost() != null ? user.getPost().length : 0);
                     user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
                     user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
@@ -89,7 +93,7 @@ public class UserController {
             return ResponseEntity.status(401).body("아이디와 패스워드를 확인하시고 다시 시도하세요.");
         } catch (Exception e) {
             System.err.println(e);
-            return ResponseEntity.status(403).body("여기야?" + e);
+            return ResponseEntity.status(403).body("Login : " + e);
         }
     }
 
