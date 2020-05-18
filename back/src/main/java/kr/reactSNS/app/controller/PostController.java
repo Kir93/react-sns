@@ -236,6 +236,7 @@ public class PostController {
             for (MultipartFile image : images) {
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
                 if(ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")){
+                    
                     byte[] bytes = IOUtils.toByteArray(image.getInputStream());
                     ObjectMetadata objmeta = new ObjectMetadata();
                     objmeta.setContentType(image.getContentType());
@@ -244,7 +245,7 @@ public class PostController {
                     String basename = FilenameUtils.getBaseName(image.getOriginalFilename()) + new Date().getTime();
                     String newFile = basename + "." + ext;
 
-                    BufferedImage thumbImage = Scalr.resize((BufferedImage) image, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_TO_WIDTH, 800);
+                    BufferedImage thumbImage = Scalr.resize(ImageIO.read(image.getInputStream()), Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_TO_WIDTH, 800);
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     ImageIO.write(thumbImage, ext, os);
                     InputStream is = new ByteArrayInputStream(os.toByteArray());
