@@ -169,6 +169,9 @@ export default (state = initialState, action) => {
         break;
       }
       case ADD_POST_TO_ME: {
+        if (draft.me.post === null) {
+          draft.me.post = [];
+        }
         draft.me.post.unshift(action.data);
         break;
       }
