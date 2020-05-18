@@ -84,7 +84,7 @@ const PostForm = () => {
           type="file"
           multiple
           hidden
-          accept="image/* capture=camera"
+          accept="image/*"
           ref={imageInput}
           onChange={onChangeImages}
         />
