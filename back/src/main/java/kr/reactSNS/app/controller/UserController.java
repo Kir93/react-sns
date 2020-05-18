@@ -43,6 +43,7 @@ public class UserController {
                 return ResponseEntity.status(403).body("로그인 후 사용하세요.");
             }
             UserBean user = um.checkUser((int) userId);
+            user.setPost(um.realPost(user.getId()));
             user.setPosts(user.getPost() != null ? user.getPost().length : 0);
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
