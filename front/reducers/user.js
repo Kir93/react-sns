@@ -145,6 +145,9 @@ export default (state = initialState, action) => {
         break;
       }
       case FOLLOW_USER_SUCCESS: {
+        if (draft.me.following === null) {
+          draft.me.following = [];
+        }
         draft.me.following.unshift(action.data);
         break;
       }
