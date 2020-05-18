@@ -76,7 +76,6 @@ const User = () => {
 
 User.getInitialProps = async (context) => {
   const id = parseInt(context.query.id, 10);
-  console.log('User getInitialProps', id);
   context.store.dispatch({
     type: LOAD_USER_REQUEST,
     data: id,

@@ -26,7 +26,6 @@ const Profile = () => {
 
   const onUnfollow = useCallback(
     (userId) => () => {
-      console.log(userId);
       dispatch({
         type: UNFOLLOW_USER_REQUEST,
         data: userId,
@@ -36,7 +35,6 @@ const Profile = () => {
   );
   const onRemovefollower = useCallback(
     (userId) => () => {
-      console.log(userId);
       dispatch({
         type: REMOVE_FOLLOWER_REQUEST,
         data: userId,

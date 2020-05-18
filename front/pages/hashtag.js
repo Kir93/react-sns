@@ -50,7 +50,6 @@ Hashtag.propTypes = {
 
 Hashtag.getInitialProps = async (context) => {
   const tag = context.query.tag;
-  console.log('hashtag getInitialProps', tag);
   context.store.dispatch({
     type: LOAD_HASHTAG_POSTS_REQUEST,
     data: tag,

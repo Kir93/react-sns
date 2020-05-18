@@ -81,6 +81,7 @@ public class UserController {
                     user.setPassword("");
                     session.setAttribute("rslc", user.getId());
                     if((Object) um.realPost(user.getId()) != null){
+                        System.out.println(um.realPost(user.getId()));
                         user.setPost(um.realPost(user.getId()));
                     }
                     user.setPosts(user.getPost() != null ? user.getPost().length : 0);
