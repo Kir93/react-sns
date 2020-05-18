@@ -234,10 +234,8 @@ public class PostController {
             List<String> list = new ArrayList<String>();
             // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
             for (MultipartFile image : images) {
-                String ext = FilenameUtils.getExtension(image.getOriginalFilename());
-                System.out.println(ext);
+                String ext = FilenameUtils.getExtension(image.getOriginalFilename()).toLowerCase();
                 if(ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")){
-                    
                     byte[] bytes = IOUtils.toByteArray(image.getInputStream());
                     ObjectMetadata objmeta = new ObjectMetadata();
                     objmeta.setContentType(image.getContentType());
