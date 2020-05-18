@@ -83,6 +83,12 @@ public class UserController {
                     System.out.println(um.realPost(user.getId()));
                     if((Object) um.realPost(user.getId()) != null){
                         user.setPost(um.realPost(user.getId()));
+                    }else{
+                        try {
+                            user.setPost(null);   
+                        } catch (Exception e) {
+                            System.err.println("널은 에러나네" + e);
+                        }
                     }
                     user.setPosts(user.getPost() != null ? user.getPost().length : 0);
                     user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
