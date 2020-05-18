@@ -25,7 +25,7 @@ const UserProfile = () => {
         <a>
           <GridCard>
             포스트
-            <Span>{me.post === null ? 0 : me.post.length}</Span>
+            <Span>{me.posts}</Span>
           </GridCard>
         </a>
       </Link>
