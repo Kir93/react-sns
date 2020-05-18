@@ -45,8 +45,11 @@ public class UserController {
             UserBean user = um.checkUser((int) userId);
             if((Object) um.realPost(user.getId()) != null){
                 user.setPost(um.realPost(user.getId()));
+                user.setPosts(user.getPost().length);
+            }else{
+                user.setPost("");
+                user.setPosts(0);
             }
-            user.setPosts(user.getPost() != null ? user.getPost().length : 0);
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
             user.setPassword("");
@@ -80,17 +83,13 @@ public class UserController {
                 if (BCrypt.checkpw(ub.getPassword(), user.getPassword())) {
                     user.setPassword("");
                     session.setAttribute("rslc", user.getId());
-                    System.out.println(um.realPost(user.getId()));
                     if((Object) um.realPost(user.getId()) != null){
                         user.setPost(um.realPost(user.getId()));
+                        user.setPosts(user.getPost().length);
                     }else{
-                        try {
-                            user.setPost(null);   
-                        } catch (Exception e) {
-                            System.err.println("널은 에러나네" + e);
-                        }
+                        user.setPost("");
+                        user.setPosts(0);
                     }
-                    user.setPosts(user.getPost() != null ? user.getPost().length : 0);
                     user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
                     user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
                     user.setPassword("");
@@ -122,7 +121,13 @@ public class UserController {
             if (user == null) {
                 return ResponseEntity.status(401).body("존재하지 않는 사용자입니다.");
             }
-            user.setPosts(user.getPost() != null ? user.getPost().length : 0);
+            if((Object) um.realPost(user.getId()) != null){
+                user.setPost(um.realPost(user.getId()));
+                user.setPosts(user.getPost().length);
+            }else{
+                user.setPost("");
+                user.setPosts(0);
+            }
             user.setFollowings(user.getFollowing() != null ? user.getFollowing().length : 0);
             user.setFollowers(user.getFollower() != null ? user.getFollower().length : 0);
             user.setPost("");
