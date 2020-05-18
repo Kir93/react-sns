@@ -73,7 +73,7 @@ export default (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
       case UPLOAD_IMAGES_REQUEST: {
-        isAddingImage = true;
+        draft.isAddingImage = true;
         break;
       }
       case UPLOAD_IMAGES_SUCCESS: {
@@ -86,11 +86,11 @@ export default (state = initialState, action) => {
             draft.editImagePaths.push(p);
           });
         }
-        isAddingImage = false;
+        draft.isAddingImage = false;
         break;
       }
       case UPLOAD_IMAGES_FAILURE: {
-        isAddingImage = false;
+        draft.isAddingImage = false;
         break;
       }
       case REMOVE_IMAGE: {
