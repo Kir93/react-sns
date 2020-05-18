@@ -3,6 +3,7 @@ import produce from 'immer';
 export const initialState = {
   mainPosts: [], // 화면에 보일 포스트들
   imagePaths: [], // 미리보기 이미지 경로
+  isAddingImage: false, // 이미지 업로드 중
   editImagePaths: [], // 수정 미리보기 이미지 경로
   addPostErrorReason: '', // 포스트 업로드 실패 사유
   isAddingPost: false, // 포스트 업로드 중
@@ -72,6 +73,7 @@ export default (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
       case UPLOAD_IMAGES_REQUEST: {
+        isAddingImage = true;
         break;
       }
       case UPLOAD_IMAGES_SUCCESS: {
@@ -84,9 +86,11 @@ export default (state = initialState, action) => {
             draft.editImagePaths.push(p);
           });
         }
+        isAddingImage = false;
         break;
       }
       case UPLOAD_IMAGES_FAILURE: {
+        isAddingImage = false;
         break;
       }
       case REMOVE_IMAGE: {

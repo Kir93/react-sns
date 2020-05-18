@@ -11,12 +11,11 @@ import {
   CANCLED_EDIT_POST,
   EDIT_POST_REQUEST,
 } from '../reducers/post';
-import { backUrl } from '../config/config';
 
 const EditPostForm = ({ post, finishEdit }) => {
   const dispatch = useDispatch();
   const [text, setText] = useState(post.content);
-  const { editImagePaths } = useSelector((state) => state.post);
+  const { editImagePaths, isAddingImage } = useSelector((state) => state.post);
   const imageInput = useRef();
   useEffect(() => {
     if (post.src) {
@@ -103,7 +102,9 @@ const EditPostForm = ({ post, finishEdit }) => {
           ref={imageInput}
           onChange={onChangeImages}
         />
-        <Button onClick={onClickImagesUpload}>이미지 업로드</Button>
+        <Button onClick={onClickImagesUpload} loading={isAddingImage}>
+          이미지 업로드
+        </Button>
         <PostBtn
           type="danger"
           style={{ marginLeft: '5px' }}

@@ -13,7 +13,7 @@ import { InputPost, PostBtn, ImageRow } from './Styles';
 const PostForm = () => {
   const dispatch = useDispatch();
   const [text, setText] = useState('');
-  const { imagePaths, isAddingPost, postAdded } = useSelector(
+  const { imagePaths, isAddingPost, postAdded, isAddingImage } = useSelector(
     (state) => state.post,
   );
   const imageInput = useRef();
@@ -88,7 +88,9 @@ const PostForm = () => {
           ref={imageInput}
           onChange={onChangeImages}
         />
-        <Button onClick={onClickImagesUpload}>이미지 업로드</Button>
+        <Button onClick={onClickImagesUpload} loading={isAddingImage}>
+          이미지 업로드
+        </Button>
         <PostBtn type="primary" htmlType="submit" loading={isAddingPost}>
           POST
         </PostBtn>
