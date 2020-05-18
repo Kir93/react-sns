@@ -97,9 +97,14 @@ const PostForm = () => {
       <ImageRow gutter={16}>
         {imagePaths.map((v, i) => {
           return (
-            <Col key={v} style={{ display: 'inline-block' }} xs={12} md={6}>
+            <Col
+              key={v.replace('original', 'thumbnail')}
+              style={{ display: 'inline-block' }}
+              xs={12}
+              md={6}
+            >
               <div>
-                <img src={v} alt={v} />
+                <img src={v.replace('original', 'thumbnail')} alt={v} />
                 <div>
                   <Button onClick={onRemoveImage(i)}>제거</Button>
                 </div>
