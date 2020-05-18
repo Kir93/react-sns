@@ -235,6 +235,7 @@ public class PostController {
             // String baseDir = System.getProperty("user.dir") + "/back/src/main/resources/static/uploads/"; // 개발환경
             for (MultipartFile image : images) {
                 String ext = FilenameUtils.getExtension(image.getOriginalFilename());
+                System.out.println(ext);
                 if(ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")){
                     
                     byte[] bytes = IOUtils.toByteArray(image.getInputStream());
@@ -249,7 +250,7 @@ public class PostController {
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     ImageIO.write(thumbImage, ext, os);
                     InputStream is = new ByteArrayInputStream(os.toByteArray());
-                    
+
                     s3Client.putObject(new PutObjectRequest(bucket, "original/"+newFile, byteArrayInputStream, objmeta)
                                 .withCannedAcl(CannedAccessControlList.PublicRead));
                     s3Client.putObject(new PutObjectRequest(bucket, "thumbnail/"+newFile, is, null)
