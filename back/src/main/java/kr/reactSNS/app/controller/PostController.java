@@ -249,9 +249,9 @@ public class PostController {
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     ImageIO.write(thumbImage, ext, os);
                     InputStream is = new ByteArrayInputStream(os.toByteArray());
-                    s3Client.putObject(new PutObjectRequest(bucket, "/original/"+newFile, byteArrayInputStream, objmeta)
+                    s3Client.putObject(new PutObjectRequest(bucket, "original/"+newFile, byteArrayInputStream, objmeta)
                                 .withCannedAcl(CannedAccessControlList.PublicRead));
-                    s3Client.putObject(new PutObjectRequest(bucket, "/thumbnail/"+newFile, is, null)
+                    s3Client.putObject(new PutObjectRequest(bucket, "thumbnail/"+newFile, is, null)
                                 .withCannedAcl(CannedAccessControlList.PublicRead));
                     // File dest = new File(baseDir + basename + "." + ext); // 개발환경
                     // image.transferTo(dest); // 개발환경
