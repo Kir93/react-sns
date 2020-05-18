@@ -255,7 +255,7 @@ public class PostController {
                                 .withCannedAcl(CannedAccessControlList.PublicRead));
                     // File dest = new File(baseDir + basename + "." + ext); // 개발환경
                     // image.transferTo(dest); // 개발환경
-                    list.add(s3Client.getUrl(bucket, "/original/"+newFile).toString());
+                    list.add(s3Client.getUrl(bucket, "original/"+newFile).toString());
                 }else{
                     return ResponseEntity.status(403).body("JPG나 PNG 파일을 등록하세요");
                 }
