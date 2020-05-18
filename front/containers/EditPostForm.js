@@ -98,7 +98,7 @@ const EditPostForm = ({ post, finishEdit }) => {
           type="file"
           multiple
           hidden
-          accept="image/*;capture=camera"
+          accept="image/* capture=camera"
           capture
           ref={imageInput}
           onChange={onChangeImages}
