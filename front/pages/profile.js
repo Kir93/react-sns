@@ -85,7 +85,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!me) {
-      alert('로그인 된 사용자는 접근 할 수 없는 페이지 입니다.');
+      alert('로그인 후 접근 가능한 페이지 입니다.');
       Router.push('/');
     }
   }, [me && me.id]);
